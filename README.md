@@ -9,3 +9,6 @@ mpvue + mpvue-router-patch + mpvue-entry + vuex + webpack + ES6/7 + flyio + mpvu
 ## 后端技术栈
 python3 + mysql + flask
 
+支持以下功能：
+1.日历记录
+2.体重记录
