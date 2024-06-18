@@ -1,0 +1,25 @@
+port: 5000
+
+app_secret: yamibuy # csrf token秘钥
+jwt_secret: yamibuy # jwt token秘钥
+jwt_algorithm: HS256 # jwt 加密算法
+
+database.host: 127.0.0.1
+database.port: 3306
+database.username: root
+database.password: yami123
+database.database: testcase
+
+github.client_id: Iv1.d46ce4fee124044c
+github.client_secret: 04030bc3ef9b30f88a66e8f4d1b18143cb222507
+github.auth_url: https://github.com/login/oauth/authorize
+github.access_token_url: https://github.com/login/oauth/access_token
+github.user_info_url: https://api.github.com/user
+github.user_email_url: https://api.github.com/user/emails
+github.redict_url: http://10.30.20.196:5173/oauth?env=github
+github.branch_name: myth_test
+
+log_filepath: "logs/"
+
+action_scripts_path: "src/scripts/action_scripts/"
+case_scripts_path: "src/scripts/action_scripts/test/"
