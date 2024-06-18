@@ -24,8 +24,9 @@
     "lint": "eslint --ext .js,.vue src"
   },
   "dependencies": {
-    "@vant/weapp": "^1.11.6",
     "mpvue": "^2.0.0",
+    "node-sass": "^9.0.0",
+    "scss": "^0.2.4",
     "vuex": "^3.0.1"
   },
   "devDependencies": {
@@ -71,6 +72,8 @@
     "px2rpx-loader": "^0.1.10",
     "relative": "^3.0.2",
     "rimraf": "^2.6.0",
+    "sass": "^1.77.6",
+    "sass-loader": "^7.3.1",
     "semver": "^5.3.0",
     "shelljs": "^0.8.1",
     "uglifyjs-webpack-plugin": "^1.2.5",
