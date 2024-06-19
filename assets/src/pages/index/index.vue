@@ -1,126 +1,112 @@
 <template>
-  <div @click="clickHandle">
-
-    <div class="userinfo" @click="bindViewTap">
-      <img class="userinfo-avatar" v-if="userInfo.avatarUrl" :src="userInfo.avatarUrl" background-size="cover" />
-      <img class="userinfo-avatar" src="/static/images/user.png" background-size="cover" />
-
-      <div class="userinfo-nickname">
-        <card :text="userInfo.nickName"></card>
-      </div>
-    </div>
-
-    <div class="usermotto">
-      <div class="user-motto">
-        <card :text="motto"></card>
-      </div>
-    </div>
-
-    <form class="form-container">
-      <input type="text" class="form-control" :value="motto" placeholder="v-model" />
-      <input type="text" class="form-control" v-model="motto" placeholder="v-model" />
-      <input type="text" class="form-control" v-model.lazy="motto" placeholder="v-model.lazy" />
-    </form>
-
-    <a href="/pages/counter/main" class="counter">去往Vuex示例页面</a>
-
-    <div class="all">
-        <div class="left">
-        </div>
-        <div class="right">
-        </div>
-    </div>
-  </div>
+  <view>
+    <view class="index-page">
+      <nut-calendar-card v-model="currentDate" :current="data.length-1">
+        <template #bottom="{ day }">
+          {{ day.date ===  todayDate ? "今天": "" }}
+        </template>
+      </nut-calendar-card>
+    </view>
+    <view class="subtitle">
+      <span>毛孩子的今天</span>
+      <nut-tabs v-model="currentTab" align="left" :animated-time="0">
+        <nut-tab-pane v-for="tab in tabList" :key="tab.paneKey" :title="tab.title" :pane-key="tab.paneKey"></nut-tab-pane>
+      </nut-tabs>
+    </view>
+    <view class="step-container">
+      <nut-steps direction="vertical">
+        <nut-step v-for="info in data" :key="info.id" :title="info.title" :content="info.content">
+          <template #icon>
+            <actionIcons :icon-type="info.type"></actionIcons>
+          </template>
+        </nut-step>
+      </nut-steps>
+    </view>
+    <view class="record-button-container">
+      <nut-button plain type="info">记一笔</nut-button>
+    </view>
+  </view>
 </template>
 
-<script>
-import card from '@/components/card'
+<script setup>
+import { ref, onBeforeMount } from 'vue';
+import actionIcons from '../../components/action-icons.vue';
 
-export default {
-  data () {
-    return {
-      motto: 'Hello miniprograme',
-      userInfo: {
-        nickName: 'mpvue',
-        avatarUrl: 'http://mpvue.com/assets/logo.png'
-      }
-    }
-  },
+const currentDate = ref();
+const todayDate = ref();
+const currentTab = ref(1);
 
-  components: {
-    card
-  },
+onBeforeMount(()=>{
+  currentDate.value = new Date();
+  todayDate.value = new Date().getDate();
+})
 
-  methods: {
-    bindViewTap () {
-      const url = '../logs/main'
-      if (mpvuePlatform === 'wx') {
-        mpvue.switchTab({ url })
-      } else {
-        mpvue.navigateTo({ url })
-      }
-    },
-    clickHandle (ev) {
-      console.log('clickHandle:', ev)
-      // throw {message: 'custom test'}
-    }
-  },
-
-  created () {
-    // let app = getApp()
-  }
-}
+const tabList = [{title: "日常", paneKey: 1}, {title: "花销", paneKey: 2}, {title: "清理", paneKey: 3}]
+const data = ref([{"title": "喂食", "content": "喂了一半", "id": 1, "type": "feed"}, {"title": "铲屎", "content": "没铲干净没铲干净没铲干净没铲干净没铲干净没铲干净没铲干净没铲干净没铲干净没铲干净没铲干净没铲干净", "id": 2, "type": "clean"}, {"title": "买猫粮", "content": "买了300g分装猫粮", "id": 3, "type": "purchase"}, {"title": "喂食", "content": "喂了一半", "id": 1, "type": "feed"}, {"title": "铲屎", "content": "", "id": 2, "type": "clean"}, {"title": "买猫粮", "content": "买了300g分装猫粮", "id": 3, "type": "purchase"}])
 </script>
 
-<style scoped>
-.userinfo {
+<style lang="scss">
+.index-page {
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
 }
 
-.userinfo-avatar {
-  width: 128rpx;
-  height: 128rpx;
-  margin: 20rpx;
-  border-radius: 50%;
+.step-container {
+  padding: 3rpx 10rpx;
 }
 
-.userinfo-nickname {
-  color: #aaa;
+.nut-calendarcard-day-top {
+  height: 0 !important;
+  line-height: 0 !important;
 }
 
-.usermotto {
-  margin-top: 150px;
+.nut-calendarcard-day {
+  height: 80rpx !important;
 }
 
-.form-control {
-  display: block;
-  padding: 0 12px;
-  margin-bottom: 5px;
-  border: 1px solid #ccc;
-}
-.all{
-  width:7.5rem;
-  height:1rem;
-  background-color:blue;
-}
-.all:after{
-  display:block;
-  content:'';
-  clear:both;
-}
-.left{
-  float:left;
-  width:3rem;
-  height:1rem;
-  background-color:red;
+.nut-step-main {
+  margin-bottom: 40rpx;
 }
 
-.right{
-  float:left;
-  width:4.5rem;
-  height:1rem;
-  background-color:green;
+.subtitle {
+  padding: 0 10rpx;
+  margin: 10rpx 0 20rpx;
+  font-size: 38rpx;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.custom-title {
+  color: black;
+  cursor: pointer;
+}
+
+.custom-title.active {
+  color: red;
+}
+
+.nut-tab-pane {
+  padding: 0 !important;
+}
+
+.record-button-container {
+  position: fixed;
+  right: 30rpx;
+  bottom: 60rpx;
+}
+
+:root,
+page {
+  --nut-steps-base-title-font-size: 35rpx;
+  --nut-steps-base-title-color: #000000;
+  --nut-steps-wait-icon-bg-color: #1E90FF;
+  --nut-primary-color: var(--nut-steps-wait-icon-bg-color);
+  --nut-tabs-titles-background-color: #ffffff;
+  --nut-tabs-titles-item-font-size: 30rpx;
 }
 </style>
