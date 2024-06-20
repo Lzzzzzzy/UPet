@@ -1,7 +1,7 @@
 <template>
   <view>
     <view class="self-title">
-      <nut-navbar title="希望提醒哪些消息？" desc="完成" @click-right="onClick"></nut-navbar>
+      <nut-navbar title="希望提醒哪些消息？" desc="完成" @click-right="save"></nut-navbar>
     </view>
     <view>
       <nut-grid :gutter="10" :column-num="4">
@@ -26,7 +26,7 @@ import { ref, onBeforeMount } from 'vue';
 import { IconFont } from '@nutui/icons-vue-taro'
 import { Check } from '@nutui/icons-vue-taro'
 
-const selectionList = [{
+const selectionList = ref([{
   name: 'text',
   icon: 'https://img11.360buyimg.com/imagetools/jfs/t1/137646/13/7132/1648/5f4c748bE43da8ddd/a3f06d51dcae7b60.png',
   selected: true},{
@@ -41,11 +41,20 @@ const selectionList = [{
   name: 'text',
   icon: 'https://img11.360buyimg.com/imagetools/jfs/t1/137646/13/7132/1648/5f4c748bE43da8ddd/a3f06d51dcae7b60.png'},{
   name: 'text',
-  icon: 'https://img11.360buyimg.com/imagetools/jfs/t1/137646/13/7132/1648/5f4c748bE43da8ddd/a3f06d51dcae7b60.png'}]
+  icon: 'https://img11.360buyimg.com/imagetools/jfs/t1/137646/13/7132/1648/5f4c748bE43da8ddd/a3f06d51dcae7b60.png'}])
 
 
 const addToRecommand = (item) => {
-  console.log(item)
+  console.log(item);
+  if (!item.selected) {
+    item.selected = false;
+  }
+  item.selected = !item.selected;
+  console.log("after:", item);
+}
+
+const save = () => {
+  console.log('save');
 }
 
 </script>
