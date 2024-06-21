@@ -34,5 +34,6 @@ page {
   --nut-grid-item-text-margin: 0;
   --nut-grid-item-content-bg-color: #F5F5F5;
   --nut-badge-background-color: var(--main-color);
+  --nut-cell-desc-color: var(--main-color);
 }
 </style>

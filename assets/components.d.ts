@@ -14,12 +14,14 @@ declare module 'vue' {
     NutGrid: typeof import('@nutui/nutui-taro')['Grid']
     NutGridItem: typeof import('@nutui/nutui-taro')['GridItem']
     NutNavbar: typeof import('@nutui/nutui-taro')['Navbar']
+    NutPopup: typeof import('@nutui/nutui-taro')['Popup']
     NutStep: typeof import('@nutui/nutui-taro')['Step']
     NutSteps: typeof import('@nutui/nutui-taro')['Steps']
     NutTabbar: typeof import('@nutui/nutui-taro')['Tabbar']
     NutTabbarItem: typeof import('@nutui/nutui-taro')['TabbarItem']
     NutTabPane: typeof import('@nutui/nutui-taro')['TabPane']
     NutTabs: typeof import('@nutui/nutui-taro')['Tabs']
+    NutTour: typeof import('@nutui/nutui-taro')['Tour']
     Tabbar: typeof import('./src/components/tabbar.vue')['default']
   }
 }
