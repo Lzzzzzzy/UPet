@@ -1,9 +1,9 @@
 <template>
   <view>
     <view class="index-page">
-      <nut-calendar-card v-model="currentDate" :current="data.length-1">
+      <nut-calendar-card v-model="currentDate" class="card-info" ref="calendarRef">
         <template #bottom="{ day }">
-          {{ day.date ===  todayDate ? "今天": "" }}
+          <view :ref="(el)=>setDayRefs(el, day)">{{ isToday(day) ? "今天": "" }}</view>
         </template>
       </nut-calendar-card>
     </view>
@@ -30,18 +30,98 @@
 </template>
 
 <script setup>
-import { ref, onBeforeMount } from 'vue';
+import { ref, onBeforeMount, onMounted } from 'vue';
 import actionIcons from '../../components/action-icons.vue';
-// import tabbar from '../../components/tabbar.vue';
 
 const currentDate = ref();
-const todayDate = ref();
+const today = ref();
 const currentTab = ref(1);
 
 onBeforeMount(()=>{
   currentDate.value = new Date();
-  todayDate.value = new Date().getDate();
 })
+
+const isToday = (day) => {
+  const today = new Date();
+  return day.date === today.getDate() && day.month === today.getMonth()+1;
+}
+
+const calendarRef = ref();
+const dayRefs = ref({});
+onMounted(()=>{
+  const calendarChildNodes = calendarRef.value.$el.childNodes;
+  const calendarContentNodes = calendarChildNodes[calendarChildNodes.length - 1];
+  const daysContentNodes = calendarContentNodes.childNodes[calendarContentNodes.childNodes.length - 1].childNodes;
+
+  const today = new Date();
+  const currentMonth = today.getMonth()+1;
+  const currentYear = today.getFullYear();
+  console.log(currentYear);
+  daysContentNodes.forEach(day => {
+    let month = currentMonth;
+    let year = currentYear;
+    if (day.classList && day.classList.contains('nut-calendarcard-day')) {
+      if (day.classList.contains("prev")) {  // 本月如果是1月，那上个月应该是去年的12月
+        if (currentMonth === 1) {
+          month = 12;
+          year = currentYear - 1;
+        } else {
+          month = currentMonth - 1;
+        }
+      } else if (day.classList.contains("next")) {  // 本月如果是12月，那下个月应该是明年的1月
+        if (currentMonth === 12) {
+          month = 1;
+          year = currentYear + 1;
+        } else {
+          month = currentMonth + 1;
+        }
+      }
+
+      const date = day.childNodes[2].childNodes[1].data;
+      const key = `${year}-${month}-${date}`
+      dayRefs.value[key] = day;
+    }
+  })
+
+  addBackgroundColor();
+  console.log(dayRefs)
+})
+
+const addBackgroundColor = () => {
+  const data = [{"2024-6-10": "green", "2024-6-11": "red"}]
+  data.forEach(item => {
+    const date = Object.keys(item)[0];
+    const color = Object.values(item)[0];
+    const day = dayRefs.value[date];
+    console.log("day:", day);
+    if (day) {
+      day.style.backgroundColor = color;
+      day.classList.add('highlight');
+    }
+  })
+}
+
+const setDayRefs = (el, day) => {
+  // console.log("el:", el.parentNode);
+  return day.date + day.month;
+}
+
+
+// onMounted(()=>{
+//   console.log("mounted");
+//   const dayElements = document.querySelectorAll('.nut-calendarcard-day');
+//   dayElements.forEach(function(element) {
+//     console.log("element:", element);
+//     console.log("day-info:", element.querySelector('.day-info'));
+//       const number = parseInt(element.querySelector('.day-info').textContent);
+      
+//       if (number === 1) {
+//           element.classList.add('highlight');
+//       } else if (number === 2) {
+//           element.classList.add('special');
+//       }
+//   });
+// })
 
 const tabList = [{title: "日常", paneKey: 1}, {title: "花销", paneKey: 2}, {title: "清理", paneKey: 3}]
 const data = ref([{"title": "喂食", "content": "喂了一半", "id": 1, "type": "feed"}, {"title": "铲屎", "content": "没铲干净没铲干净没铲干净没铲干净没铲干净没铲干净没铲干净没铲干净没铲干净没铲干净没铲干净没铲干净", "id": 2, "type": "clean"}, {"title": "买猫粮", "content": "买了300g分装猫粮", "id": 3, "type": "purchase"}, {"title": "喂食", "content": "喂了一半", "id": 1, "type": "feed"}, {"title": "铲屎", "content": "", "id": 2, "type": "clean"}, {"title": "买猫粮", "content": "买了300g分装猫粮", "id": 3, "type": "purchase"}])
@@ -66,7 +146,20 @@ const data = ref([{"title": "喂食", "content": "喂了一半", "id": 1, "type"
 }
 
 .nut-calendarcard-day {
-  height: 80rpx !important;
+  
+  &.active{
+    background-color: initial;
+    border: 1rpx solid #000000;
+    box-sizing: border-box;
+    
+    &:not(weekend) {
+      color: inherit;
+    }
+
+    &.weekend {
+      color: var(--nut-primary-color);
+    }
+  }
 }
 
 .nut-step-main {
@@ -100,5 +193,13 @@ const data = ref([{"title": "喂食", "content": "喂了一半", "id": 1, "type"
   position: fixed;
   right: 30rpx;
   bottom: 60rpx;
+}
+
+.highlight {
+  background-color: yellow;
+}
+
+.special {
+  background-color: lightblue;
 }
 </style>
