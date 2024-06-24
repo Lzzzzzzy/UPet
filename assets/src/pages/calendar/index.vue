@@ -134,6 +134,10 @@ const data = ref([{"title": "喂食", "content": "喂了一半", "id": 1, "type"
   flex-direction: column;
   align-items: center;
   justify-content: center;
+
+  .card-info {
+    background: inherit;
+  }
 }
 
 .step-container {

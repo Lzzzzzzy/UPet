@@ -1,5 +1,6 @@
 <template>
-  <view>
+  <view class="base-page">
+    <todoList v-if="currentTab === 'home'"></todoList>
     <calendar v-if="currentTab === 'calendar'"></calendar>
     <classSelection v-if="currentTab === 'self'"></classSelection>
     <tabbar :active="currentTab" @changeTab="handleChangeTab"></tabbar>
@@ -11,8 +12,9 @@ import { ref } from 'vue';
 import tabbar from '../../components/tabbar.vue';
 import calendar from '../../pages/calendar/index.vue';
 import classSelection from '../../pages/classSelection/index.vue';
+import todoList from '../../pages/todoList/index.vue';
 
-const currentTab = ref("calendar");
+const currentTab = ref("home");
 const handleChangeTab = (tabName) => {
   console.log(tabName)
   currentTab.value = tabName;
@@ -20,6 +22,11 @@ const handleChangeTab = (tabName) => {
 </script>
 
 <style lang="scss">
+.base-page {
+  background: rgba(252, 246, 225, 0.5);
+  height: 100vh;
+}
+
 :root,
 page {
   --main-color: #1E90FF;

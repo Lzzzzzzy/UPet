@@ -6,7 +6,7 @@
 </template>
 <script setup>
 import { h, ref } from 'vue'
-import { Date, Category, My } from '@nutui/icons-vue-taro'
+import { Date, Category, My, Home } from '@nutui/icons-vue-taro'
 
 const props = defineProps({
   active: {
@@ -16,6 +16,11 @@ const props = defineProps({
 });
 
 const List = [
+  {
+    title: '首页',
+    icon: h(Home),
+    name: "home"
+  },
   {
     title: '日历',
     icon: h(Date),
@@ -27,7 +32,7 @@ const List = [
     name: "self"
   },
   {
-    title: 'My',
+    title: '我的',
     icon: h(My),
     name: "my"
   }
@@ -48,5 +53,7 @@ const tabSwitch = (item, index)=>{
   bottom: 0;
   left: 0;
   width: 100%;
+  background: rgba(240, 237, 228, 1);
+  box-shadow: 0 0 10rpx rgba(102, 93, 33, 1);
 }
 </style>
