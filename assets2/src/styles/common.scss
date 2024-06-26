@@ -75,6 +75,8 @@ page {
 
 .layout-main-screen {
 	background: rgba(252, 246, 225, 0.5);
+	padding-left: 10px;
+	padding-right: 10px;
 }
 
 .layout-tabbar-safe-bottom {
@@ -84,4 +86,8 @@ page {
 
 .nut-theme-dark {
 	color: var(--nut-dark-color, var(--nut-white, #fff));
+}
+
+.default-border-style {
+	border: 1px solid #665D21;
 }

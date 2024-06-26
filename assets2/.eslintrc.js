@@ -8,6 +8,12 @@ module.exports = {
       }
     }
   ],
+  'prettier/prettier': [
+    'error',
+    {
+      endOfLine: 'auto'
+    }
+  ],
   settings: {
     'import/core-modules': ['uno.css', '~icons/*', 'virtual:svg-icons-register']
   },
