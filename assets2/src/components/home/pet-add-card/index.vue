@@ -1,0 +1,29 @@
+<script lang="ts" setup>
+import { navigateTo } from '@tarojs/taro';
+const addPetText = "为宠物创建一个档案，立刻开启健康记录吧~"
+
+function handleToAddPet() {
+  navigateTo({
+    url: '/package/package-add-pet/index'
+  });
+}
+</script>
+
+<template>
+    <div class="w-full">
+        <div class="flex flex-col items-center justify-center">
+            <div class="text-160px i-local-cat"></div>
+            <div class="text-sm my-4 text-coolgray">{{ addPetText }}</div>
+            <nut-button shape="round" class="bg-transparent border-1px b-solid border-color-#665D21" @click="handleToAddPet">
+                <template #icon>
+                    <div class="text-20px i-local-base-pet-icon"></div>
+                </template>
+                <span class="ml-10px">立即创建</span>
+            </nut-button>
+        </div>
+    </div>
+</template>
+
+<style lang="scss">
+
+</style>

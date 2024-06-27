@@ -4,6 +4,10 @@ module.exports = {
     HTTP_URL: '"https://getman.cn/mock"'
   },
   defineConstants: {},
-  mini: {},
+  mini: {
+    miniCssExtractPluginOption: {
+      ignoreOrder: true,
+    },
+  },
   h5: {}
 };

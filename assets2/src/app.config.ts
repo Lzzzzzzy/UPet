@@ -11,7 +11,7 @@ export default defineAppConfig({
   subPackages: [
     {
       root: 'package',
-      pages: ['package-a/index', 'package-b/index', 'package-c/index', 'icon/index']
+      pages: ['package-add-pet/index']
     }
   ],
   tabBar: {

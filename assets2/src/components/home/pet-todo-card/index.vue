@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import petAvatar from './pet-avatar/index.vue';
+import petAvatar from '../pet-avatar/index.vue';
 import { ref } from 'vue';
 
 const props = defineProps({
@@ -29,6 +29,7 @@ if (props.pet) {
 }
 const noTodosText = "可以添加宠物的日程，例如疫苗接种等，您会在指定的时间收到提醒。也可以添加一条不需要提醒的记录。";
 </script>
+
 <template>
     <div class="w-full rd-8px default-border-style">
         <div class="flex justify-start items-center p-12px border-b-1 border-b-solid border-color-#665D21">

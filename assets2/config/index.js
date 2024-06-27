@@ -73,6 +73,9 @@ const config = {
         }
       }
     },
+    miniCssExtractPluginOption: {
+      ignoreOrder: true
+    },
     // 合并webpack配置
     webpackChain(chain) {
       chain.plugin('unocss').use(UnoCSS());

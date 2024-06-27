@@ -10,27 +10,27 @@ function baseClick() {
 }
 
 function handleToA() {
-  navigateTo({
-    url: '/package/package-a/index'
-  });
+  // navigateTo({
+  //   url: '/package/package-a/index'
+  // });
 }
 
 function handleToB() {
-  navigateTo({
-    url: '/package/package-b/index'
-  });
+  // navigateTo({
+  //   url: '/package/package-b/index'
+  // });
 }
 
 function handleToC() {
-  navigateTo({
-    url: '/package/package-c/index'
-  });
+  // navigateTo({
+  //   url: '/package/package-c/index'
+  // });
 }
 
 function handleToIcon() {
-  navigateTo({
-    url: '/package/icon/index'
-  });
+  // navigateTo({
+  //   url: '/package/icon/index'
+  // });
 }
 
 const themeStore = useThemeStore();
