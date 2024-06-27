@@ -24,7 +24,7 @@ const providerClass = computed(() => {
   return [showTabBar.value ? 'layout-tabbar-screen layout-tabbar-safe-bottom layout-main-screen' : safeBottom];
 });
 
-themeStore.setThemeVars({buttonDefaultBgColor: "transparent", primaryColor: "#665D21", primaryColorEnd: "#665D21", buttonDefaultBorderColor: "#665D21"})
+themeStore.setThemeVars({buttonDefaultBgColor: "transparent", primaryColor: "#665D21", primaryColorEnd: "#665D21", buttonDefaultBorderColor: "#665D21", cellDescColor: "#000000"})
 </script>
 
 <template>
