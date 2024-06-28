@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { switchTab } from '@tarojs/taro';
+
 definePageConfig({
   navigationBarTitleText: '添加档案'
 });
@@ -18,23 +20,10 @@ const formData = ref({
   file: '',
   gendar: 0,  // 0 公 1 母
   sterilizedState: 0,  // 0 未绝育 1 已绝育
+  petType: 0, // petTypes
 })
 
 const formRef = ref()
-
-const reset = () => {
-  formRef.value?.reset()
-}
-
-const submit = () => {
-  formRef.value?.validate().then(({ valid, errors }) => {
-    if (valid) {
-      console.log('success:', formData.value)
-    } else {
-      console.warn('error:', errors)
-    }
-  })
-}
 
 const formRules = ref({
   name: [
@@ -42,17 +31,30 @@ const formRules = ref({
   ]
 })
 
+const handleSubmit = () => {
+  formRef.value?.validate().then(({ valid, errors }) => {
+    if (valid) {
+      formData.value.petType = selectedPetType.value[0];
+      switchTab({
+        url: '/pages/index/index'
+      })
+    } else {
+      console.warn('error:', errors)
+    }
+  })
+}
 </script>
 <template>
   <basic-layout>
     <custom-navbar title="添加档案" left-show />
-    <div class="w-full flex justify-center avatar-container">
+    <div class="w-full flex justify-center items-center mt-80px mb-30px flex-col">
       <nut-uploader
         url="http://服务地址"
         is-preview
-        class="bg-transparent avatar-uploader"
       >
+      <div class="w-80px h-80px border-rd-50% flex justify-center items-center bg-#ffffff border-1px b-solid border-color-#665D21">上传照片</div>
       </nut-uploader>
+      <div class="text-sm my-4 text-coolgray">和我们分享宝宝最可爱的样子吧~</div>
     </div>
     <nut-form
       ref="formRef"
@@ -86,7 +88,7 @@ const formRules = ref({
       </nut-form-item>
 
       <nut-space class="m-10px flex justify-center w-full">
-        <nut-button type="primary" size="small" @click="submit">提交</nut-button>
+        <nut-button type="primary" @click="handleSubmit">提交</nut-button>
       </nut-space>
     </nut-form>
   </basic-layout>
@@ -103,5 +105,17 @@ const formRules = ref({
     //   background: transparent !important;
     // }
   }
+}
+
+.uploader-btn {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background-color: #f00;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
 }
 </style>

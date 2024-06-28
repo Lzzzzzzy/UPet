@@ -2,6 +2,7 @@
 import petTodoCard from '@/components/home/pet-todo-card/index.vue';
 import petAddCard from '@/components/home/pet-add-card/index.vue';
 import { ref } from 'vue';
+import { useDidShow } from '@tarojs/taro';
 
 /** 设置页面属性 */
 definePageConfig({
@@ -9,6 +10,22 @@ definePageConfig({
 });
 
 const pets = ref<Array<Pet.PetInfo>>([]);
+
+const getPetsInfo = () => {
+  pets.value = [{
+    id: 1,
+    name: '123',
+    file: '',
+    gendar: 0,  // 0 公 1 母
+    sterilizedState: 1,  // 0 未绝育 1 已绝育
+    petType: 0, // petTypes
+  }]
+}
+
+useDidShow(()=>{
+  console.log("show index")
+  getPetsInfo()
+})
 </script>
 
 <template>
