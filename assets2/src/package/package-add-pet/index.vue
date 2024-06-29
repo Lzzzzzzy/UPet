@@ -98,24 +98,4 @@ const handleSubmit = () => {
 .form-item-border {
   border-bottom: 1px solid var(--nut-input-border-bottom, #eaf0fb)
 }
-
-.avatar-container {
-  .avatar-uploader {
-    // .nut-uploader__upload {
-    //   background: transparent !important;
-    // }
-  }
-}
-
-.uploader-btn {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  background-color: #f00;
-  color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-}
 </style>

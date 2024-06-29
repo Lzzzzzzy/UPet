@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import petTodoCard from '@/components/home/pet-todo-card/index.vue';
-import petAddCard from '@/components/home/pet-add-card/index.vue';
 import { ref } from 'vue';
 import { useDidShow } from '@tarojs/taro';
+import noPetRemind from '@/components/home/add-pet-remind/index.vue';
+import petTimeline from '@/components/home/pet-timeline/index.vue';
 
 /** 设置页面属性 */
 definePageConfig({
@@ -10,32 +10,40 @@ definePageConfig({
 });
 
 const pets = ref<Array<Pet.PetInfo>>([]);
+const firstPet = ref<Pet.PetInfo>();
 
 const getPetsInfo = () => {
   pets.value = [{
     id: 1,
-    name: '123',
-    file: '',
-    gendar: 0,  // 0 公 1 母
-    sterilizedState: 1,  // 0 未绝育 1 已绝育
-    petType: 0, // petTypes
+    petName: '123',
+    petAvatar: '',
+    userId: 1,
   }]
 }
 
 useDidShow(()=>{
   console.log("show index")
   getPetsInfo()
+  if (pets.value.length) {
+    firstPet.value = pets.value[0];
+  }
 })
+</script>
+
+<script lang="ts">
+export default {
+  name: 'Index',
+}
 </script>
 
 <template>
   <basic-layout show-tab-bar>
     <custom-navbar title="首页" />
-    <div v-if="pets.length" class="">
-      <pet-todo-card v-for="pet in pets" :key="pet.id" :pet="pet"></pet-todo-card>
+    <div v-if="pets.length">
+      <pet-timeline :pets="pets"></pet-timeline>
     </div>
     <div v-else class="position-absolute pos-top-50% translate-middle full-width">
-      <pet-add-card></pet-add-card>
+      <no-pet-remind></no-pet-remind>
     </div>
   </basic-layout>
 </template>
