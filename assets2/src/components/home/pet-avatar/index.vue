@@ -22,7 +22,7 @@ const avatarImgUrl = ref('');
 .pet-avatar {
   .nut-avatar {
     display: flex;
-    background-color: rgba(237, 228, 149, 1) !important;
+    background-color: #F7DAA1 !important;
   }
 }
 </style>

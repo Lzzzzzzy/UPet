@@ -54,7 +54,7 @@ export default {
 <style lang="scss">
 .tabbar-bg {
   .nut-tabbar {
-    background: rgba(240, 237, 228, 1);
+    background: #E7E0CC;
     box-shadow: 0px -2px 6px rgba(0, 0, 0, 0.25);
   }
 }

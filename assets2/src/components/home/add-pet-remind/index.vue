@@ -2,7 +2,7 @@
 import { navigateTo } from '@tarojs/taro';
 const addPetText = "为宠物创建一个档案，立刻开启健康记录吧~"
 
-function handleToAddPet() {
+const handleToAddPet = () => {
   navigateTo({
     url: '/package/package-add-pet/index'
   });

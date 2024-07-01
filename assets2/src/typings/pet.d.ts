@@ -11,4 +11,13 @@ declare namespace Pet {
     /** 宠物头像 */
     petAvatar: string;
   }
+
+  /** 待办信息 */
+  interface PetTodo {
+    id: number;
+    title: string;
+    time: Date;
+    remark: string;
+    status: boolean;
+  }
 }

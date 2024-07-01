@@ -25,6 +25,7 @@ const providerClass = computed(() => {
 });
 
 themeStore.setThemeVars({buttonDefaultBgColor: "transparent", primaryColor: "#665D21", primaryColorEnd: "#665D21", buttonDefaultBorderColor: "#665D21", cellDescColor: "#000000"})
+// themeStore.setThemeVars({buttonDefaultBgColor: "transparent", buttonDefaultBorderColor: "#665D21", cellDescColor: "#000000"})
 </script>
 
 <template>

@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 import { useDidShow } from '@tarojs/taro';
 import noPetRemind from '@/components/home/add-pet-remind/index.vue';
-import petTimeline from '@/components/home/pet-timeline/index.vue';
+import petTodayTodos from '@/components/home/pet-today-todos/index.vue';
 
 /** 设置页面属性 */
 definePageConfig({
@@ -18,8 +18,24 @@ const getPetsInfo = () => {
     petName: '123',
     petAvatar: '',
     userId: 1,
-  }]
-}
+  },
+  {
+    id: 2,
+    petName: '1234',
+    petAvatar: '',
+    userId: 1,
+  },{
+    id: 3,
+    petName: '1123',
+    petAvatar: '',
+    userId: 1,
+  },{
+    id: 4,
+    petName: '1123',
+    petAvatar: '',
+    userId: 1,
+  }
+]}
 
 useDidShow(()=>{
   console.log("show index")
@@ -40,7 +56,7 @@ export default {
   <basic-layout show-tab-bar>
     <custom-navbar title="首页" />
     <div v-if="pets.length">
-      <pet-timeline :pets="pets"></pet-timeline>
+      <pet-today-todos :pets="pets"></pet-today-todos>
     </div>
     <div v-else class="position-absolute pos-top-50% translate-middle full-width">
       <no-pet-remind></no-pet-remind>
