@@ -60,6 +60,7 @@ const handleSubmit = () => {
       ref="formRef"
       :model-value="formData"
       :rules="formRules"
+      star-position="right"
     >
       <nut-form-item label="名字" prop="name" class="form-item-border">
         <nut-input

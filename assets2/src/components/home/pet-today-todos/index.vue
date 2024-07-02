@@ -2,19 +2,15 @@
 import todoCardHeader from "@/components/home/pet-today-todos/components/pet-todo-card-header/index.vue";
 import todoCardContent from "@/components/home/pet-today-todos/components/pet-todo-card-content/index.vue";
 import addTodoButton from "@/components/add-pet-todo-button/index.vue";
-import { computed, ref, onBeforeMount } from "vue";
+import { ref, onBeforeMount } from "vue";
 import { eventCenter } from "@tarojs/taro";
 
-const props = defineProps({
+defineProps({
   pets: {
     type: Array<Pet.PetInfo>,
     default: () => []
   }
 });
-
-const currentPet = computed(()=>{
-    return props.pets[0]
-})
 
 const petTodos = ref()
 
@@ -32,8 +28,6 @@ onBeforeMount(() => {
     });
 });
 
-const showAddTodoPopup = ref(false);
-const showSelectPetPopup = ref(false);
 </script>
 <template>
     <div>
