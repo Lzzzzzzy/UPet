@@ -15,7 +15,12 @@ defineProps({
 const petTodos = ref()
 
 const getPetTodos = () => {
-    petTodos.value = [{"id": 1, "time": "08:00", "title": "换水", "remark": "全部两个碗里的倒矿泉水纯净水蒸馏水都行,就是不能用自来水", "status": false},{"id": 2, "time": "12:00", "title": "换粮", "remark": "全换", "status": false},{"id": 3, "time": "18:00", "title": "铲屎", "remark": "", "status": false}] 
+    petTodos.value = [
+        {"id": 1, "time": "08:00", "title": "换水", "remark": "全部两个碗里的倒矿泉水纯净水蒸馏水都行,就是不能用自来水", "complete": false},
+        {"id": 2, "time": "12:00", "title": "换粮", "remark": "全换", "complete": false},
+        {"id": 3, "time": "18:00", "title": "铲屎", "remark": "", "complete": false},
+        {"id": 4, "time": "12:43", "title": "换水", "remark": "123123123123123123123123aasdasdasdsasadsadsdsdsadsdasqeqweqweqeqewqeqweqeqweq", "complete": false}
+    ] 
 }
 
 getPetTodos();
@@ -25,6 +30,11 @@ const selectedPet = ref<Pet.PetInfo>();
 onBeforeMount(() => {
     eventCenter.on("selectpet", (pet: Pet.PetInfo) => {
         selectedPet.value = pet
+    });
+    eventCenter.on("addTodo", (todo: Pet.PetTodo) => {
+        console.log("addTodo", todo);
+        petTodos.value.push(todo);
+        // getPetTodos();
     });
 });
 

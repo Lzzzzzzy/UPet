@@ -1,5 +1,5 @@
 export default defineAppConfig({
-  pages: ['pages/index/index', 'pages/my/index'],
+  pages: ['pages/index/index', 'pages/my/index', 'pages/calendar/index'],
   window: {
     backgroundColor: '#fff',
     backgroundTextStyle: 'light',
@@ -22,6 +22,10 @@ export default defineAppConfig({
       {
         pagePath: 'pages/index/index',
         text: '首页'
+      },
+      {
+        pagePath: 'pages/calendar/index',
+        text: '日历'
       },
       {
         pagePath: 'pages/my/index',

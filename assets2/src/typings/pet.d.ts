@@ -14,10 +14,10 @@ declare namespace Pet {
 
   /** 待办信息 */
   interface PetTodo {
-    id: number;
+    id?: number;
     title: string;
     time: Date;
     remark: string;
-    status: boolean;
+    complete: boolean;
   }
 }

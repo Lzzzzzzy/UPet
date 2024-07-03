@@ -32,7 +32,7 @@ const formRules = ref({
 })
 
 const handleSubmit = () => {
-  formRef.value?.validate().then(({ valid, errors }) => {
+  formRef.value?.validate().then(({ valid, errors }: { valid: boolean, errors: any}) => {
     if (valid) {
       formData.value.petType = selectedPetType.value[0];
       switchTab({

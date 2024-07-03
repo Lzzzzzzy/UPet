@@ -18,9 +18,5 @@ export const useAppStore = defineStore('app-store', {
     setActiveTab(tab: string) {
       this.activeTab = tab;
     },
-    /** 重置app状态 */
-    resetAuthStore() {
-      this.$reset();
-    }
   }
 });
