@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import fullCalendar from '@/components/calendar/full-calendar/index.vue';
+
 definePageConfig({
   navigationBarTitleText: '日历'
 });
@@ -6,7 +8,7 @@ definePageConfig({
 <template>
   <basic-layout show-tab-bar>
     <custom-navbar title="日历" />
-    <div class="w-375px text-30px text-primary">个人中心</div>
+    <full-calendar></full-calendar>
   </basic-layout>
 </template>
 
