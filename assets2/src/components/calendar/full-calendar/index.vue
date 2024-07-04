@@ -1,115 +1,85 @@
 <template>
-  <div>
-    <div class="index-page">
-      <nut-calendar-card v-model="currentDate" class="card-info" ref="calendarRef" firstDayOfWeek="1">
+    <nut-calendar-card v-model="currentDate" class="!bg-inherit" ref="calendarRef" :firstDayOfWeek="1" @page-change="onHandleChangeMonth" @day-click="onHandleChangeDate">
         <template #default="{ day }">
-          {{ day.date <= 9 ? `0${day.date}` : day.date }}
+            {{ day.date <= 9 ? `0${day.date}` : day.date }}
         </template>
         <template #bottom="{ day }">
-          <div :ref="(el)=>setDayRefs(el, day)">{{ isToday(day) ? "今天": "" }}</div>
+            <div>{{ isToday(day) ? "今天": "" }}</div>
         </template>
-      </nut-calendar-card>
-    </div>
-  </div>
+    </nut-calendar-card>
 </template>
 
-<script setup>
-import { ref, onBeforeMount, onMounted } from 'vue';
+<script setup lang="ts">
+import { ref, nextTick } from 'vue';
+import { formatDate } from '@/utils/common/datetime';
+import type { CalendarCardDay } from "@nutui/nutui-taro";
+
+interface ElementMap {
+  [key: string]: HTMLElement;
+}
 
 const currentDate = ref();
-const today = ref();
-const currentTab = ref(1);
 
-onBeforeMount(()=>{
-  currentDate.value = new Date();
-})
-
-const isToday = (day) => {
+const isToday = (day: CalendarCardDay) => {
   const today = new Date();
   return day.date === today.getDate() && day.month === today.getMonth()+1 && day.year === today.getFullYear();
 }
 
 const calendarRef = ref();
-const dayRefs = ref({});
-onMounted(()=>{
+let dayRefs: ElementMap = {};
+
+const getColorDate = (year: number, month: number) => {
+    const data = [{date: formatDate(new Date(year, month-1, 10)), color: "green"},{date: formatDate(new Date(year, month-1, 2)), color: "red"}];
+    return data;
+}
+
+const addBackgroundColor = (colorDate: Array<{date: string, color: string}>) => {
+  colorDate.forEach(item => {
+    const date = item.date;
+    const color = item.color;
+    const day = dayRefs[date];
+    if (day) {
+      day.classList.add(color);
+    }
+  })
+}
+
+const onHandleChangeMonth = async ({ year, month}: { year: number, month: number}) =>{
+  if (!calendarRef.value){
+    return
+  }
+  await nextTick();  // 需要等待DOM加载完成，否则calendarRef没加载完成，会获取到错误子节点
+  dayRefs = {};
   const calendarChildNodes = calendarRef.value.$el.childNodes;
   const calendarContentNodes = calendarChildNodes[calendarChildNodes.length - 1];
   const daysContentNodes = calendarContentNodes.childNodes[calendarContentNodes.childNodes.length - 1].childNodes;
 
-  const today = new Date();
-  const currentMonth = today.getMonth()+1;
-  const currentYear = today.getFullYear();
-  console.log(currentYear);
-  daysContentNodes.forEach(day => {
-    let month = currentMonth;
-    let year = currentYear;
-    if (day.classList && day.classList.contains('nut-calendarcard-day')) {
+  daysContentNodes.forEach((day: HTMLElement) => {
+    if (day.className && day.className.includes('nut-calendarcard-day') && day.className.includes('current')) {
       const date = day.childNodes[2].childNodes[1].data;
-      const key = `${year}-${month}-${date}`
-      dayRefs.value[key] = day;
+      const key = formatDate(new Date(year, month-1, date));
+      dayRefs[key] = day;
     }
-  })
+  }) 
+  const colorDate = getColorDate(year, month)
+  addBackgroundColor(colorDate);
+  const today = new Date();
+  if (month-1 === today.getMonth() && year === today.getFullYear()) {
+    currentDate.value = today;
+  } else {
+    currentDate.value = new Date(year, month-1, 1);
+  }
+};
 
-  addBackgroundColor();
-  console.log(dayRefs)
-})
-
-const addBackgroundColor = () => {
-  const data = [{"2024-7-10": "green", "2024-7-11": "red"}]
-  data.forEach(item => {
-    const date = Object.keys(item)[0];
-    const color = Object.values(item)[0];
-    const day = dayRefs.value[date];
-    console.log("day:", day);
-    if (day) {
-      day.style.backgroundColor = color;
-      day.classList.add('highlight');
-    }
-  })
-}
-
-const setDayRefs = (el, day) => {
-  // console.log("el:", el.parentNode);
-  return day.date + day.month;
-}
-
-
-// onMounted(()=>{
-//   console.log("mounted");
-//   const dayElements = document.querySelectorAll('.nut-calendarcard-day');
-//   dayElements.forEach(function(element) {
-//     console.log("element:", element);
-//     console.log("day-info:", element.querySelector('.day-info'));
-//       const number = parseInt(element.querySelector('.day-info').textContent);
-      
-//       if (number === 1) {
-//           element.classList.add('highlight');
-//       } else if (number === 2) {
-//           element.classList.add('special');
-//       }
-//   });
-// })
-
-const tabList = [{title: "日常", paneKey: 1}, {title: "花销", paneKey: 2}, {title: "清理", paneKey: 3}]
-const data = ref([{"title": "喂食", "content": "喂了一半", "id": 1, "type": "feed"}, {"title": "铲屎", "content": "没铲干净没铲干净没铲干净没铲干净没铲干净没铲干净没铲干净没铲干净没铲干净没铲干净没铲干净没铲干净", "id": 2, "type": "clean"}, {"title": "买猫粮", "content": "买了300g分装猫粮", "id": 3, "type": "purchase"}, {"title": "喂食", "content": "喂了一半", "id": 1, "type": "feed"}, {"title": "铲屎", "content": "", "id": 2, "type": "clean"}, {"title": "买猫粮", "content": "买了300g分装猫粮", "id": 3, "type": "purchase"}])
+const onHandleChangeDate = (date: CalendarCardDay)=>{
+    console.log("changeDate:", date);
+};
 </script>
 
 <style lang="scss">
-.card-info {
-  background: inherit;
-}
-
-
-.step-container {
-  padding: 3rpx 10rpx;
-}
-
-.nut-calendarcard-day-top {
-  height: 0 !important;
-  line-height: 0 !important;
-}
-
 .nut-calendarcard-day {
+  border-radius: 16px;
+
   &.next {
     display: none;
   }
@@ -120,8 +90,9 @@ const data = ref([{"title": "喂食", "content": "喂了一半", "id": 1, "type"
   
   &.active{
     background-color: initial;
-    border: 1rpx solid #000000;
+    border: 2px solid var(--nut-primary-color);
     box-sizing: border-box;
+    border-radius: 16px;
     
     &:not(weekend) {
       color: inherit;
@@ -131,5 +102,13 @@ const data = ref([{"title": "喂食", "content": "喂了一半", "id": 1, "type"
       color: var(--nut-primary-color);
     }
   }
+}
+
+.green {
+  background-color: green;
+}
+
+.red {
+  background-color: red;
 }
 </style>

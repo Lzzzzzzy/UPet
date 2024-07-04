@@ -1,8 +1,8 @@
-/** 格式化日期 
+/** 格式化日期时间 
  * @param date Date 对象
  * 日期格式： YYYY-MM-DD HH:mm
 */
-export function formatDate(date: Date) {
+export function formatDatetime(date: Date) {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, '0');
   const day = String(date.getDate()).padStart(2, '0');
@@ -26,4 +26,17 @@ export function getMinAndMaxDate(date: Date) {
     minDate = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0);
   }
   return {minDate, maxDate}
+}
+
+
+/** 格式化日期 
+ * @param date Date 对象
+ * 日期格式： YYYY-MM-DD
+*/
+export function formatDate(date: Date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  const formattedDate = `${year}-${month}-${day}`;
+  return formattedDate
 }

@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import todoCardHeader from "@/components/home/pet-today-todos/components/pet-todo-card-header/index.vue";
-import todoCardContent from "@/components/home/pet-today-todos/components/pet-todo-card-content/index.vue";
+import todoCardHeader from "@/components/pet-today-todos/components/pet-todo-card-header/index.vue";
+import todoCardContent from "@/components/pet-today-todos/components/pet-todo-card-content/index.vue";
 import addTodoButton from "@/components/add-pet-todo-button/index.vue";
 import { ref, onBeforeMount } from "vue";
 import { eventCenter } from "@tarojs/taro";
@@ -31,10 +31,8 @@ onBeforeMount(() => {
     eventCenter.on("selectpet", (pet: Pet.PetInfo) => {
         selectedPet.value = pet
     });
-    eventCenter.on("addTodo", (todo: Pet.PetTodo) => {
-        console.log("addTodo", todo);
-        petTodos.value.push(todo);
-        // getPetTodos();
+    eventCenter.on("refreshTodo", (todo: Pet.PetTodo) => {;
+        getPetTodos();
     });
 });
 

@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { ref, onBeforeMount } from "vue";
-import { formatDate, getMinAndMaxDate } from "@/utils/common/datetime";
+import { formatDatetime, getMinAndMaxDate } from "@/utils/common/datetime";
 import { eventCenter } from "@tarojs/taro";
 
 const showAddTodoPopup = ref(false);
@@ -36,7 +36,7 @@ const formRules = ref({
 const handleSubmit = () => {
   formRef.value?.validate().then(({ valid, errors }: { valid: boolean, errors: any}) => {
     if (valid) {
-      eventCenter.trigger('addTodo', formData.value);
+      eventCenter.trigger('refreshTodo', formData.value);
       showAddTodoPopup.value = false;
     } else {
       console.warn('error:', errors)
@@ -82,7 +82,7 @@ const getRepeatText = (value: number) => {
             star-position="right"
           >
             <nut-form-item label="时间" class="form-item-border">
-                <div @click="showDatePicker=true" class="w-full">{{ formatDate(formData.time) }}</div>
+                <div @click="showDatePicker=true" class="w-full">{{ formatDatetime(formData.time) }}</div>
                 <nut-popup v-model:visible="showDatePicker" position="bottom" round safe-area-inset-bottom>
                     <nut-date-picker
                         v-model="selectedTime"

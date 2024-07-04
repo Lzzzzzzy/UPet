@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 import { useDidShow } from '@tarojs/taro';
 import noPetRemind from '@/components/home/add-pet-remind/index.vue';
-import petTodayTodos from '@/components/home/pet-today-todos/index.vue';
+import petTodayTodos from '@/components/pet-today-todos/index.vue';
 
 /** 设置页面属性 */
 definePageConfig({
@@ -38,7 +38,6 @@ const getPetsInfo = () => {
 ]}
 
 useDidShow(()=>{
-  console.log("show index")
   getPetsInfo()
   if (pets.value.length) {
     firstPet.value = pets.value[0];
