@@ -58,23 +58,13 @@ const curMonth = computed(() => {
 });
 
 // 计算每周的日期
-const updateWeeks = () => {
-  // console.log("get weeks", selectedDate.value);
-  const currentWeeks = [];
-  weekIndexes.value.map(index => currentWeeks.push(getWeekDays(index, selectedDate.value)));
-  weeks.value = currentWeeks;
-  // return weekIndexes.value.map(index => getWeekDays(index, selectedDate.value));
-};
-
-// watch(weekIndexes, (newIndexes, oldIndexes) => {  
-//   console.log("watch");
-//   // 当weekIndexes变化时，重新计算weeks  
-//   weeks.value = newIndexes.map(index => getWeekDays(index, selectedDate.value));
-//   console.log("weeks:", weeks.value);
-//   // 注意：这里仍然使用了selectedDate.value，但仅在weekIndexes变化时  
-// }, {  
-//   deep: true, // 如果weekIndexes是对象或数组，需要深度监听  
-// }); 
+watch(weekIndexes, (newIndexes, oldIndexes) => {  
+  // 当weekIndexes变化时，重新计算weeks  
+  weeks.value = newIndexes.map(index => getWeekDays(index, selectedDate.value));
+  // 注意：这里仍然使用了selectedDate.value，但仅在weekIndexes变化时  
+}, {  
+  deep: true, // 如果weekIndexes是对象或数组，需要深度监听  
+}); 
 
 weekIndexes.value = [-1, 0, 1]
 
@@ -88,20 +78,9 @@ const weeksT = computed(() => {
 
 // 处理轮播切换事件
 const handleSlide = ({ detail: { current } }) => {
-  console.log("current:", current)
-  const curVal = weekIndexes.value[current];
   slideIndex.value = current;
   const direct = getSlideDirect();
   previousIndex.value = current;
-
-  weekIndexes.value = current === 0
-    ? [curVal, curVal + 1, curVal - 1]
-    : current === 1
-    ? [curVal - 1, curVal, curVal + 1]
-    : [curVal + 1, curVal - 1, curVal];
-
-  updateWeeks();
-  console.log("weeks.value:", weeks.value);
 
   let needSwitchedDate: Dayjs;
   if (direct === "left") {
@@ -111,11 +90,11 @@ const handleSlide = ({ detail: { current } }) => {
   }
 
   onHandleChangeDate(needSwitchedDate.format('YYYY-MM-DD'));
-    // weekIndexes.value = current === 0
-    // ? [curVal, curVal + 1, curVal - 1]
-    // : current === 1
-    // ? [curVal - 1, curVal, curVal + 1]
-    // : [curVal + 1, curVal - 1, curVal];
+  weekIndexes.value = current === 0
+    ? [0, 1, -1]
+    : current === 1
+    ? [-1, 0, 1]
+    : [1, 1, 0];
 };
 
 const getSlideDirect = () => {
@@ -132,7 +111,6 @@ const onHandleChangeDate = (date: string | Dayjs) => {
   selectedDate.value = copiedDate;
   emit('update:modelValue', copiedDate);
 };
-updateWeeks();
 </script>
 
 <style lang="scss">
