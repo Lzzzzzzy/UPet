@@ -50,6 +50,7 @@
     "@tarojs/taro": "3.6.21",
     "@tarojs/webpack5-runner": "3.6.21",
     "@vueuse/core": "^10.7.0",
+    "dayjs": "^1.11.11",
     "lodash-es": "^4.17.21",
     "pinia": "^2.1.7",
     "pnpm": "^9.4.0",

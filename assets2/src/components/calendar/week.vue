@@ -1,94 +1,155 @@
 <template>
   <div class="week">
-    <h3>{{ curMonth.$y }}年{{ curMonth.$M + 1 }}月</h3>
+    <!-- 显示当前月份和年份 -->
+    <h3>{{ formattedMonth }}</h3>
     <ul>
-          <li
-            v-for="(elem, i) in weekName"
-            :key="i"
-            class="cell date"
-          >
-            <p>{{ elem }}</p>
-          </li>
-        </ul>
-    <swiper
-      class="swiper"
-      :current="current"
-      :circular="true"
-      @change="handleSlide"
-    >
-      <swiper-item v-for="(item, index) in weeksT" :key="index">
+      <!-- 显示星期名称 -->
+      <li v-for="(elem, i) in weekName" :key="i" class="cell date">
+        <p>{{ elem }}</p>
+      </li>
+    </ul>
+    <!-- 轮播组件 -->
+    <swiper class="swiper" :current="current" :circular="true" @change="handleSlide">
+      <swiper-item v-for="(week, index) in weeksT" :key="index">
         <ul>
-          <li
-            v-for="(elem, i) in item"
-            :key="i"
-            class="cell date"
-            :class="{
-              active: elem.isActive,
-            }"
-          >
-            <p>{{ elem.dateT }}</p>
+          <!-- 显示每周的日期 -->
+          <li v-for="(elem, i) in week" :key="i" class="cell date" :class="{ active: elem.isActive }" @click="onHandleChangeDate(elem.date)">
+            <p>{{ elem.d }}</p>
           </li>
         </ul>
       </swiper-item>
     </swiper>
   </div>
 </template>
-<script setup>
-import { ref, computed } from "vue";
-import dayjs from 'dayjs';
-import { getWeekDays, getWeek} from '@/utils/common/datetime';
+
+<script setup lang="ts">
+import { ref, computed, PropType, watch } from "vue";
+import { useDidShow } from '@tarojs/taro';
+import dayjs from "dayjs";
+import type { Dayjs } from 'dayjs';
+import { getWeekDays, getWeek } from '@/utils/common/datetime';
 import { weekName } from '@/utils/common/const';
-// 周list
-const date = dayjs().format('YYYY-MM-DD');
-const selectedDate = ref(date);
-const slideIndex = ref(1); // 当前slide索引
-const current = ref(1)
-const weekIndexs = ref([-1, 0, 1]);
-const curMonth = computed(() => {
-    return getWeek(weekIndexs.value[slideIndex.value], selectedDate.value).start;
-});
-const weeks = computed(() => {
-    return weekIndexs.value.map((item) => getWeekDays(item, selectedDate.value));
-});
-let curDay = dayjs().format('d')
-const weeksT = computed(() => {
-    return weeks.value.map((week) => {
-        return week.map((item, index) => {
-            return {
-                ...item,
-                isActive: (curDay - index) === 1,
-                dateT: item.d,
-                // showMonth: item.d === 1,
-            };
-        });
-    });
+
+// 定义组件的props，currentDate为Dayjs对象类型并且是必须的
+const props = defineProps({
+  modelValue: {
+    type: Object as PropType<Dayjs>,
+    required: true,
+  }
 });
 
-const handleSlide = ({ detail: { current } }) => {
-    const curVal = weekIndexs.value[current];
-    slideIndex.value = current;
-    if (current === 0) {
-        weekIndexs.value = [curVal, curVal + 1, curVal - 1];
-    } else if (current === 1) {
-        weekIndexs.value = [curVal - 1, curVal, curVal + 1];
-    } else {
-        weekIndexs.value = [curVal + 1, curVal - 1, curVal];
-    }
+// 初始化引用
+const selectedDate = ref(props.modelValue);
+const slideIndex = ref(1);
+const previousIndex = ref(1);
+const current = ref(1);
+const weekIndexes = ref([-1, 0, 1]);
+const weeks = ref([]); 
+
+// 计算当前月份和年份
+const formattedMonth = computed(() => {
+  const month = curMonth.value.$M + 1;
+  return `${curMonth.value.$y}年${month < 10 ? `0${month}` : month}月`;
+});
+
+// 计算当前月
+const curMonth = computed(() => {
+  return getWeek(weekIndexes.value[slideIndex.value], selectedDate.value).start;
+});
+
+// 计算每周的日期
+const updateWeeks = () => {
+  // console.log("get weeks", selectedDate.value);
+  const currentWeeks = [];
+  weekIndexes.value.map(index => currentWeeks.push(getWeekDays(index, selectedDate.value)));
+  weeks.value = currentWeeks;
+  // return weekIndexes.value.map(index => getWeekDays(index, selectedDate.value));
 };
 
+// watch(weekIndexes, (newIndexes, oldIndexes) => {  
+//   console.log("watch");
+//   // 当weekIndexes变化时，重新计算weeks  
+//   weeks.value = newIndexes.map(index => getWeekDays(index, selectedDate.value));
+//   console.log("weeks:", weeks.value);
+//   // 注意：这里仍然使用了selectedDate.value，但仅在weekIndexes变化时  
+// }, {  
+//   deep: true, // 如果weekIndexes是对象或数组，需要深度监听  
+// }); 
+
+weekIndexes.value = [-1, 0, 1]
+
+// 计算每周的日期，并设置是否为活动日期
+const weeksT = computed(() => {
+  return weeks.value.map(week => week.map((item, index) => ({
+    ...item,
+    isActive: selectedDate.value.format('YYYY-MM-DD') === item.date,
+  })));
+});
+
+// 处理轮播切换事件
+const handleSlide = ({ detail: { current } }) => {
+  console.log("current:", current)
+  const curVal = weekIndexes.value[current];
+  slideIndex.value = current;
+  const direct = getSlideDirect();
+  previousIndex.value = current;
+
+  weekIndexes.value = current === 0
+    ? [curVal, curVal + 1, curVal - 1]
+    : current === 1
+    ? [curVal - 1, curVal, curVal + 1]
+    : [curVal + 1, curVal - 1, curVal];
+
+  updateWeeks();
+  console.log("weeks.value:", weeks.value);
+
+  let needSwitchedDate: Dayjs;
+  if (direct === "left") {
+    needSwitchedDate = selectedDate.value.subtract(1, "week");
+  } else {
+    needSwitchedDate = selectedDate.value.add(1, "week");
+  }
+
+  onHandleChangeDate(needSwitchedDate.format('YYYY-MM-DD'));
+    // weekIndexes.value = current === 0
+    // ? [curVal, curVal + 1, curVal - 1]
+    // : current === 1
+    // ? [curVal - 1, curVal, curVal + 1]
+    // : [curVal + 1, curVal - 1, curVal];
+};
+
+const getSlideDirect = () => {
+  if (previousIndex.value - 1 === slideIndex.value || slideIndex.value === previousIndex.value + 2) {
+    return "left";
+  } else {
+    return "right";
+  }
+};
+
+const emit = defineEmits(["update:modelValue"]);
+const onHandleChangeDate = (date: string | Dayjs) => {
+  const copiedDate = dayjs(date);
+  selectedDate.value = copiedDate;
+  emit('update:modelValue', copiedDate);
+};
+updateWeeks();
 </script>
+
 <style lang="scss">
 .week {
   margin: 10px 10px 15px;
-  &>h3{
+
+  & > h3 {
     padding: 10px;
     width: max-content;
     font-size: 24px;
     font-weight: 400;
     line-height: 20px;
   }
+
   ul {
     display: flex;
+
     li {
       padding: 10px 0;
       display: flex;
@@ -99,9 +160,11 @@ const handleSlide = ({ detail: { current } }) => {
       margin: 0 4px;
     }
   }
+
   .swiper {
     width: calc(100vw - 20px);
     height: 55px;
+
     li {
       position: relative;
       padding-top: 7px;
@@ -109,9 +172,11 @@ const handleSlide = ({ detail: { current } }) => {
       justify-content: center;
       background-color: rgba(255, 255, 255, 1);
       border-radius: 5px;
+
       &.active {
         background: #fde98d;
       }
+
       p {
         margin-bottom: 1.5px;
         height: 14px;
@@ -124,6 +189,7 @@ const handleSlide = ({ detail: { current } }) => {
         overflow: hidden;
         text-align: center;
         width: 100%;
+
         &:last-child {
           height: 16.5px;
           font-size: 12px;
@@ -131,8 +197,10 @@ const handleSlide = ({ detail: { current } }) => {
           color: rgba(85, 85, 85, 1);
         }
       }
+
       span {
         position: absolute;
+
         &.brand {
           top: 0;
           right: 0;
