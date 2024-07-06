@@ -1,150 +1,167 @@
 <template>
   <div class="month">
-    <h3>{{ curMonth.text}}</h3>
-    <ul>
-          <li
-            v-for="(elem, i) in weekName"
-            :key="i"
-            class="cell date"
-          >
-            <p>{{ elem }}</p>
-          </li>
-        </ul>
+    <nut-grid :column-num="7" square :border="false" :gutter="5">
+        <nut-grid-item v-for="(elem, i) in weekName" :key="i" class="cell"> {{ elem }}</nut-grid-item>
+    </nut-grid>
     <swiper
       class="swiper"
       :current="current"
       :circular="true"
       @change="handleSlide"
     >
-      <swiper-item v-for="(item, index) in monthsT" :key="index">
-        <ul>
-        <template v-if="item.start!==0">
-          <li
-            v-for="(i) in item.start-1"
-            :key="i"
-          >
-          </li>
-        </template>
-          
-          <li
-            v-for="(elem, i) in item.days"
-            :key="i"
-          >
-            <p>{{ i+1}}</p>
-          </li>
-        </ul>
+      <swiper-item v-for="(month, index) in monthsT" :key="index">
+        <nut-grid :column-num="7" square :border="false" :gutter="5">
+            <nut-grid-item v-for="index in ((month[0].day.$W === 0 ? 7 : month[0].day.$W)-1)" :key="index"></nut-grid-item>
+            <nut-grid-item v-for="(elem, i) in month" :key="i" class="date" :class="{ active: elem.isActive, today: elem.isToday }" @click="onHandleChangeDate(elem.date)">  
+              <div class="date-num">{{ elem.d }}</div>
+                <div class="dot-container">
+                    <div v-for="(color, i) in elem.dotColors" :key="i" :style="{ background: color }" class="dot"></div>
+                </div>
+            </nut-grid-item>
+        </nut-grid>
       </swiper-item>
     </swiper>
   </div>
 </template>
-<script setup>
+<script setup lang="ts">
 import { ref, computed } from "vue";
-import dayjs from 'dayjs';
-import { getMonth} from '@/utils/common/datetime';
+import type { Dayjs } from 'dayjs';
+import dayjs from "dayjs";
+import { getDays} from '@/utils/common/datetime';
 import { weekName } from '@/utils/common/const';
-// 周list
-const date = dayjs().format('YYYY-MM-DD');
-const selectedDate = ref(date);
-const slideIndex = ref(1); // 当前slide索引
-const current = ref(1)
-const monthIndexs = ref([-1, 0, 1]);
-const curMonth = computed(() => {
-    return monthsT.value[slideIndex.value];
+
+const props = defineProps({
+  modelValue: {
+    type: Object as PropType<Date | Dayjs>,
+    required: true,
+  },
+  getDotInfoFunc: {
+    type: Function,
+    required: false,
+  }
 });
+// 周list
+const selectedDate = computed(() => {
+    return dayjs(props.modelValue);
+});
+const slideIndex = ref(1); // 当前slide索引
+const current = ref(1);
+const previousIndex = ref(1);
+const monthIndexs = ref([-1, 0, 1]);
+
+const dotData = computed(() => {
+  if (!props.getDotInfoFunc) return [];
+  const dates: Array<any> = [];
+
+  months.value.map((m) => {
+      m.map((item, index) => {
+          dates.push(item.date);
+      });
+  });
+  return props.getDotInfoFunc(dates);
+});
+
 const months = computed(() => {
-    return monthIndexs.value.map((item) => getMonth(item, selectedDate.value));
+    return monthIndexs.value.map((item) => getDays(item, selectedDate.value, "month"));
 });
 
 const monthsT = computed(() => {
-    return months.value
+  const dates: Array<any> = [];
+  months.value.map(m => {
+    const monthDates: Array<any> = [];
+    m.map((item, index) => {
+      const dateInfo = {
+        ...item,
+        isActive: selectedDate.value.format('YYYY-MM-DD') === item.date,
+        isToday: dayjs().format('YYYY-MM-DD') === item.date,
+        dotColors: dotData.value[item.date] || [],
+      }
+      monthDates.push(dateInfo);
+    })
+    dates.push(monthDates);
+  });
+  return dates;
 });
 
+// 处理轮播切换事件
 const handleSlide = ({ detail: { current } }) => {
-    const curVal = monthIndexs.value[current];
-    slideIndex.value = current;
-    if (current === 0) {
-        monthIndexs.value = [curVal, curVal + 1, curVal - 1];
-    } else if (current === 1) {
-        monthIndexs.value = [curVal - 1, curVal, curVal + 1];
-    } else {
-        monthIndexs.value = [curVal + 1, curVal - 1, curVal];
-    }
+  slideIndex.value = current;
+  const direct = getSlideDirect();
+  previousIndex.value = current;
+
+  let needSwitchedDate: Dayjs;
+  if (direct === "left") {
+    needSwitchedDate = selectedDate.value.subtract(1, "month");
+  } else {
+    needSwitchedDate = selectedDate.value.add(1, "month");
+  }
+
+  onHandleChangeDate(needSwitchedDate.format('YYYY-MM-DD'));
+  monthIndexs.value = current === 0
+    ? [0, 1, -1]
+    : current === 1
+    ? [-1, 0, 1]
+    : [1, -1, 0];
+};
+
+const getSlideDirect = () => {
+  if (previousIndex.value - 1 === slideIndex.value || slideIndex.value === previousIndex.value + 2) {
+    return "left";
+  } else {
+    return "right";
+  }
+};
+
+const emit = defineEmits(["update:modelValue"]);
+const onHandleChangeDate = (date: string | Dayjs) => {
+  const copiedDate = dayjs(date);
+  emit('update:modelValue', copiedDate.toDate());
 };
 </script>
 <style lang="scss">
 .month {
-  margin: 10px 10px 15px;
-  &>h3{
-    padding: 10px;
-    width: max-content;
-    font-size: 24px;
-    font-weight: 400;
-    line-height: 20px;
-  }
-  ul {
-    display: flex;
-    margin-bottom: 10px;
-    li {
-      padding: 10px 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      width: calc((100vw - 20px) / 7);
-      padding: 0 4px;
-    }
-  }
+
   .swiper {
-    width: calc(100vw - 20px);
     height: 400px;
-    background-color: rgba(255, 255, 255, 1);
-    ul{
-      flex-wrap: wrap;
+
+    .date {
+        .nut-grid-item__content {
+            border-radius: 50%;
+            justify-content: end;
+        }
+
+        &.active {
+            .nut-grid-item__content {
+                background-color: #fde98d;
+            }
+        }
+    
+        &.today {
+            .nut-grid-item__content {
+                border: 1px solid #fde98d;
+            }
+        }
+
+        .date-num {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+        }
     }
-    li {
-      position: relative;
-      padding-top: 7px;
-      height: 55px;
-      justify-content: center;
-      border-radius: 5px;
-      &.active {
-        background: #fde98d;
-      }
-      p {
-        margin-bottom: 1.5px;
-        height: 14px;
-        font-size: 10px;
-        font-weight: 400;
-        line-height: 14px;
-        color: rgba(85, 85, 85, 1);
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        overflow: hidden;
-        text-align: center;
-        width: 100%;
-        &:last-child {
-          height: 16.5px;
-          font-size: 12px;
-          line-height: 16.5px;
-          color: rgba(85, 85, 85, 1);
+
+    .dot-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 5px;
+
+        .dot {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            margin: 0 1px;
         }
-      }
-      span {
-        position: absolute;
-        &.brand {
-          top: 0;
-          right: 0;
-          padding: 0 2px;
-          background: #a4c3ff;
-          text-align: center;
-          line-height: 15px;
-          min-width: 15px;
-          font-size: 7px;
-          font-weight: 400;
-          color: rgba(255, 255, 255, 1);
-          border-radius: 0 2px 0 6px;
-        }
-      }
     }
   }
 }

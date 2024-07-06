@@ -19,7 +19,7 @@ const NutUIResolver = () => {
 
 const config = {
   projectName: 'Taro3',
-  date: '2021-12-18',
+  date: '2024-06-25',
   designWidth(input) {
     // 配置 NutUI 375 尺寸
     if (input?.file?.replace(/\\+/g, '/').indexOf('@nutui') > -1) {
