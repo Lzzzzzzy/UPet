@@ -1,6 +1,6 @@
 <template>
-  <div class="month">
-    <nut-grid :column-num="7" square :border="false" :gutter="5">
+  <div class="card">
+    <nut-grid :column-num="7" :border="false" class="week-text-container">
         <nut-grid-item v-for="(elem, i) in weekName" :key="i" class="cell"> {{ elem }}</nut-grid-item>
     </nut-grid>
     <swiper
@@ -8,15 +8,18 @@
       :current="current"
       :circular="true"
       @change="handleSlide"
+      :class="{ 'week-height': isWeek, 'month-height': !isWeek }"
     >
-      <swiper-item v-for="(month, index) in monthsT" :key="index">
-        <nut-grid :column-num="7" square :border="false" :gutter="5">
-            <nut-grid-item v-for="index in ((month[0].day.$W === 0 ? 7 : month[0].day.$W)-1)" :key="index"></nut-grid-item>
-            <nut-grid-item v-for="(elem, i) in month" :key="i" class="date" :class="{ active: elem.isActive, today: elem.isToday }" @click="onHandleChangeDate(elem.date)">  
-              <div class="date-num">{{ elem.d }}</div>
+      <swiper-item v-for="(batch, index) in swipersDays" :key="index">
+        <nut-grid :column-num="7" :border="false">
+            <nut-grid-item v-for="index in ((batch[0].day.$W === 0 ? 7 : batch[0].day.$W)-1)" :key="index"></nut-grid-item>
+            <nut-grid-item v-for="(elem, i) in batch" :key="i" @click="onHandleChangeDate(elem.date)" class="date">  
+              <template #default>
+                <div class="date-num" :class="{ active: elem.isActive, today: elem.isToday }">{{ elem.d }}</div>
                 <div class="dot-container">
                     <div v-for="(color, i) in elem.dotColors" :key="i" :style="{ background: color }" class="dot"></div>
                 </div>
+              </template>
             </nut-grid-item>
         </nut-grid>
       </swiper-item>
@@ -24,7 +27,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { ref, computed, PropType } from "vue";
 import type { Dayjs } from 'dayjs';
 import dayjs from "dayjs";
 import { getDays} from '@/utils/common/datetime';
@@ -38,22 +41,30 @@ const props = defineProps({
   getDotInfoFunc: {
     type: Function,
     required: false,
+  },
+  isWeek: {
+    type: Boolean,
+    default: false,
   }
 });
-// 周list
+
 const selectedDate = computed(() => {
-    return dayjs(props.modelValue);
+  return dayjs(props.modelValue);
 });
+
+const calendarType = computed(()=>{
+  return props.isWeek ? "week" : "month";
+})
 const slideIndex = ref(1); // 当前slide索引
 const current = ref(1);
 const previousIndex = ref(1);
-const monthIndexs = ref([-1, 0, 1]);
+const dateIndexes = ref([-1, 0, 1]);
 
 const dotData = computed(() => {
   if (!props.getDotInfoFunc) return [];
   const dates: Array<any> = [];
 
-  months.value.map((m) => {
+  days.value.map((m) => {
       m.map((item, index) => {
           dates.push(item.date);
       });
@@ -61,14 +72,14 @@ const dotData = computed(() => {
   return props.getDotInfoFunc(dates);
 });
 
-const months = computed(() => {
-    return monthIndexs.value.map((item) => getDays(item, selectedDate.value, "month"));
+const days = computed(() => {
+  return dateIndexes.value.map((item) => getDays(item, selectedDate.value, calendarType.value));
 });
 
-const monthsT = computed(() => {
+const swipersDays = computed(() => {
   const dates: Array<any> = [];
-  months.value.map(m => {
-    const monthDates: Array<any> = [];
+  days.value.map(m => {
+    const swiperDays: Array<any> = [];
     m.map((item, index) => {
       const dateInfo = {
         ...item,
@@ -76,9 +87,9 @@ const monthsT = computed(() => {
         isToday: dayjs().format('YYYY-MM-DD') === item.date,
         dotColors: dotData.value[item.date] || [],
       }
-      monthDates.push(dateInfo);
+      swiperDays.push(dateInfo);
     })
-    dates.push(monthDates);
+    dates.push(swiperDays);
   });
   return dates;
 });
@@ -91,13 +102,13 @@ const handleSlide = ({ detail: { current } }) => {
 
   let needSwitchedDate: Dayjs;
   if (direct === "left") {
-    needSwitchedDate = selectedDate.value.subtract(1, "month");
+    needSwitchedDate = selectedDate.value.subtract(1, calendarType.value);
   } else {
-    needSwitchedDate = selectedDate.value.add(1, "month");
+    needSwitchedDate = selectedDate.value.add(1, calendarType.value);
   }
 
   onHandleChangeDate(needSwitchedDate.format('YYYY-MM-DD'));
-  monthIndexs.value = current === 0
+  dateIndexes.value = current === 0
     ? [0, 1, -1]
     : current === 1
     ? [-1, 0, 1]
@@ -119,35 +130,44 @@ const onHandleChangeDate = (date: string | Dayjs) => {
 };
 </script>
 <style lang="scss">
-.month {
+.card {
+  font-size: 14px;
+  .nut-grid-item__content--center {
+    justify-content: flex-start;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
 
   .swiper {
-    height: 400px;
+
+    &.week-height {
+      height: 40px;
+      transition: height 0.3s ease-in-out;  
+    }
+
+    &.month-height {
+      height: 210px;
+      transition: height 0.3s ease-in-out;
+    }
 
     .date {
-        .nut-grid-item__content {
-            border-radius: 50%;
-            justify-content: end;
-        }
 
-        &.active {
-            .nut-grid-item__content {
-                background-color: #fde98d;
-            }
-        }
-    
-        &.today {
-            .nut-grid-item__content {
-                border: 1px solid #fde98d;
-            }
-        }
+      .date-num {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 50%;
+          width: calc(((100vw - 20px) / 7) * 0.5);
+          height: calc(((100vw - 20px) / 7) * 0.5);
 
-        .date-num {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100%;
-        }
+          &.active {
+            background-color: #fde98d;
+          }
+
+          &.today {
+            border: 1px solid #fde98d;
+          }
+      }
     }
 
     .dot-container {
@@ -155,6 +175,7 @@ const onHandleChangeDate = (date: string | Dayjs) => {
         align-items: center;
         justify-content: center;
         height: 5px;
+        margin-top: 3px;
 
         .dot {
             width: 5px;

@@ -3,6 +3,7 @@ import { ref } from 'vue';
 import { useDidShow } from '@tarojs/taro';
 import noPetRemind from '@/components/home/add-pet-remind/index.vue';
 import petTodayTodos from '@/components/pet-today-todos/index.vue';
+import calendar from '@/components/calendar/index.vue';
 
 /** 设置页面属性 */
 definePageConfig({
@@ -43,6 +44,12 @@ useDidShow(()=>{
     firstPet.value = pets.value[0];
   }
 })
+
+const currentDate = ref(new Date());
+const dotInfos = (date: Array<string>) => {
+    return {"2024-07-02": ["red", "black"], "2024-07-03": ["green"], "2024-07-30": ["green"], "2024-07-31": ["orange"]}
+}
+const showWeek = ref(true);
 </script>
 
 <script lang="ts">
@@ -55,6 +62,13 @@ export default {
   <basic-layout show-tab-bar>
     <custom-navbar title="首页" />
     <div v-if="pets.length">
+      <div class="bg-#fff">
+        <calendar v-model="currentDate" :get-dot-info-func="dotInfos" :show-week="showWeek">
+          <template #header>
+            <div @click="showWeek = !showWeek">切换日历</div>
+          </template>
+        </calendar>
+      </div>
       <pet-today-todos :pets="pets"></pet-today-todos>
     </div>
     <div v-else class="position-absolute pos-top-50% translate-middle full-width">

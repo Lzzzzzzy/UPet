@@ -1,7 +1,6 @@
 <script setup lang="ts">
-import { ref, computed, watch } from "vue"
-import month from './month.vue'
-import week from './week.vue'
+import { ref, computed, watch, PropType } from "vue"
+import calendarCard from './calendar-card.vue'
 import type { Dayjs } from 'dayjs'
 
 const props = defineProps({
@@ -40,28 +39,52 @@ const emit = defineEmits(["update:modelValue"]);
 watch(currentDate, (newVal) => {
   emit('update:modelValue', newVal);
 })
+
+const beforeEnter = (el: HTMLElement) => {
+  el.style.height = '0';
+  el.style.opacity = '0';
+}
+
+const enter = (el: HTMLElement, done: Function) => {
+  const height = el.scrollHeight;
+  el.style.transition = 'height 0.5s ease, opacity 0.5s ease';
+  el.style.height = height + 'px';
+  el.style.opacity = '1';
+  setTimeout(() => {
+    el.style.height = '';
+    done();
+  }, 500);
+}
+
+const leave = (el: HTMLElement, done: Function) => {
+  el.style.transition = 'height 0.5s ease, opacity 0.5s ease';
+  el.style.height = '0';
+  el.style.opacity = '0';
+  setTimeout(() => {
+    done();
+  }, 500);
+}
 </script>
 <template>
-    <div class="calendar-container">
-        <div class="header-container">
-            <h3 @click="changeDate = true">{{ formattedMonth }}</h3>
-            <slot name="header"></slot>
+    <div>
+        <div class="calendar-container">
+            <div class="header-container">
+                <div @click="changeDate = true">{{ formattedMonth }}</div>
+                <slot name="header"></slot>
+            </div>
+            <calendar-card v-model="currentDate" :get-dot-info-func="getDotInfoFunc" :is-week="showWeek"></calendar-card>
         </div>
-        <div class="calendar">
-            <week v-model="currentDate" :get-dot-info-func="getDotInfoFunc" v-if="showWeek"></week>
-            <month v-else v-model="currentDate" :get-dot-info-func="getDotInfoFunc"></month>
-        </div>
+        <nut-popup v-model:visible="changeDate" position="bottom" round safe-area-inset-bottom>
+            <nut-date-picker
+                v-model="switchedDate"
+                :min-date="minDate"
+                :max-date="maxDate"
+                :three-dimensional="false"
+                @confirm="confirm"
+                @cancel="changeDate = false"
+            ></nut-date-picker>
+        </nut-popup>
     </div>
-    <nut-popup v-model:visible="changeDate" position="bottom" round safe-area-inset-bottom>
-        <nut-date-picker
-            v-model="switchedDate"
-            :min-date="minDate"
-            :max-date="maxDate"
-            :three-dimensional="false"
-            @confirm="confirm"
-            @cancel="changeDate = false"
-        ></nut-date-picker>
-    </nut-popup>
 </template>
 
 <style lang="scss">
@@ -71,13 +94,7 @@ watch(currentDate, (newVal) => {
     display: flex;
     justify-content: space-between;
     align-items: center;
-
-    h3 {
-        width: max-content;
-        font-size: 24px;
-        font-weight: 400;
-        line-height: 20px;
-    }
   }
 }
+
 </style>
