@@ -5,7 +5,7 @@ import type { Dayjs } from 'dayjs'
 
 const props = defineProps({
   modelValue: {
-    type: Object as PropType<Date | Dayjs>,
+    type: Object as PropType<Date>,
     required: true,
   },
   getDotInfoFunc: {
@@ -16,6 +16,10 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
+  swiperClass: {
+    type: String,
+    default: "",
+  }
 });
 const currentDate = ref(props.modelValue);
 
@@ -40,30 +44,11 @@ watch(currentDate, (newVal) => {
   emit('update:modelValue', newVal);
 })
 
-const beforeEnter = (el: HTMLElement) => {
-  el.style.height = '0';
-  el.style.opacity = '0';
-}
+watch(() => props.modelValue, (newValue) => {
+  currentDate.value = newValue;
+});
 
-const enter = (el: HTMLElement, done: Function) => {
-  const height = el.scrollHeight;
-  el.style.transition = 'height 0.5s ease, opacity 0.5s ease';
-  el.style.height = height + 'px';
-  el.style.opacity = '1';
-  setTimeout(() => {
-    el.style.height = '';
-    done();
-  }, 500);
-}
-
-const leave = (el: HTMLElement, done: Function) => {
-  el.style.transition = 'height 0.5s ease, opacity 0.5s ease';
-  el.style.height = '0';
-  el.style.opacity = '0';
-  setTimeout(() => {
-    done();
-  }, 500);
-}
+const swiperClass = computed(()=> props.swiperClass)
 </script>
 <template>
     <div>
@@ -72,7 +57,7 @@ const leave = (el: HTMLElement, done: Function) => {
                 <div @click="changeDate = true">{{ formattedMonth }}</div>
                 <slot name="header"></slot>
             </div>
-            <calendar-card v-model="currentDate" :get-dot-info-func="getDotInfoFunc" :is-week="showWeek"></calendar-card>
+            <calendar-card v-model="currentDate" :get-dot-info-func="getDotInfoFunc" :is-week="showWeek" :swiper-class="swiperClass"></calendar-card>
         </div>
         <nut-popup v-model:visible="changeDate" position="bottom" round safe-area-inset-bottom>
             <nut-date-picker
@@ -90,7 +75,7 @@ const leave = (el: HTMLElement, done: Function) => {
 <style lang="scss">
 .calendar-container {
   .header-container {
-    padding: 10px;
+    padding: 8px 15px;
     display: flex;
     justify-content: space-between;
     align-items: center;

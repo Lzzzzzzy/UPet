@@ -11,7 +11,7 @@
       :class="{ 'week-height': isWeek, 'month-height': !isWeek }"
     >
       <swiper-item v-for="(batch, index) in swipersDays" :key="index">
-        <nut-grid :column-num="7" :border="false">
+        <nut-grid :column-num="7" :border="false" :class="swiperClass">
             <nut-grid-item v-for="index in ((batch[0].day.$W === 0 ? 7 : batch[0].day.$W)-1)" :key="index"></nut-grid-item>
             <nut-grid-item v-for="(elem, i) in batch" :key="i" @click="onHandleChangeDate(elem.date)" class="date">  
               <template #default>
@@ -35,7 +35,7 @@ import { weekName } from '@/utils/common/const';
 
 const props = defineProps({
   modelValue: {
-    type: Object as PropType<Date | Dayjs>,
+    type: Object as PropType<Date>,
     required: true,
   },
   getDotInfoFunc: {
@@ -45,6 +45,10 @@ const props = defineProps({
   isWeek: {
     type: Boolean,
     default: false,
+  },
+  swiperClass: {
+    type: String,
+    default: "",
   }
 });
 
@@ -128,6 +132,8 @@ const onHandleChangeDate = (date: string | Dayjs) => {
   const copiedDate = dayjs(date);
   emit('update:modelValue', copiedDate.toDate());
 };
+
+const swiperClass = computed(()=> props.swiperClass)
 </script>
 <style lang="scss">
 .card {
@@ -161,11 +167,11 @@ const onHandleChangeDate = (date: string | Dayjs) => {
           height: calc(((100vw - 20px) / 7) * 0.5);
 
           &.active {
-            background-color: #fde98d;
+            background-color: #F7DAA1;
           }
 
           &.today {
-            border: 1px solid #fde98d;
+            border: 1px solid #F7DAA1;
           }
       }
     }

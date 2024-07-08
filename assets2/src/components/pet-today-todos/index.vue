@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import todoCardHeader from "@/components/pet-today-todos/components/pet-todo-card-header/index.vue";
 import todoCardContent from "@/components/pet-today-todos/components/pet-todo-card-content/index.vue";
 import addTodoButton from "@/components/add-pet-todo-button/index.vue";
 import { ref, onBeforeMount } from "vue";
@@ -39,8 +38,7 @@ onBeforeMount(() => {
 </script>
 <template>
     <div>
-        <todo-card-header :pets="pets"></todo-card-header>
-        <div>
+        <div class="pl-15px">
             <div class="fw-600 text-18px text-#665d21 mb-25px" v-if="selectedPet">{{ selectedPet.petName }}的今日安排</div>
             <todo-card-content v-for="todo in petTodos" :key="todo.id" :todo="todo"></todo-card-content>
         </div>

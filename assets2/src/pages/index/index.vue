@@ -4,6 +4,7 @@ import { useDidShow } from '@tarojs/taro';
 import noPetRemind from '@/components/home/add-pet-remind/index.vue';
 import petTodayTodos from '@/components/pet-today-todos/index.vue';
 import calendar from '@/components/calendar/index.vue';
+import todoCardHeader from "@/components/pet-today-todos/components/pet-todo-card-header/index.vue";
 
 /** 设置页面属性 */
 definePageConfig({
@@ -50,6 +51,26 @@ const dotInfos = (date: Array<string>) => {
     return {"2024-07-02": ["red", "black"], "2024-07-03": ["green"], "2024-07-30": ["green"], "2024-07-31": ["orange"]}
 }
 const showWeek = ref(true);
+
+const swiperDirection = ref('');
+const changeCurrentDateAnimation = () => {
+  const today = new Date().setHours(0, 0, 0, 0);
+  if (currentDate.value.setHours(0, 0, 0, 0) ==  today) {
+    return
+  }
+  if (currentDate.value.setHours(0, 0, 0, 0) > today) {
+    swiperDirection.value = 'slide-left'
+  } else {
+    swiperDirection.value = 'slide-right'
+  }
+  setTimeout(() => swiperDirection.value = '', 300);
+}
+
+const goToday = () => {
+  changeCurrentDateAnimation();
+  currentDate.value = new Date();
+}
+
 </script>
 
 <script lang="ts">
@@ -63,9 +84,12 @@ export default {
     <custom-navbar title="首页" />
     <div v-if="pets.length">
       <div class="bg-#fff">
-        <calendar v-model="currentDate" :get-dot-info-func="dotInfos" :show-week="showWeek">
+        <calendar v-model="currentDate" :get-dot-info-func="dotInfos" :show-week="showWeek" :swiper-class="swiperDirection">
           <template #header>
-            <div @click="showWeek = !showWeek">切换日历</div>
+            <div>
+              <div class="text-20px pr-20px" @click="showWeek = !showWeek" :class="{ 'i-local-calendar-month': showWeek, 'i-local-calendar-week':  !showWeek }"></div>
+              <div class="text-20px i-local-goto-today pl-20px" @click="goToday"></div>
+            </div>
           </template>
         </calendar>
       </div>
@@ -84,5 +108,37 @@ export default {
 
 .full-width {
   width: calc(100% - 20px);
+}
+
+@keyframes slide-left {
+  0% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(50%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slide-right {
+  0% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.slide-left {
+  animation: slide-left 0.3s forwards;
+}
+
+.slide-right {
+  animation: slide-right 0.3s forwards;
 }
 </style>
