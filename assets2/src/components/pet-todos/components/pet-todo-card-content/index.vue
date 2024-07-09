@@ -18,7 +18,7 @@ defineProps({
           <div class="text-16px">{{ todo.title }}</div>
           <div class="text-12px mt-10px break-words" v-if="todo.remark">{{ todo.remark }}</div>
         </div>
-        <nut-checkbox v-model="todo.status" class="!mr-0 ml-10px">
+        <nut-checkbox v-model="todo.complete" class="!mr-0 ml-10px">
           <template #icon> <div class="i-local-unchecked text-25px"></div> </template>
           <template #checkedIcon> <div class="i-local-checked text-25px"></div> </template>
         </nut-checkbox>

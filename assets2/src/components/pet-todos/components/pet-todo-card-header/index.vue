@@ -47,7 +47,7 @@ const currentPet = ref<Pet.PetInfo>(props.pets[0]);
             <div>{{ currentPet.petName }}</div>
             <div class="text-20px i-local-more-options"></div>
         </div> -->
-        <div class="text-16px ml-5px">的今日安排</div>
+        <div class="text-16px ml-5px fw-600">的今日安排</div>
     </div>
     <nut-popup v-model:visible="showSelectPetPopup" position="top">
         <nut-grid :column-num="4"  class="mt-25%">
@@ -67,8 +67,10 @@ const currentPet = ref<Pet.PetInfo>(props.pets[0]);
 <style lang="scss">
 .todo-header {
     .nut-button--normal {
-        background-color: #DEDEDE;
-        padding: 0 10px;
+        background-color: #98C7CE;
+        padding: 0 7px;
+        border-color: #98C7CE;
+        color: #000000;
     }
 }
 </style>

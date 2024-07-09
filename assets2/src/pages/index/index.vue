@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onBeforeMount, computed } from 'vue';
+import { ref, onBeforeMount, computed, watch } from 'vue';
 import { eventCenter } from '@tarojs/taro';
 import noPetRemind from '@/components/home/add-pet-remind/index.vue';
 import petTodosPage from '@/components/pet-todos/index.vue';
@@ -10,7 +10,7 @@ definePageConfig({
   navigationBarTitleText: '首页'
 });
 
-
+/** 日历相关参数和方法 */
 const currentDate = ref(new Date());
 const dotInfos = (date: Array<string>) => {
     return {"2024-07-02": ["red", "black"], "2024-07-03": ["green"], "2024-07-30": ["green"], "2024-07-31": ["orange"]}
@@ -36,11 +36,13 @@ const goToday = () => {
   currentDate.value = new Date();
 }
 
-const selectedPet = ref<Pet.PetInfo>();
+
+/** 宠物相关参数和方法 */
+const currentPet = ref<Pet.PetInfo>();
 
 onBeforeMount(() => {
     eventCenter.on("selectpet", (pet: Pet.PetInfo) => {
-        selectedPet.value = pet
+        currentPet.value = pet
     });
 });
 
@@ -48,18 +50,18 @@ const pets = ref<Array<Pet.PetInfo>>([]);
 const getPetsInfo = () => {
   return [{
     id: 1,
-    petName: '123',
+    petName: '旺财',
     petAvatar: '',
     userId: 1,
   },
   {
     id: 2,
-    petName: '1234',
+    petName: '帅帅',
     petAvatar: '',
     userId: 1,
   },{
     id: 3,
-    petName: '1123',
+    petName: '1234',
     petAvatar: '',
     userId: 1,
   },{
@@ -71,9 +73,13 @@ const getPetsInfo = () => {
 ]}
 pets.value = getPetsInfo();
 
-const petTodos = computed(() => {
-  return getPetTodos(currentDate.value, selectedPet.value!);
-})
+
+/** 待办事项相关参数和方法 */
+const petTodos = ref();
+watch([currentDate, currentPet], ([newVal1, newVal2], [oldVal1, oldVal2]) => {  
+  const todos = getPetTodos(currentDate.value, currentPet.value!);
+  petTodos.value = todos;
+});  
 
 const getPetTodos = (date: Date, pet: Pet.PetInfo) => {
   if (pet?.petName === "1234") {
@@ -94,7 +100,7 @@ const getPetTodos = (date: Date, pet: Pet.PetInfo) => {
       {"id": 2, "time": "12:00", "title": "换粮", "remark": "全换", "complete": false},
       {"id": 3, "time": "18:00", "title": "铲屎", "remark": "", "complete": false},
       {"id": 4, "time": "12:43", "title": "换水", "remark": "123123123123123123123123aasdasdasdsasadsadsdsdsadsdasqeqweqweqeqewqeqweqeqweq", "complete": false},
-      {"id": 5, "time": "18:00", "title": "铲屎", "remark": "", "complete": false},
+      {"id": 5, "time": "18:00", "title": "铲屎", "remark": "", "complete": true},
       {"id": 6, "time": "18:00", "title": "铲屎", "remark": "", "complete": false},
       {"id": 7, "time": "18:00", "title": "铲屎", "remark": "", "complete": false},
       {"id": 8, "time": "18:00", "title": "铲屎", "remark": "", "complete": false},
@@ -113,19 +119,17 @@ export default {
   <basic-layout show-tab-bar>
     <custom-navbar title="首页" />
     <div v-if="pets.length">
-      <div>
-        <nut-sticky top="93" class="bg-#fff">
-          <calendar v-model="currentDate" :get-dot-info-func="dotInfos" :show-week="showWeek" :swiper-class="swiperDirection">
-            <template #header>
-              <div>
-                <div class="text-20px pr-20px" @click="showWeek = !showWeek" :class="{ 'i-local-calendar-month': showWeek, 'i-local-calendar-week':  !showWeek }"></div>
-                <div class="text-20px i-local-goto-today pl-20px" @click="goToday"></div>
-              </div>
-            </template>
-          </calendar>
-        </nut-sticky>
+      <div class="fixed-header" :class="{ expanded: !showWeek }">
+        <calendar v-model="currentDate" :get-dot-info-func="dotInfos" :show-week="showWeek" :swiper-class="swiperDirection">
+          <template #header>
+            <div>
+              <div class="text-20px pr-20px" @click="showWeek = !showWeek" :class="{ 'i-local-calendar-month': showWeek, 'i-local-calendar-week':  !showWeek }"></div>
+              <div class="text-20px i-local-goto-today pl-20px" @click="goToday"></div>
+            </div>
+          </template>
+        </calendar>
       </div>
-      <pet-todos-page :pets="pets" :todos="petTodos"></pet-todos-page>
+      <pet-todos-page :pets="pets" :todos="petTodos" class="todo-container"></pet-todos-page>
     </div>
     <div v-else class="position-absolute pos-top-50% translate-middle full-width">
       <no-pet-remind></no-pet-remind>
@@ -172,5 +176,29 @@ export default {
 
 .slide-right {
   animation: slide-right 0.3s forwards;
+}
+
+.fixed-header {
+  position: fixed;
+  top: 90px;
+  width: 100%;
+  background-color: #ffffff;
+  // transition: height 0.3s;
+  overflow: hidden;
+  height: 105px; /* 初始高度 */
+  z-index: 99;
+}
+
+.fixed-header.expanded {
+  height: 270px; /* 展开后的高度 */
+}
+
+.todo-container {
+  padding: 105px 0; /* 初始高度，等于固定头部初始高度 */
+  transition: padding-top 0.3s; /* 确保过渡效果 */
+}
+
+.fixed-header.expanded + .todo-container {
+  padding-top: 270px; /* 展开后，内容容器下移 */
 }
 </style>
