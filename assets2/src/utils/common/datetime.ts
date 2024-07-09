@@ -71,7 +71,7 @@ export const getMonth = (index = 0, date: Date | Dayjs): DateRange => {
 };
 
 export const getDays = (index = 0, date: Date | Dayjs, type: string) => {
-    const { start, days, end } = type === 'week' ? getWeek(index, date) : getMonth(index, date);
+    const { start, days } = type === 'week' ? getWeek(index, date) : getMonth(index, date);
     const list = [];
 
     for (let i = 0; i<days; i++) {

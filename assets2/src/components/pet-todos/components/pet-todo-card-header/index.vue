@@ -13,16 +13,11 @@ const props = defineProps({
 const showSelectPetPopup = ref(false);
 
 const selectPet = (pet: Pet.PetInfo) => {
+    currentPet.value = pet;
     eventCenter.trigger("selectpet", pet);
     showSelectPetPopup.value = false;
 };
 
-const getBatchPets = () => {  
-    // 计算结束索引，如果数组长度小于3，则取数组长度作为结束索引  
-    var endIndex = Math.min(props.pets.length, 1);  
-    // 使用slice方法获取元素  
-    return props.pets.slice(0, endIndex);  
-}
 
 const handleToAddPet = () => {
   navigateTo({
@@ -31,19 +26,28 @@ const handleToAddPet = () => {
 }
 
 onMounted(() => {
-    eventCenter.trigger("selectpet", props.pets[0]);
+    eventCenter.trigger("selectpet", currentPet.value);
 })
+
+const currentPet = ref<Pet.PetInfo>(props.pets[0]);
 </script>
 
 <template>
 <div>
-    <div class="flex justify-center my-20px">
-        <nut-avatar-group max-count="2" span="-18" zIndex="right" @click="showSelectPetPopup = true" max-content="...">
-            <pet-avatar :avatar-img-url="pet.petAvatar" v-for="pet in getBatchPets()" :key="pet.id" />
-            <nut-avatar class="!flex justify-center items-center">
-                <div class="text-20px i-local-add"></div>
-            </nut-avatar>
-        </nut-avatar-group>
+    <div class="flex items-center my-20px todo-header">
+        <nut-button @click="showSelectPetPopup=true">
+            <template #default>
+                <div class="flex items-center text-16px">
+                    <div>{{ currentPet.petName }}</div>
+                    <div class="i-local-more-options"></div>
+                </div>
+            </template>
+        </nut-button>
+        <!-- <div @click="showSelectPetPopup=true" class="flex items-center bg-#DEDEDE p-7px rounded-50%">
+            <div>{{ currentPet.petName }}</div>
+            <div class="text-20px i-local-more-options"></div>
+        </div> -->
+        <div class="text-16px ml-5px">的今日安排</div>
     </div>
     <nut-popup v-model:visible="showSelectPetPopup" position="top">
         <nut-grid :column-num="4"  class="mt-25%">
@@ -61,4 +65,10 @@ onMounted(() => {
 </template>
 
 <style lang="scss">
+.todo-header {
+    .nut-button--normal {
+        background-color: #DEDEDE;
+        padding: 0 10px;
+    }
+}
 </style>

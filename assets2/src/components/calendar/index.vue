@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, watch, PropType } from "vue"
 import calendarCard from './calendar-card.vue'
-import type { Dayjs } from 'dayjs'
 
 const props = defineProps({
   modelValue: {

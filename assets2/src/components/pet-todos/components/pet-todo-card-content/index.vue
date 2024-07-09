@@ -15,8 +15,8 @@ defineProps({
     <nut-col :span="19">
       <div class="flex items-center justify-start">
         <div class="flex flex-col p-10px border-rd-md bg-#ffffff">
-          <div class="font-size-35">{{ todo.title }}</div>
-          <div class="font-size-23 text-#787263 mt-10px break-words" v-if="todo.remark">{{ todo.remark }}</div>
+          <div class="text-16px">{{ todo.title }}</div>
+          <div class="text-12px mt-10px break-words" v-if="todo.remark">{{ todo.remark }}</div>
         </div>
         <nut-checkbox v-model="todo.status" class="!mr-0 ml-10px">
           <template #icon> <div class="i-local-unchecked text-25px"></div> </template>
