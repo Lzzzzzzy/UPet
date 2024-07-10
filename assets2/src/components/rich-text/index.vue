@@ -43,10 +43,10 @@ const uploadUrl = ref("");
 
 <template>
   <div>
-    <editor id="editor" class="editor" :placeholder="placeholder" @ready="onEditorReady" @input="onEditorInput"></editor>
-    <div class="flex items-center">
+    <editor id="editor" class="editor break-words h-50px min-h-0" :placeholder="placeholder" @ready="onEditorReady" @input="onEditorInput"></editor>
+    <div class="flex items-center justify-end mt-5px">
       <nut-uploader :url="uploadUrl">
-        <div class="i-local-image text-20px text-#333333"></div>
+        <div class="i-local-image text-25px text-#333333"></div>
       </nut-uploader>
     </div>
   </div>
