@@ -2,7 +2,7 @@
 import { ref, onBeforeMount, reactive } from "vue";
 import { formatDatetime, getMinAndMaxDate } from "@/utils/common/datetime";
 import { eventCenter } from "@tarojs/taro";
-import RichText from "@/components/rich-text/index.vue";
+import richTextContent from "@/components/rich-text/index.vue";
 
 
 definePageConfig({
@@ -20,6 +20,12 @@ const repeatList = ref([
   { text: '每年', value: 7 },
 ])
 
+const tagList = [
+  { text: "一般", value: 0 },
+  { text: "需要注意", value: 1 },
+  { text: "紧急情况", value: 2 }
+]
+
 const formData = reactive({
   title: '',
   time: new Date(),
@@ -27,6 +33,7 @@ const formData = reactive({
   remind: false,
   repeat: [repeatList.value[0].value],
   complete: false,
+  tag: [tagList[0].value],
 })
 
 const formRef = ref()
@@ -76,6 +83,12 @@ const onUpdateRemark = (data: string) => {
   console.log("data:", data);
   formData.remark = data;
 }
+
+const showTagSelection = ref(false);
+const getTagText = (value: number) => {
+  const tag = tagList.find(item => item.value === value);
+  return tag?.text || '';
+}
 </script>
 <template>
   <basic-layout>
@@ -102,11 +115,25 @@ const onUpdateRemark = (data: string) => {
           </nut-popup>
         </nut-form-item>
         <nut-form-item label="标题" prop="title" class="form-item-border">
-            <nut-input v-model="formData.title" placeholder="请输入标题" />
+          <nut-input v-model="formData.title" placeholder="请输入标题" />
         </nut-form-item>
         <nut-form-item label="备注" prop="remark" class="form-item-border">
-            <!-- <editor id="editor" class="editor" placeholder="备注，支持上传图片" @ready="editorReady"></editor> -->
-             <rich-text :data="formData.remark" placeholder="备注，支持上传图片" @update-data="onUpdateRemark"></rich-text>
+          <rich-text-content :data="formData.remark" placeholder="备注，您也可以上传图片,例如确诊单或者希望给医生展示的症状" @update-data="onUpdateRemark"></rich-text-content>
+        </nut-form-item>
+        <nut-form-item label="标签" prop="tag" class="form-item-border">
+          <div @click="showTagSelection=true" class="flex items-center">
+            <div>{{ getTagText(formData.tag[0]) }}</div>
+            <div class="w-15px h-15px border-rd-50% ml-10px" :class='`tag-color-${formData.tag[0]}`'></div>
+          </div>
+          <nut-popup v-model:visible="showTagSelection" position="bottom" round safe-area-inset-bottom>
+            <nut-picker 
+              v-model="formData.tag" 
+              :columns="tagList" 
+              title="选择标签" 
+              @confirm="showTagSelection=false" 
+              cancel-text=" "
+            />
+          </nut-popup>
         </nut-form-item>
         <nut-form-item label="需要提醒" prop="remind" class="form-item-border">
             <nut-switch v-model="formData.remind" />
@@ -126,4 +153,12 @@ const onUpdateRemark = (data: string) => {
   </basic-layout>
 </template>
 
-<style lang="scss"></style>
+<style lang="scss">
+.tag-color-1 {
+  background: #FFC300;
+}
+
+.tag-color-2 {
+  background: #FF5733;
+}
+</style>

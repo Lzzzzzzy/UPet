@@ -12,16 +12,21 @@ const props = defineProps({
   }
 });
 
+
 const editorCtx = ref();
 const onEditorReady = () => {
   createSelectorQuery().select('#editor').context((res) => {
     console.log(res.context);
     editorCtx.value = res.context;
+    setContent();
   }).exec()
+};
+
+const setContent = () => {
   editorCtx.value.setContents({
     html: props.data,
   });
-};
+}
 
 interface editorChangeDetail {
   html: string;
@@ -29,27 +34,24 @@ interface editorChangeDetail {
   text: string;
 }
 const emit = defineEmits(["updateData"]);
-const onEditorInput = (detail: editorChangeDetail) => {
-  emit("updateData", detail.html);
+const onEditorInput = ({ detail: { html, delta, text } }: {detail: editorChangeDetail}) => {
+  emit("updateData", html);
 };
+
+const uploadUrl = ref("");
 </script>
 
 <template>
   <div>
     <editor id="editor" class="editor" :placeholder="placeholder" @ready="onEditorReady" @input="onEditorInput"></editor>
-    <div class="toolbar">
-        <div class="i-local-image"></div>
+    <div class="flex items-center">
+      <nut-uploader :url="uploadUrl">
+        <div class="i-local-image text-20px text-#333333"></div>
+      </nut-uploader>
     </div>
   </div>
 </template>
 
-<style scoped lang="less">
-.rich-text {
-  font-size: 14px;
-  line-height: 1.5;
-  color: #333;
-  word-wrap: break-word;
-  word-break: break-all;
-  white-space: pre-wrap;
-}
+<style lang="scss">
+
 </style>
