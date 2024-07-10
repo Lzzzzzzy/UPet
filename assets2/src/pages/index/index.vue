@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onBeforeMount, computed, watch } from 'vue';
+import { ref, onBeforeMount, watch } from 'vue';
 import { eventCenter } from '@tarojs/taro';
 import noPetRemind from '@/components/home/add-pet-remind/index.vue';
 import petTodosPage from '@/components/pet-todos/index.vue';
@@ -106,12 +106,6 @@ const getPetTodos = (date: Date, pet: Pet.PetInfo) => {
       {"id": 8, "time": "18:00", "title": "铲屎", "remark": "", "complete": false},
       {"id": 9, "time": "18:00", "title": "铲屎", "remark": "", "complete": false},
   ] 
-}
-</script>
-
-<script lang="ts">
-export default {
-  name: 'Index',
 }
 </script>
 

@@ -98,8 +98,12 @@ const swipersDays = computed(() => {
   return dates;
 });
 
+interface SlideDetail {
+  current: number;
+}
+
 // 处理轮播切换事件
-const handleSlide = ({ detail: { current } }) => {
+const handleSlide = ({ detail: { current } }: {detail: SlideDetail}) => {
   slideIndex.value = current;
   const direct = getSlideDirect();
   previousIndex.value = current;
