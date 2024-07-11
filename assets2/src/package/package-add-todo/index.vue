@@ -155,14 +155,14 @@ const confirmRepeatTime = () => {
             <nut-cell @click="showRepeatDate=true" class="!p-0">
               <nut-ellipsis direction="middle" :content="getRepeatDates()"></nut-ellipsis>
             </nut-cell>
-            <nut-popup v-model:visible="showRepeatDate" position="bottom" round safe-area-inset-bottom pop-class="mb-50px">
+            <nut-popup v-model:visible="showRepeatDate" position="bottom" round safe-area-inset-bottom>
                 <!-- <nut-picker v-model="formData.repeat" :columns="repeatList" title="选择重复提醒周期" @confirm="showRepeatDate=false" cancel-text=" " /> -->
                  <div class="flex items-center justify-between h-45px">
                     <div class="date-picker__left"></div>
                     <div class="date-picker__center">可以同时选择多个日期</div>
                     <div class="date-picker__right px-15px" @click="onHandleConfirmSelectDate">确认</div>
                  </div>
-                 <calendar v-model="currentDate" :get-dot-info-func="getDotInfos" :show-week="false" :multiple="true">
+                 <calendar v-model="currentDate" :get-dot-info-func="getDotInfos" :show-week="false" :show-calendar-change-button="false">
                 </calendar>
             </nut-popup>
         </nut-form-item>

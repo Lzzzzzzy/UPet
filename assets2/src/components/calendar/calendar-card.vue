@@ -4,18 +4,18 @@
         <nut-grid-item v-for="(elem, i) in weekName" :key="i" class="cell"> {{ elem }}</nut-grid-item>
     </nut-grid>
     <swiper
-      class="swiper"
+      class="swiper mode-change-transition"
       :current="current"
       :circular="true"
       @change="handleSlide"
-      :class="{ 'week-height': isWeek, 'month-height': !isWeek }"
+      :style="{'height': calcCalendarHeight}"
     >
       <swiper-item v-for="(batch, index) in swipersDays" :key="index">
         <nut-grid :column-num="7" :border="false" :class="swiperClass">
             <nut-grid-item v-for="index in ((batch[0].day.$W === 0 ? 7 : batch[0].day.$W)-1)" :key="index"></nut-grid-item>
             <nut-grid-item v-for="(elem, i) in batch" :key="i" @click="onHandleChangeSelectedDate(elem.date)" class="date">  
               <template #default>
-                <div class="date-num" :class="{ active: elem.isActive, today: elem.isToday }">{{ elem.d }}</div>
+                <div class="date-num" :class="{ active: isActiveDay(elem.date), today: elem.isToday }">{{ elem.d }}</div>
                 <div class="dot-container">
                     <div v-for="(color, i) in elem.dotColors" :key="i" :style="{ background: color }" class="dot"></div>
                 </div>
@@ -27,10 +27,10 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref, computed } from "vue";
+import { ref, computed, watch } from "vue";
 import type { Dayjs } from 'dayjs';
 import dayjs from "dayjs";
-import { getDays} from '@/utils/common/datetime';
+import { getDays, isDateInArray } from '@/utils/common/datetime';
 import { weekName } from '@/utils/common/const';
 
 const props = defineProps({
@@ -56,13 +56,17 @@ const props = defineProps({
   }
 });
 
-const emit = defineEmits(["update:modelValue", "changeSelectedDates"]);
+const emit = defineEmits(["update:modelValue", "changeSelectedDates", "updateSwiperHeight"]);
 
 const currentDate = computed(() => {
   return dayjs(props.modelValue);
 });
 
-const selectedDates = ref(props.selectedDates);
+const selectedDates = ref<Array<Date>>([]);
+
+watch(() => props.selectedDates, (newValue) => {
+  selectedDates.value = newValue;
+}, { immediate: true });
 
 const calendarType = computed(()=>{
   return props.isWeek ? "week" : "month";
@@ -85,7 +89,9 @@ const dotData = computed(() => {
 });
 
 const days = computed(() => {
-  return dateIndexes.value.map((item) => getDays(item, currentDate.value, calendarType.value));
+  const d = dateIndexes.value.map((item) => getDays(item, currentDate.value, calendarType.value));
+  console.log("days:", d)
+  return d;
 });
 
 const isActiveDay = (date: string) => {
@@ -105,7 +111,6 @@ const swipersDays = computed(() => {
     m.map((item, index) => {
       const dateInfo = {
         ...item,
-        isActive: isActiveDay(item.date),
         isToday: dayjs().format('YYYY-MM-DD') === item.date,
         dotColors: dotData.value[item.date] || [],
       }
@@ -152,18 +157,41 @@ const getSlideDirect = () => {
 
 const onHandleChangeSelectedDate = (date: string | Dayjs) => {
   const day = dayjs(date);
-  if (selectedDates.value.includes(day.toDate())) {
+  const isDaySelected = isDateInArray(day.toDate(), selectedDates.value);
+  if (selectedDates.value.length === 1 && isDaySelected) {  // 只有一天选中时不能再取消
+    return;
+  }
+
+  if (isDateInArray(day.toDate(), selectedDates.value)) {
     // 移除选中日期
     selectedDates.value = selectedDates.value.filter((d) => dayjs(d).format('YYYY-MM-DD') !== day.format('YYYY-MM-DD'));
   } else {
     // 添加选中日期
     selectedDates.value.push(day.toDate());
+    selectedDates.value = selectedDates.value;
   }
-
   emit('changeSelectedDates', selectedDates.value);
 };
 
-const swiperClass = computed(()=> props.swiperClass)
+const swiperClass = computed(()=> props.swiperClass);
+
+const calcCalendarHeight = computed(() => {
+  if (props.isWeek) {
+    emit("updateSwiperHeight", 40)
+    return "40px";
+  }
+  const dates = swipersDays.value[slideIndex.value];
+  const firstLineCount = dates[0].day.$W === 0 ? 1 : (7-dates[0].day.$W+1);
+  const otherDatesCount = dates.length - firstLineCount;
+  let lines = Math.floor(otherDatesCount / 7);
+  const remainder = otherDatesCount % 7;
+  if (remainder) {
+    lines +=  2
+  }
+  const height = 43 * lines;
+  emit("updateSwiperHeight", height)
+  return `${height}px`;
+})
 </script>
 <style lang="scss">
 .card {
@@ -176,14 +204,8 @@ const swiperClass = computed(()=> props.swiperClass)
 
   .swiper {
 
-    &.week-height {
-      height: 40px;
+    &.mode-change-transition {
       transition: height 0.3s ease-in-out;  
-    }
-
-    &.month-height {
-      height: 210px;
-      transition: height 0.3s ease-in-out;
     }
 
     .date {

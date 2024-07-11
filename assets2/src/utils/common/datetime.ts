@@ -104,3 +104,26 @@ export const getDays = (index = 0, date: Date | Dayjs, type: string) => {
 
     return list;
 };
+
+/** 判断date是否在date列表中 
+ * @param dateToCheck Date 对象
+ * @param dateArray Date 列表
+*/
+export const isDateInArray = (dateToCheck: Date, dateArray: Array<Date>) => {
+  // 将dateToCheck转换为只有年月日的日期
+  const checkDateOnly = new Date(dateToCheck.getFullYear(), dateToCheck.getMonth(), dateToCheck.getDate());
+
+  // 遍历dateArray并检查每个日期
+  for (let i = 0; i < dateArray.length; i++) {
+    // 将数组中的每个日期也转换为只有年月日的日期
+    const arrayDateOnly = new Date(dateArray[i].getFullYear(), dateArray[i].getMonth(), dateArray[i].getDate());
+
+    // 如果两个日期相同（仅比较年月日），则返回true
+    if (checkDateOnly.getTime() === arrayDateOnly.getTime()) {
+      return true;
+    }
+  }
+
+  // 如果没有找到匹配的日期，则返回false
+  return false;
+}

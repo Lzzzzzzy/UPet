@@ -15,14 +15,10 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
-  swiperClass: {
-    type: String,
-    default: "",
-  },
-  // multiple: {
-  //   type: Boolean,
-  //   default: false,
-  // }
+  showCalendarChangeButton: {
+    type: Boolean,
+    default: true,
+  }
 });
 const currentDate = ref(new Date());  // 当前指向的日期
 const selectedDates = ref();  // 当前选中的日期
@@ -39,14 +35,14 @@ const confirm = () => {
 }
 
 // 向父组件返回选中的日期
-const emit = defineEmits(["update:modelValue"]);
+const emit = defineEmits(["update:modelValue", "changeMode", "updateSwiperHeight"]);
 watch(selectedDates, (newVal) => {
   if (multiple.value) {
     emit('update:modelValue', selectedDates.value);
   } else {
     emit('update:modelValue', selectedDates.value[selectedDates.value.length - 1]);
   }
-})
+}, { deep: true })
 
 watch(currentDate, (newVal) => {
   switchedDate.value = newVal;
@@ -61,10 +57,9 @@ watch(() => props.modelValue, (newValue) => {
     multiple.value = true;
   } else {
     selectedDates.value = [props.modelValue];
+    currentDate.value = props.modelValue;
   }
 }, { immediate: true });
-
-const swiperClass = computed(()=> props.swiperClass)
 
 const formattedMonth = computed(() => {
   const month = currentDate.value.getMonth() + 1;
@@ -75,15 +70,49 @@ const formattedMonth = computed(() => {
 const onHandleSelectDate = (date: Array<Date>) => {
   selectedDates.value = date
 }
+
+const showWeekView = ref(props.showWeek);
+const swiperClass = ref('');
+const changeCurrentDateAnimation = () => {
+  const today = new Date().setHours(0, 0, 0, 0);
+  if (currentDate.value.setHours(0, 0, 0, 0) ==  today) {
+    return
+  }
+  if (currentDate.value.setHours(0, 0, 0, 0) > today) {
+    swiperClass.value = 'slide-left'
+  } else {
+    swiperClass.value = 'slide-right'
+  }
+  setTimeout(() => swiperClass.value = '', 300);
+}
+
+const goToday = () => {
+  changeCurrentDateAnimation();
+  currentDate.value = new Date();
+}
+
+const changeCalendarMode = () => {
+  showWeekView.value = !showWeekView.value
+  const mode = showWeekView.value ? "week" : "month";
+  emit("changeMode", mode);
+}
+
+const updateSwiperHeight = (height: number) => {
+  emit("updateSwiperHeight", height)
+}
 </script>
 <template>
     <div>
         <div class="calendar-container">
             <div class="header-container">
                 <div @click="showChangeDatePopup = true">{{ formattedMonth }}</div>
-                <slot name="header"></slot>
+                <div>
+                  <div class="text-20px pr-20px" @click="changeCalendarMode" :class="{ 'i-local-calendar-month': showWeekView, 'i-local-calendar-week':  !showWeekView }" v-if="showCalendarChangeButton"></div>
+                  <div class="text-20px i-local-goto-today pl-20px" @click="goToday"></div>
+                  <slot name="header"></slot>
+                </div>
             </div>
-            <calendar-card v-model="currentDate" :get-dot-info-func="getDotInfoFunc" :is-week="showWeek" :swiper-class="swiperClass" @change-selected-dates="onHandleSelectDate" :selected-dates="selectedDates"></calendar-card>
+            <calendar-card v-model="currentDate" :get-dot-info-func="getDotInfoFunc" :is-week="showWeekView" :swiper-class="swiperClass" @change-selected-dates="onHandleSelectDate" :selected-dates="selectedDates" @update-swiper-height="updateSwiperHeight"></calendar-card>
         </div>
         <nut-popup v-model:visible="showChangeDatePopup" position="bottom" round safe-area-inset-bottom>
             <nut-date-picker
@@ -108,4 +137,35 @@ const onHandleSelectDate = (date: Array<Date>) => {
   }
 }
 
+@keyframes slide-left {
+  0% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(50%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slide-right {
+  0% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.slide-left {
+  animation: slide-left 0.3s forwards;
+}
+
+.slide-right {
+  animation: slide-right 0.3s forwards;
+}
 </style>
