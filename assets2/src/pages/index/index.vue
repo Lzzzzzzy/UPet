@@ -12,7 +12,7 @@ definePageConfig({
 
 /** 日历相关参数和方法 */
 const currentDate = ref(new Date());
-const dotInfos = (date: Array<string>) => {
+const getDotInfos = (date: Array<string>) => {
     return {"2024-07-02": ["red", "black"], "2024-07-03": ["green"], "2024-07-30": ["green"], "2024-07-31": ["orange"]}
 }
 const showWeek = ref(true);
@@ -114,7 +114,7 @@ const getPetTodos = (date: Date, pet: Pet.PetInfo) => {
     <custom-navbar title="首页" />
     <div v-if="pets.length">
       <div class="fixed-header" :class="{ expanded: !showWeek }">
-        <calendar v-model="currentDate" :get-dot-info-func="dotInfos" :show-week="showWeek" :swiper-class="swiperDirection">
+        <calendar v-model="currentDate" :get-dot-info-func="getDotInfos" :show-week="showWeek" :swiper-class="swiperDirection">
           <template #header>
             <div>
               <div class="text-20px pr-20px" @click="showWeek = !showWeek" :class="{ 'i-local-calendar-month': showWeek, 'i-local-calendar-week':  !showWeek }"></div>

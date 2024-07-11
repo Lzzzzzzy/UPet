@@ -1,24 +1,14 @@
 <script setup lang="ts">
 import { ref, onBeforeMount, reactive } from "vue";
-import { formatDatetime, getMinAndMaxDate } from "@/utils/common/datetime";
+import { formatDatetime, getMinAndMaxDate, formatTime } from "@/utils/common/datetime";
 import { eventCenter } from "@tarojs/taro";
 import richTextContent from "@/components/rich-text/index.vue";
+import dayjs from "dayjs";
 
 
 definePageConfig({
   navigationBarTitleText: '添加待办'
 });
-
-const repeatList = ref([
-  { text: '不重复', value: 0 },
-  { text: '每天', value: 1 },
-  { text: '每周', value: 2 },
-  { text: '每两周', value: 3 },
-  { text: '每月', value: 4 },
-  { text: '每三个月', value: 5 },
-  { text: '每半年', value: 6 },
-  { text: '每年', value: 7 },
-])
 
 const tagList = [
   { text: "一般", value: 0 },
@@ -31,7 +21,8 @@ const formData = reactive({
   time: new Date(),
   remark: '',
   remind: false,
-  repeat: [repeatList.value[0].value],
+  repeatDate: [dayjs().format('YYYY-MM-DD')],
+  repeatTime: formatTime(new Date()),
   complete: false,
   tag: [tagList[0].value],
 })
@@ -73,11 +64,26 @@ const confirmSelectTime = () => {
 }
 
 // 重复周期选择
-const showRepeatSelection = ref(false);
-const getRepeatText = (value: number) => {
-  const repeat = repeatList.value.find(item => item.value === value);
-  return repeat?.text || '';
+const showRepeatDate = ref(false);
+
+const getDotInfos = (date: Array<string>) => {
+    return {"2024-07-02": ["red", "black"], "2024-07-03": ["green"], "2024-07-30": ["green"], "2024-07-31": ["orange"]}
 }
+
+const currentDate = ref([new Date()])
+
+const onHandleConfirmSelectDate = () => {
+  const repeatDate: Array<string> = [];
+  currentDate.value.forEach((date)=>{
+    repeatDate.push(dayjs(date).format('YYYY-MM-DD'))
+  })
+  formData.repeatDate = repeatDate;
+  showRepeatDate.value = false;
+}
+
+const getRepeatDates = () => {
+  return formData.repeatDate.join(",")
+} 
 
 const onUpdateRemark = (data: string) => {
   console.log("data:", data);
@@ -88,6 +94,13 @@ const showTagSelection = ref(false);
 const getTagText = (value: number) => {
   const tag = tagList.find(item => item.value === value);
   return tag?.text || '';
+}
+
+const showRepeatTimePicker = ref(false);
+const repeatTime = ref(new Date());
+const confirmRepeatTime = () => {
+  formData.repeatTime = formatTime(repeatTime.value);
+  showRepeatTimePicker.value = false;
 }
 </script>
 <template>
@@ -138,15 +151,36 @@ const getTagText = (value: number) => {
         <nut-form-item label="需要提醒" prop="remind" class="form-item-border">
             <nut-switch v-model="formData.remind" />
         </nut-form-item>
-        <nut-form-item label="重复" prop="repeat" class="form-item-border" v-if="formData.remind">
-            <div @click="showRepeatSelection=true">{{ getRepeatText(formData.repeat[0]) }}</div>
-            <nut-popup v-model:visible="showRepeatSelection" position="bottom" round safe-area-inset-bottom pop-class="mb-50px">
-                <nut-picker v-model="formData.repeat" :columns="repeatList" title="选择重复提醒周期" @confirm="showRepeatSelection=false" cancel-text=" " />
+        <nut-form-item label="提醒日期" prop="repeatDate" class="form-item-border" v-if="formData.remind">
+            <nut-cell @click="showRepeatDate=true" class="!p-0">
+              <nut-ellipsis direction="middle" :content="getRepeatDates()"></nut-ellipsis>
+            </nut-cell>
+            <nut-popup v-model:visible="showRepeatDate" position="bottom" round safe-area-inset-bottom pop-class="mb-50px">
+                <!-- <nut-picker v-model="formData.repeat" :columns="repeatList" title="选择重复提醒周期" @confirm="showRepeatDate=false" cancel-text=" " /> -->
+                 <div class="flex items-center justify-between h-45px">
+                    <div class="date-picker__left"></div>
+                    <div class="date-picker__center">可以同时选择多个日期</div>
+                    <div class="date-picker__right px-15px" @click="onHandleConfirmSelectDate">确认</div>
+                 </div>
+                 <calendar v-model="currentDate" :get-dot-info-func="getDotInfos" :show-week="false" :multiple="true">
+                </calendar>
             </nut-popup>
+        </nut-form-item>
+        <nut-form-item label="提醒时间" prop="repeatTime" class="form-item-border" v-if="formData.remind">
+          <div @click="showRepeatTimePicker=true" class="w-full">{{ formData.repeatTime }}</div>
+          <nut-popup v-model:visible="showRepeatTimePicker" position="bottom" round safe-area-inset-bottom>
+              <nut-date-picker
+                v-model="repeatTime"
+                type="hour-minute"
+                :three-dimensional="false"
+                @confirm="confirmRepeatTime"
+                cancel-text=" "
+              ></nut-date-picker>
+          </nut-popup>
         </nut-form-item>
 
         <nut-space class="m-10px flex justify-center w-full">
-            <nut-button type="primary" @click="handleSubmit">提交</nut-button>
+          <nut-button type="primary" @click="handleSubmit">提交</nut-button>
         </nut-space>
       </nut-form>
     </div>
