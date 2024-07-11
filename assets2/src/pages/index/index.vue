@@ -134,20 +134,11 @@ const calendarHeight = computed(()=>{
   width: 100%;
   background-color: #ffffff;
   overflow: hidden;
-  // height: 105px; /* 初始高度 */
   z-index: 99;
 }
 
-.fixed-header.expanded {
-  height: 330px; /* 展开后的高度 */
-}
-
 .todo-container {
-  padding-top: 105px; /* 初始高度，等于固定头部初始高度 */
   transition: padding-top 0.3s; /* 确保过渡效果 */
-}
-
-.fixed-header.expanded + .todo-container {
-  padding-top: 330px; /* 展开后，内容容器下移 */
+  padding-bottom: 100px;
 }
 </style>
