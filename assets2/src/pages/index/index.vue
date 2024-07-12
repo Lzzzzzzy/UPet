@@ -110,7 +110,7 @@ const calendarHeight = computed(()=>{
         <calendar v-model="currentDate" :get-dot-info-func="getDotInfos" :show-week="true" @change-mode="changeCalendarMode" @update-swiper-height="updateSwiperHeight">
         </calendar>
       </div>
-      <pet-todos-page :pets="pets" :todos="petTodos" class="todo-container" :style="{'padding-top': calendarHeight}"></pet-todos-page>
+      <pet-todos-page :pets="pets" :todos="petTodos" class="todo-container" :style="{'padding-top': calendarHeight}" :current-date="currentDate"></pet-todos-page>
     </div>
     <div v-else class="position-absolute pos-top-50% translate-middle full-width">
       <no-pet-remind></no-pet-remind>

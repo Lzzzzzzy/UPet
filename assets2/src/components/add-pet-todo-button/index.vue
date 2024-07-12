@@ -1,9 +1,16 @@
 <script lang="ts" setup>
 import { navigateTo } from "@tarojs/taro";
 
+const props = defineProps({
+  currentDate: {
+    type: String,
+    required: true,
+  }
+});
+
 const handleToAddTodo = () => {
   navigateTo({
-    url: '/package/package-add-todo/index'
+    url: `/package/package-add-todo/index?selectedDate=${props.currentDate}`
   });
 }
 </script>

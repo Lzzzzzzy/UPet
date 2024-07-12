@@ -37,7 +37,7 @@
 import { ref, computed, watch } from "vue";
 import type { Dayjs } from 'dayjs';
 import dayjs from "dayjs";
-import { getDays, isDateInArray } from '@/utils/common/datetime';
+import { getDays, isDateInArray, isSameDate } from '@/utils/common/datetime';
 import { weekName } from '@/utils/common/const';
 
 const props = defineProps({
@@ -102,7 +102,7 @@ const days = computed(() => {
 const isActiveDay = (date: string) => {
   let res = false;
   selectedDates.value.forEach((d) => {
-    if (dayjs(d).format('YYYY-MM-DD') === date) {
+    if (isSameDate(d, date)) {
       res = true;
     }
   });
@@ -116,7 +116,7 @@ const swipersDays = computed(() => {
     m.map((item, index) => {
       const dateInfo = {
         ...item,
-        isToday: dayjs().format('YYYY-MM-DD') === item.date,
+        isToday: isSameDate(dayjs(), item.date),
         dotColors: dotData.value[item.date] || [],
       }
       swiperDays.push(dateInfo);

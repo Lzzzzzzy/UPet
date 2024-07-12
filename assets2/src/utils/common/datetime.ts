@@ -17,22 +17,6 @@ export function formatDatetime(date: Date) {
   return formattedDateTime
 }
 
-/** 获取可选的当天时间
- * @param date Date 对象
- */
-export function getMinAndMaxDate(date: Date) {
-  const today = new Date();
-  let minDate;
-  const maxDate = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59);
-
-  if (date.getMonth() === today.getMonth() && date.getFullYear() === today.getFullYear() && date.getDate() === today.getDate()) {
-    minDate = new Date(date.getFullYear(), date.getMonth(), date.getDate(), date.getHours(), date.getMinutes(), 0);
-  } else {
-    minDate = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0);
-  }
-  return {minDate, maxDate}
-}
-
 /** 格式化时间 
  * @param date Date 对象
  * 日期格式： HH:mm
@@ -126,4 +110,20 @@ export const isDateInArray = (dateToCheck: Date, dateArray: Array<Date>) => {
 
   // 如果没有找到匹配的日期，则返回false
   return false;
+}
+
+/** 判断两个日期是否是同一天
+ * @param date1
+ * @param date2
+ */
+export const isSameDate = (date1: Date | string | Dayjs, date2: Date | string | Dayjs) => {
+  return dayjs(date1).format("YYYY-MM-DD") === dayjs(date2).format("YYYY-MM-DD");
+}
+
+/** 判断日期1在日期2之前
+ * @param date1
+ * @param date2
+ */
+export const isBeforeDate = (date1: Date | string | Dayjs, date2: Date | string | Dayjs) => {
+  return dayjs(dayjs(date1).format("YYYY-MM-DD")).isBefore(dayjs(date2).format("YYYY-MM-DD"));
 }

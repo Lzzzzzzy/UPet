@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, watch, PropType } from "vue"
 import calendarCard from './calendar-card.vue'
+import { isSameDate, isBeforeDate } from "@/utils/common/datetime";
 
 const props = defineProps({
   modelValue: {
@@ -10,6 +11,9 @@ const props = defineProps({
   getDotInfoFunc: {
     type: Function,
     required: false,
+    default: () => {
+      return ()=>{}
+    }
   },
   showWeek: {
     type: Boolean,
@@ -55,12 +59,12 @@ watch(currentDate, (newVal) => {
 })
 
 watch(() => props.modelValue, (newValue) => {
-  if (Array.isArray(props.modelValue)) {
-    selectedDates.value = props.modelValue;
+  if (Array.isArray(newValue)) {
+    selectedDates.value = newValue;
     multiple.value = true;
   } else {
-    selectedDates.value = [props.modelValue];
-    currentDate.value = props.modelValue;
+    selectedDates.value = [newValue];
+    currentDate.value = newValue;
   }
 }, { immediate: true });
 
@@ -77,11 +81,11 @@ const onHandleSelectDate = (date: Array<Date>) => {
 const showWeekView = ref(props.showWeek);
 const swiperClass = ref('');
 const changeCurrentDateAnimation = () => {
-  const today = new Date().setHours(0, 0, 0, 0);
-  if (currentDate.value.setHours(0, 0, 0, 0) ==  today) {
+  const today = new Date();
+  if (isSameDate(currentDate.value, today)) {
     return
   }
-  if (currentDate.value.setHours(0, 0, 0, 0) > today) {
+  if (isBeforeDate(today, currentDate.value)) {
     swiperClass.value = 'slide-left'
   } else {
     swiperClass.value = 'slide-right'

@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ref, onBeforeMount, reactive } from "vue";
-import { formatDatetime, getMinAndMaxDate, formatTime } from "@/utils/common/datetime";
-import { eventCenter } from "@tarojs/taro";
+import { ref, onBeforeMount, reactive, computed } from "vue";
+import { formatDatetime, formatTime, isSameDate, isBeforeDate } from "@/utils/common/datetime";
+import { eventCenter, getCurrentInstance } from "@tarojs/taro";
 import richTextContent from "@/components/rich-text/index.vue";
 import dayjs from "dayjs";
 
@@ -10,15 +10,25 @@ definePageConfig({
   navigationBarTitleText: '添加待办'
 });
 
+const selectedDate = ref(new Date());
+
+const isEarlierThanToday = computed(() => {
+  return isBeforeDate(selectedDate.value, new Date())
+})
+
+const pageTitle = computed(()=>{
+  return isEarlierThanToday.value ? "添加记录" : "添加待办"
+})
+
 const tagList = [
-  { text: "一般", value: 0 },
+  { text: "日常", value: 0 },
   { text: "需要注意", value: 1 },
   { text: "紧急情况", value: 2 }
 ]
 
 const formData = reactive({
   title: '',
-  time: new Date(),
+  time: formatDatetime(new Date()),
   remark: '',
   remind: false,
   repeatDate: [dayjs().format('YYYY-MM-DD')],
@@ -46,29 +56,26 @@ const handleSubmit = () => {
   })
 }
 
-const selectionMinDate = ref();
-const selectionMaxDate = ref();
 
 onBeforeMount(() => {
-  const { minDate, maxDate } = getMinAndMaxDate(new Date())
-  selectionMinDate.value = minDate;
-  selectionMaxDate.value = maxDate;
+  const instance = getCurrentInstance();
+  const params = instance?.router?.params;
+  selectedDate.value = params ? dayjs(params.selectedDate).toDate() : new Date();
+  if (!isSameDate(selectedDate.value, new Date())) {
+    formData.time = formatDatetime(selectedDate.value);
+  }
 })
 
 // 日期选择
 const showDatePicker = ref(false);
-const selectedTime = ref();
+const selectedTime = ref(new Date());
 const confirmSelectTime = () => {
-    formData.time = selectedTime.value;
-    showDatePicker.value = false;
+  formData.time = formatDatetime(selectedTime.value);
+  showDatePicker.value = false;
 }
 
 // 重复周期选择
 const showRepeatDate = ref(false);
-
-const getDotInfos = (date: Array<string>) => {
-    return {"2024-07-02": ["red", "black"], "2024-07-03": ["green"], "2024-07-30": ["green"], "2024-07-31": ["orange"]}
-}
 
 const currentDate = ref([new Date()])
 
@@ -81,10 +88,6 @@ const onHandleConfirmSelectDate = () => {
   formData.repeatDate = repeatDate;
   showRepeatDate.value = false;
 }
-
-const getRepeatDates = () => {
-  return formData.repeatDate.join(",")
-} 
 
 const onUpdateRemark = (data: string) => {
   console.log("data:", data);
@@ -103,10 +106,20 @@ const confirmRepeatTime = () => {
   formData.repeatTime = formatTime(repeatTime.value);
   showRepeatTimePicker.value = false;
 }
+
+const remindDatesString = computed(() => {
+  if (formData.repeatDate.length === 1) {
+    if (isSameDate(formData.repeatDate[0], dayjs())) {
+      return `${formData.repeatDate[0]} (今天)`
+    }
+    return formData.repeatDate[0]
+  }
+  return `已选 ${formData.repeatDate.length} 天`
+});
 </script>
 <template>
   <basic-layout>
-    <custom-navbar title="添加待办" left-show />
+    <custom-navbar :title="pageTitle" left-show />
     <div class="w-full text-20px">
       <nut-form
         ref="formRef"
@@ -115,7 +128,7 @@ const confirmRepeatTime = () => {
         star-position="right"
       >
         <nut-form-item label="时间" class="form-item-border">
-          <div @click="showDatePicker=true" class="w-full">{{ formatDatetime(formData.time) }}</div>
+          <div @click="showDatePicker=true" class="w-full">{{ formData.time }}</div>
           <nut-popup v-model:visible="showDatePicker" position="bottom" round safe-area-inset-bottom>
               <nut-date-picker
                 v-model="selectedTime"
@@ -123,8 +136,6 @@ const confirmRepeatTime = () => {
                 :three-dimensional="false"
                 @confirm="confirmSelectTime"
                 cancel-text=" "
-                :min-date="selectionMinDate"
-                :max-date="selectionMaxDate"
               ></nut-date-picker>
           </nut-popup>
         </nut-form-item>
@@ -149,21 +160,20 @@ const confirmRepeatTime = () => {
             />
           </nut-popup>
         </nut-form-item>
-        <nut-form-item label="需要提醒" prop="remind" class="form-item-border">
+        <nut-form-item label="需要提醒" prop="remind" class="form-item-border" v-if="!isEarlierThanToday">
             <nut-switch v-model="formData.remind" />
         </nut-form-item>
         <nut-form-item label="提醒日期" prop="repeatDate" class="form-item-border" v-if="formData.remind">
-            <nut-cell @click="showRepeatDate=true" class="!p-0">
-              <nut-ellipsis direction="middle" :content="getRepeatDates()"></nut-ellipsis>
-            </nut-cell>
+            <div @click="showRepeatDate=true" class="text-#315efb">
+              {{ remindDatesString }}
+            </div>
             <nut-popup v-model:visible="showRepeatDate" position="bottom" round safe-area-inset-bottom>
-                <!-- <nut-picker v-model="formData.repeat" :columns="repeatList" title="选择重复提醒周期" @confirm="showRepeatDate=false" cancel-text=" " /> -->
                  <div class="flex items-center justify-between h-45px">
                     <div class="date-picker__left"></div>
                     <div class="date-picker__center">可以同时选择多个日期</div>
                     <div class="date-picker__right px-15px" @click="onHandleConfirmSelectDate">确认</div>
                  </div>
-                 <calendar v-model="currentDate" :get-dot-info-func="getDotInfos" :show-week="false" :show-change-mode-button="false">
+                 <calendar v-model="currentDate" :show-week="false" :show-change-mode-button="false">
                 </calendar>
             </nut-popup>
         </nut-form-item>
@@ -195,5 +205,11 @@ const confirmRepeatTime = () => {
 
 .tag-color-2 {
   background: #FF5733;
+}
+
+.ellipsis-style {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
 </style>
