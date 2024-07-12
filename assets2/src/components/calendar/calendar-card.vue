@@ -1,8 +1,11 @@
 <template>
   <div class="card">
+    <!-- 星期名称 -->
     <nut-grid :column-num="7" :border="false" class="week-text-container">
-        <nut-grid-item v-for="(elem, i) in weekName" :key="i" class="cell"> {{ elem }}</nut-grid-item>
+      <nut-grid-item v-for="(elem, i) in weekName" :key="i" class="cell"> {{ elem }}</nut-grid-item>
     </nut-grid>
+
+    <!-- 轮播组件 -->
     <swiper
       class="swiper mode-change-transition"
       :current="current"
@@ -12,15 +15,19 @@
     >
       <swiper-item v-for="(batch, index) in swipersDays" :key="index">
         <nut-grid :column-num="7" :border="false" :class="swiperClass">
-            <nut-grid-item v-for="index in ((batch[0].day.$W === 0 ? 7 : batch[0].day.$W)-1)" :key="index"></nut-grid-item>
-            <nut-grid-item v-for="(elem, i) in batch" :key="i" @click="onHandleChangeSelectedDate(elem.date)" class="date">  
-              <template #default>
-                <div class="date-num" :class="{ active: isActiveDay(elem.date), today: elem.isToday }">{{ elem.d }}</div>
-                <div class="dot-container">
-                    <div v-for="(color, i) in elem.dotColors" :key="i" :style="{ background: color }" class="dot"></div>
-                </div>
-              </template>
-            </nut-grid-item>
+          <!-- 从1号开始，空出1号之前的日期 -->
+          <nut-grid-item v-for="index in ((batch[0].day.$W === 0 ? 7 : batch[0].day.$W)-1)" :key="index"></nut-grid-item>
+
+          <!-- 当月日期 -->
+          <nut-grid-item v-for="(elem, i) in batch" :key="i" @click="onHandleChangeSelectedDate(elem.date)" class="date">
+            <template #default>
+              <div class="date-num" :class="{ active: isActiveDay(elem.date), today: elem.isToday }">{{ elem.d }}</div>
+              <div class="dot-container">
+                <!-- 日期下面的标记小圆点 -->
+                <div v-for="(color, i) in elem.dotColors" :key="i" :style="{ background: color }" class="dot"></div>
+              </div>
+            </template>
+          </nut-grid-item>
         </nut-grid>
       </swiper-item>
     </swiper>

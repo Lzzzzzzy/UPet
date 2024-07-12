@@ -20,6 +20,9 @@ const props = defineProps({
     default: true,
   }
 });
+
+// 对于父组件来说，只关心选中的日期，不关心当前指向的日期，所以当前指向的日期只是组件内部的记录，向父组件只暴露选中的日期
+
 const currentDate = ref(new Date());  // 当前指向的日期
 const selectedDates = ref();  // 当前选中的日期
 const multiple = ref(false);  // 是否多选
