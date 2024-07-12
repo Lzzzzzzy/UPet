@@ -94,7 +94,6 @@ const changeCalendarMode = (value: string) => {
 
 const swiperHeight = ref(40);
 const updateSwiperHeight = (height: number) => {
-  console.log("height:", height);
   swiperHeight.value = height;
 }
 const calendarHeight = computed(()=>{

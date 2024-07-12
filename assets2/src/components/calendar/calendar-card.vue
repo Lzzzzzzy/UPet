@@ -89,9 +89,7 @@ const dotData = computed(() => {
 });
 
 const days = computed(() => {
-  const d = dateIndexes.value.map((item) => getDays(item, currentDate.value, calendarType.value));
-  console.log("days:", d)
-  return d;
+  return dateIndexes.value.map((item) => getDays(item, currentDate.value, calendarType.value));
 });
 
 const isActiveDay = (date: string) => {
@@ -183,11 +181,8 @@ const calcCalendarHeight = computed(() => {
   const dates = swipersDays.value[slideIndex.value];
   const firstLineCount = dates[0].day.$W === 0 ? 1 : (7-dates[0].day.$W+1);
   const otherDatesCount = dates.length - firstLineCount;
-  let lines = Math.floor(otherDatesCount / 7);
-  const remainder = otherDatesCount % 7;
-  if (remainder) {
-    lines +=  2
-  }
+  let lines = Math.ceil(otherDatesCount / 7);
+  lines += 1;
   const height = 43 * lines;
   emit("updateSwiperHeight", height)
   return `${height}px`;

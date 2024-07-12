@@ -74,6 +74,7 @@ const currentDate = ref([new Date()])
 
 const onHandleConfirmSelectDate = () => {
   const repeatDate: Array<string> = [];
+  currentDate.value.sort((a, b) => a.getTime() - b.getTime());
   currentDate.value.forEach((date)=>{
     repeatDate.push(dayjs(date).format('YYYY-MM-DD'))
   })
@@ -162,7 +163,7 @@ const confirmRepeatTime = () => {
                     <div class="date-picker__center">可以同时选择多个日期</div>
                     <div class="date-picker__right px-15px" @click="onHandleConfirmSelectDate">确认</div>
                  </div>
-                 <calendar v-model="currentDate" :get-dot-info-func="getDotInfos" :show-week="false" :show-calendar-change-button="false">
+                 <calendar v-model="currentDate" :get-dot-info-func="getDotInfos" :show-week="false" :show-change-mode-button="false">
                 </calendar>
             </nut-popup>
         </nut-form-item>

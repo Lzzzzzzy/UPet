@@ -15,7 +15,7 @@ const props = defineProps({
     type: Boolean,
     default: true,
   },
-  showCalendarChangeButton: {
+  showChangeModeButton: {
     type: Boolean,
     default: true,
   }
@@ -107,7 +107,7 @@ const updateSwiperHeight = (height: number) => {
             <div class="header-container">
                 <div @click="showChangeDatePopup = true">{{ formattedMonth }}</div>
                 <div>
-                  <div class="text-20px pr-20px" @click="changeCalendarMode" :class="{ 'i-local-calendar-month': showWeekView, 'i-local-calendar-week':  !showWeekView }" v-if="showCalendarChangeButton"></div>
+                  <div class="text-20px pr-20px" @click="changeCalendarMode" :class="{ 'i-local-calendar-month': showWeekView, 'i-local-calendar-week':  !showWeekView }" v-if="showChangeModeButton"></div>
                   <div class="text-20px i-local-goto-today pl-20px" @click="goToday"></div>
                   <slot name="header"></slot>
                 </div>
