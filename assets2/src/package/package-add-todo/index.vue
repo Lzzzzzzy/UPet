@@ -146,7 +146,7 @@ const remindDatesString = computed(() => {
             </div>
         </nut-form-item>
         <nut-form-item label="提醒时间" prop="remindTime" class="form-item-border" v-if="formData.remind">
-          <div @click="showRepeatTimePicker=true" class="w-full">{{ formData.remindTime }}</div>
+          <div @click="showRepeatTimePicker=true" class="text-#315efb">{{ formData.remindTime }}</div>
         </nut-form-item>
 
         <nut-space class="m-10px flex justify-center w-full">
@@ -194,6 +194,10 @@ const remindDatesString = computed(() => {
 </template>
 
 <style lang="scss">
+.tag-color-0 {
+  border: 1px solid #222222;
+}
+
 .tag-color-1 {
   background: #FFC300;
 }

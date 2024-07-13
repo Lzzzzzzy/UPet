@@ -16,8 +16,8 @@ const handleToAddTodo = () => {
 </script>
 <template>
     <div>
-        <nut-avatar class="!flex justify-center items-center !bg-#F7DAA1 !position-fixed position-bottom-100px position-right-30px" size="large" @click="handleToAddTodo">
-            <div class="text-30px i-local-add"></div>
+        <nut-avatar class="!flex justify-center items-center !bg-#98c7ce !position-fixed position-bottom-100px position-right-30px" size="large" @click="handleToAddTodo">
+            <div class="text-30px i-local-add text-black"></div>
         </nut-avatar>
     </div>
 </template>
