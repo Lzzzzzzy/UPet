@@ -15,12 +15,6 @@ const tabBar = {
       iconSelect: 'i-local-home-fill'
     },
     {
-      pagePath: '/pages/calendar/index',
-      text: '日历',
-      icon: 'i-local-calendar',
-      iconSelect: 'i-local-calendar-fill'
-    },
-    {
       pagePath: '/pages/my/index',
       text: '我的',
       icon: 'i-local-my',
@@ -52,7 +46,7 @@ export default {
     <nut-tabbar :model-value="activeTab" class="tabbar-bg" bottom safe-area-inset-bottom @tab-switch="tabSwitch">
       <nut-tabbar-item v-for="item in tabBar.list" :key="item.pagePath" :name="item.pagePath" :tab-title="item.text">
         <template #icon>
-          <div class="text-25px" :class="activeTab === item.pagePath ? item.iconSelect : item.icon"></div>
+          <div class="text-25px" :class="item.icon"></div>
         </template>
       </nut-tabbar-item>
     </nut-tabbar>
@@ -62,7 +56,7 @@ export default {
 <style lang="scss">
 .tabbar-bg {
   .nut-tabbar {
-    background: #E7E0CC;
+    // background: #E7E0CC;
     box-shadow: 0px -2px 6px rgba(0, 0, 0, 0.25);
   }
 }

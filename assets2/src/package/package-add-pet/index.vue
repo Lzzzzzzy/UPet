@@ -43,18 +43,20 @@ const handleSubmit = () => {
     }
   })
 }
+
+const uploadUrl = ref("");
 </script>
 <template>
   <basic-layout>
     <custom-navbar title="添加档案" left-show />
     <div class="w-full flex justify-center items-center mt-80px mb-30px flex-col">
       <nut-uploader
-        url="http://服务地址"
+        :url="uploadUrl"
         is-preview
       >
       <div class="w-80px h-80px border-rd-50% flex justify-center items-center bg-#ffffff border-1px b-solid border-color-#665D21">上传照片</div>
       </nut-uploader>
-      <div class="text-sm my-4 text-coolgray">和我们分享宝宝最可爱的样子吧~</div>
+      <div class="text-sm my-4 text-coolgray">上传一张孩子最可爱的照片作为头像</div>
     </div>
     <nut-form
       ref="formRef"

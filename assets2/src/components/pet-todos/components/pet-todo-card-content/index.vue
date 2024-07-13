@@ -9,10 +9,10 @@ defineProps({
 
 <template>
   <nut-row :gutter="10" class="my-10px" type="flex" justify="space-between">
-    <nut-col :span="5">
+    <nut-col :span="4">
       <div class="bg-#ffffff py-10px border-rd-md text-center">{{ todo.time }}</div>
     </nut-col>
-    <nut-col :span="19">
+    <nut-col :span="20">
       <div class="flex items-center justify-start">
         <div class="flex flex-col p-10px border-rd-md bg-#ffffff">
           <div class="text-16px">{{ todo.title }}</div>
