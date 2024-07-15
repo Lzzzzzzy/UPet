@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { ref, onBeforeMount, watch, computed } from 'vue';
-import { eventCenter } from '@tarojs/taro';
+import { eventCenter, getCurrentInstance, useDidShow } from '@tarojs/taro';
 import noPetRemind from '@/components/home/add-pet-remind/index.vue';
 import petTodosPage from '@/components/pet-todos/index.vue';
 import calendar from '@/components/calendar/index.vue';
+import dayjs from 'dayjs';
+import { localStg } from '@/utils';
 
 /** 设置页面属性 */
 definePageConfig({
@@ -21,10 +23,22 @@ const getDotInfos = (date: Array<string>) => {
 const currentPet = ref<Pet.PetInfo>();
 
 onBeforeMount(() => {
-    eventCenter.on("selectpet", (pet: Pet.PetInfo) => {
-        currentPet.value = pet
-    });
+  eventCenter.on("selectpet", (pet: Pet.PetInfo) => {
+    currentPet.value = pet;
+  });
+  eventCenter.on("changeDate", (date: Date) => {
+    console.log("changeDate");
+    currentDate.value = date;
+  })
 });
+
+useDidShow(() => {
+  const todoDate = localStg.get("todoDate") || null;
+  if (todoDate) {
+    currentDate.value = dayjs(todoDate).toDate()
+    localStg.remove("todoDate")
+  }
+})
 
 const pets = ref<Array<Pet.PetInfo>>([]);
 const getPetsInfo = () => {
@@ -56,10 +70,11 @@ pets.value = getPetsInfo();
 
 /** 待办事项相关参数和方法 */
 const petTodos = ref();
-watch([currentDate, currentPet], ([newVal1, newVal2], [oldVal1, oldVal2]) => {  
+watch([currentDate, currentPet], ([newVal1, newVal2], [oldVal1, oldVal2]) => {
+  console.log("watched");
   const todos = getPetTodos(currentDate.value, currentPet.value!);
   petTodos.value = todos;
-});  
+});
 
 const getPetTodos = (date: Date, pet: Pet.PetInfo) => {
   if (pet?.petName === "1234") {

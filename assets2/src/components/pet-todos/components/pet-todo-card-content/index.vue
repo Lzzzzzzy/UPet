@@ -1,9 +1,10 @@
 <script lang="ts" setup>
+import { PropType } from "vue";
 import checkedRadio from "@/components/checked-radio/index.vue";
 
 defineProps({
   todo: {
-    type: Object,
+    type: Array as PropType<Array<Pet.PetTodo>>,
     default: () => {},
   }
 });

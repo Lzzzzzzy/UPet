@@ -3,15 +3,15 @@ import todoCardContent from "@/components/pet-todos/components/pet-todo-card-con
 import todoCardHeader from "@/components/pet-todos/components/pet-todo-card-header/index.vue";
 import addTodoButton from "@/components/add-pet-todo-button/index.vue";
 import dayjs from "dayjs";
-import { computed } from "vue";
+import { computed, PropType } from "vue";
 
 const props = defineProps({
   todos: {
-    type: Array<Pet.PetTodo>,
+    type: Array as PropType<Array<Pet.PetTodo>>,
     default: () => []
   },
   pets: {
-    type: Array<Pet.PetInfo>,
+    type: Array as PropType<Array<Pet.PetInfo>>,
     default: () => []
   },
   currentDate: {
