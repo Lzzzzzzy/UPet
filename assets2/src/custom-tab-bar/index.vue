@@ -10,15 +10,18 @@ const tabBar = {
   list: [
     {
       pagePath: '/pages/index/index',
-      text: '首页',
+      text: '',
       icon: 'i-local-home',
-      iconSelect: 'i-local-home-fill'
+    },
+    {
+      pagePath: '/pages/search/index',
+      text: '',
+      icon: 'i-local-search',
     },
     {
       pagePath: '/pages/my/index',
-      text: '我的',
+      text: '',
       icon: 'i-local-my',
-      iconSelect: 'i-local-my-fill'
     }
   ]
 };
@@ -67,9 +70,7 @@ export default {
         background: #f7daa1;
         border-radius: 20px;
       }
-      .nut-tabbar-item_icon-box_nav-word {
-        display: none;
-      }
+
     }
   }
 }

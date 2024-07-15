@@ -1,25 +1,19 @@
 <script setup lang="ts">
 import { ref, onBeforeMount, reactive, computed } from "vue";
-import { formatDatetime, formatTime, isSameDate, isBeforeDate } from "@/utils/common/datetime";
+import { formatDatetime, formatTime, isSameDate } from "@/utils/common/datetime";
 import { eventCenter, getCurrentInstance } from "@tarojs/taro";
 import richTextContent from "@/components/rich-text/index.vue";
 import dayjs from "dayjs";
+import checkedRadio from "@/components/checked-radio/index.vue";
 
 const selectedDate = ref(new Date());
 
-const isEarlierThanToday = computed(() => {
-  return isBeforeDate(selectedDate.value, new Date())
-})
-
-const pageTitle = computed(()=>{
-  return isEarlierThanToday.value ? "添加记录" : "添加待办"
-})
-
-const tagList = [
-  { text: "日常", value: 0 },
-  { text: "需要注意", value: 1 },
-  { text: "紧急情况", value: 2 }
+const typeList = [
+  { text: "日常记录", value: 0 },
+  { text: "待办事项", value: 1 },
 ]
+
+const colorList = ["#ffffff", "#ffffcf", "#efdcd5"]
 
 const formData = reactive({
   title: '',
@@ -29,7 +23,8 @@ const formData = reactive({
   remindDate: [dayjs().format('YYYY-MM-DD')],
   remindTime: formatTime(new Date()),
   complete: false,
-  tag: [tagList[0].value],
+  type: typeList[0].value,
+  color: 0,
 })
 
 const formRef = ref()
@@ -89,11 +84,6 @@ const onUpdateRemark = (data: string) => {
   formData.remark = data;
 }
 
-const showTagSelection = ref(false);
-const getTagText = (value: number) => {
-  const tag = tagList.find(item => item.value === value);
-  return tag?.text || '';
-}
 
 const showRepeatTimePicker = ref(false);
 const remindTime = ref(new Date());
@@ -111,10 +101,11 @@ const remindDatesString = computed(() => {
   }
   return `已选 ${formData.remindDate.length} 天`
 });
+
 </script>
 <template>
   <basic-layout>
-    <custom-navbar :title="pageTitle" left-show />
+    <custom-navbar title="添加记录" left-show />
     <div class="w-full text-20px">
       <nut-form
         ref="formRef"
@@ -131,14 +122,36 @@ const remindDatesString = computed(() => {
         <nut-form-item label="备注" prop="remark" class="form-item-border">
           <rich-text-content :data="formData.remark" placeholder="备注，您也可以上传图片,例如确诊单或者希望给医生展示的症状" @update-data="onUpdateRemark"></rich-text-content>
         </nut-form-item>
-        <nut-form-item label="标签" prop="tag" class="form-item-border">
-          <div @click="showTagSelection=true" class="flex items-center">
-            <div>{{ getTagText(formData.tag[0]) }}</div>
-            <div class="w-15px h-15px border-rd-50% ml-10px" :class='`tag-color-${formData.tag[0]}`'></div>
-          </div>
+        <nut-form-item label="类型" prop="type" class="form-item-border">
+          <nut-radio-group v-model="formData.type">
+            <div class="flex items-center">
+              <div v-for="(type, index) in typeList" :key="index" class="mr-15px">
+                <!-- <nut-radio :label="type.value">
+                  {{ type.text }}
+                </nut-radio> -->
+                <nut-radio :label="type.value">
+                  <template #icon> <checked-radio :checked="false" size="15px"></checked-radio> </template>
+                  <template #checkedIcon> <checked-radio :checked="true" size="15px" checked-bg-color="#f7daa1"></checked-radio> </template>
+                  {{ type.text }}
+                </nut-radio>
+              </div>
+            </div>
+          </nut-radio-group>
         </nut-form-item>
-        <nut-form-item label="需要提醒" prop="remind" class="form-item-border" v-if="!isEarlierThanToday">
-            <nut-switch v-model="formData.remind" />
+        <nut-form-item label="颜色" prop="color" class="form-item-border">
+          <nut-radio-group v-model="formData.color">
+            <div class="flex items-center">
+              <div v-for="(color, index) in colorList" :key="index">
+                <nut-radio :label="index">
+                  <template #icon> <checked-radio :bg-color="color" :checked="false" size="25px" :checked-bg-color="color"></checked-radio> </template>
+                  <template #checkedIcon> <checked-radio :bg-color="color" :checked="true" size="25px" :checked-bg-color="color"></checked-radio> </template>
+                </nut-radio>
+              </div>
+            </div>
+          </nut-radio-group>
+        </nut-form-item>
+        <nut-form-item label="需要提醒" prop="remind" class="form-item-border" v-if="formData.type===1">
+            <nut-switch v-model="formData.remind" active-color="#f7daa1" />
         </nut-form-item>
         <nut-form-item label="提醒日期" prop="remindDate" class="form-item-border" v-if="formData.remind">
             <div @click="showRepeatDate=true" class="text-#315efb">
@@ -150,7 +163,7 @@ const remindDatesString = computed(() => {
         </nut-form-item>
 
         <nut-space class="m-10px flex justify-center w-full">
-          <nut-button type="primary" @click="handleSubmit">提交</nut-button>
+          <nut-button color="#f7daa1" @click="handleSubmit" class="!text-#000000">提交</nut-button>
         </nut-space>
       </nut-form>
       <nut-popup v-model:visible="showDatePicker" position="bottom" round safe-area-inset-bottom>
@@ -161,15 +174,6 @@ const remindDatesString = computed(() => {
           @confirm="confirmSelectTime"
           cancel-text=" "
         ></nut-date-picker>
-      </nut-popup>
-      <nut-popup v-model:visible="showTagSelection" position="bottom" round safe-area-inset-bottom>
-        <nut-picker 
-          v-model="formData.tag" 
-          :columns="tagList" 
-          title="选择标签" 
-          @confirm="showTagSelection=false" 
-          cancel-text=" "
-        />
       </nut-popup>
       <nut-popup v-model:visible="showRepeatDate" position="bottom" round safe-area-inset-bottom>
         <div class="flex items-center justify-between h-45px font-size-14px">
@@ -194,17 +198,6 @@ const remindDatesString = computed(() => {
 </template>
 
 <style lang="scss">
-.tag-color-0 {
-  border: 1px solid #222222;
-}
-
-.tag-color-1 {
-  background: #FFC300;
-}
-
-.tag-color-2 {
-  background: #FF5733;
-}
 
 .ellipsis-style {
   text-overflow: ellipsis;

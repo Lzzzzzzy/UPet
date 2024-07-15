@@ -24,7 +24,13 @@ const providerClass = computed(() => {
   return [showTabBar.value ? 'layout-tabbar-screen layout-tabbar-safe-bottom layout-main-screen' : safeBottom];
 });
 
-themeStore.setThemeVars({buttonDefaultBgColor: "transparent", cellDescColor: "#000000", checkboxIconDisableColor: "#665D21" })
+themeStore.setThemeVars({
+  buttonDefaultBgColor: "transparent", 
+  cellDescColor: "#000000", 
+  checkboxIconDisableColor: "#665D21", 
+  radioLabelMarginLeft: "10px",
+  radioLabelFontActiveColor: "#f7daa1", // #98c7ce 
+})
 // primaryColor: "#665D21", primaryColorEnd: "#665D21", buttonDefaultBorderColor: "#665D21",
 </script>
 
