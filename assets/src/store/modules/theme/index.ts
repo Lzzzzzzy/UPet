@@ -1,13 +1,13 @@
 import { defineStore } from 'pinia';
 
 type ConfigProviderTheme = 'light' | 'dark';
-interface AuthState {
+interface ThemeState {
   theme: ConfigProviderTheme;
   themeVars: object;
 }
 
 export const useThemeStore = defineStore('theme-store', {
-  state: (): AuthState => ({
+  state: (): ThemeState => ({
     theme: 'light',
     themeVars: {
       primaryColor: '#e53935',

@@ -1,13 +1,13 @@
 import { defineStore } from 'pinia';
 import { useRoutePath } from '@/composables';
 
-interface AuthState {
+interface AppState {
   /** 用户信息 */
   activeTab: string;
 }
 
 export const useAppStore = defineStore('app-store', {
-  state: (): AuthState => ({
+  state: (): AppState => ({
     activeTab: useRoutePath()
   }),
   getters: {

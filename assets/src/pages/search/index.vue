@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { switchTab, eventCenter } from '@tarojs/taro';
+import { switchTab } from '@tarojs/taro';
 import dayjs from "dayjs";
-import { useAppStore } from '@/store';
-import { localStg } from '@/utils';
+import { usePageStore, useAppStore } from '@/store';
 
 definePageConfig({
   navigationBarTitleText: '搜索'
@@ -31,7 +30,9 @@ const search = () => {
 
 const skipToIndex = (date: Date) => {
   const todoDate = dayjs(date).format("YYYY-MM-DD")
-  localStg.set("todoDate", todoDate)
+  const pageStore = usePageStore();
+  pageStore.setTodoDate(todoDate);
+
   const appStore = useAppStore();
   const url = "/pages/index/index"
   appStore.setActiveTab(url);

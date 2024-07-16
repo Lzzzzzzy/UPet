@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { ref, onBeforeMount, watch, computed } from 'vue';
-import { eventCenter, getCurrentInstance, useDidShow } from '@tarojs/taro';
+import { eventCenter, useDidShow } from '@tarojs/taro';
 import noPetRemind from '@/components/home/add-pet-remind/index.vue';
 import petTodosPage from '@/components/pet-todos/index.vue';
 import calendar from '@/components/calendar/index.vue';
 import dayjs from 'dayjs';
-import { localStg } from '@/utils';
+import { usePageStore } from '@/store';
 
 /** 设置页面属性 */
 definePageConfig({
@@ -33,10 +33,11 @@ onBeforeMount(() => {
 });
 
 useDidShow(() => {
-  const todoDate = localStg.get("todoDate") || null;
-  if (todoDate) {
-    currentDate.value = dayjs(todoDate).toDate()
-    localStg.remove("todoDate")
+  const pageStore = usePageStore();
+  if (pageStore.hasTodoDate) {
+    const todoDate = pageStore.getTodoDate;
+    currentDate.value = dayjs(todoDate).toDate();
+    pageStore.removeTodoDate();
   }
 })
 
@@ -71,7 +72,6 @@ pets.value = getPetsInfo();
 /** 待办事项相关参数和方法 */
 const petTodos = ref();
 watch([currentDate, currentPet], ([newVal1, newVal2], [oldVal1, oldVal2]) => {
-  console.log("watched");
   const todos = getPetTodos(currentDate.value, currentPet.value!);
   petTodos.value = todos;
 });
