@@ -1,9 +1,13 @@
 module.exports = {
   env: {
-    NODE_ENV: '"development"'
+    NODE_ENV: '"development"',
+    HTTP_URL: '"https://getman.cn/mock"'
   },
-  defineConstants: {
+  defineConstants: {},
+  mini: {
+    miniCssExtractPluginOption: {
+      ignoreOrder: true,
+    },
   },
-  mini: {},
   h5: {}
-}
+};

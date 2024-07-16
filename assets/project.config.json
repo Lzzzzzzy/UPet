@@ -1,35 +1,13 @@
 {
-  "miniprogramRoot": "dist/",
-  "description": "upet前端",
+  "miniprogramRoot": "./dist",
+  "projectname": "Taro3",
+  "description": "Taro3",
+  "appid": "",
   "setting": {
-    "urlCheck": true,
+    "urlCheck": false,
     "es6": false,
-    "enhance": false,
-    "compileHotReLoad": false,
     "postcss": false,
-    "minified": false,
-    "coverView": false,
-    "showShadowRootInWxmlPanel": false,
-    "packNpmRelationList": [],
-    "ignoreUploadUnusedFiles": true,
-    "babelSetting": {
-      "ignore": [],
-      "disablePlugins": [],
-      "outputPath": ""
-    }
+    "minified": false
   },
-  "compileType": "miniprogram",
-  "condition": {},
-  "editorSetting": {
-    "tabIndent": "insertSpaces",
-    "tabSize": 2
-  },
-  "libVersion": "3.4.6",
-  "srcMiniprogramRoot": "dist/",
-  "packOptions": {
-    "ignore": [],
-    "include": []
-  },
-  "projectname": "assets",
-  "appid": "wx0b422d257082a0c3"
+  "compileType": "miniprogram"
 }
