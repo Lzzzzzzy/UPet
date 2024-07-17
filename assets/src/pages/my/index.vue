@@ -12,12 +12,21 @@ const gotoMenu = (url: string) => {
 <template>
   <basic-layout show-tab-bar>
     <custom-navbar title="个人中心" />
-    <div v-for="(menu, index) in menus" :key="index" @click="gotoMenu(menu.url)">
+    <div v-for="(menu, index) in menus" :key="index" @click="gotoMenu(menu.url)" class="personal-menu-container">
       <nut-cell :title="menu.name">
          <template #desc>
-           <span class="i-local-more text-25px"></span>
+           <div class="i-local-more text-20px"></div>
          </template>
        </nut-cell>
     </div>
   </basic-layout>
 </template>
+<style lang="scss">
+.personal-menu-container {
+  .nut-cell {
+    margin: 0;
+    border-radius:0;
+    border-bottom: 0.5px solid #ebebeb;
+  }
+}
+</style>

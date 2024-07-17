@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { onBeforeMount } from 'vue';
+import { onBeforeMount, ref } from 'vue';
+import { eventCenter, navigateTo } from "@tarojs/taro";
 
 const getPetsInfo = () => {
   return [{
@@ -27,13 +28,26 @@ const getPetsInfo = () => {
 ]}
 
 onBeforeMount(() => {
-  getPetsInfo();
+  pets.value = getPetsInfo();
 })
+
+const pets = ref<Array<Pet.PetInfo>>([]);
+
+const editPet = (pet: Pet.PetInfo) => {
+  navigateTo({url: `/package/package-add-pet/index`, success: () => {
+    eventCenter.trigger("selectPet", pet)
+  }})
+};
 </script>
 <template>
   <basic-layout>
     <custom-navbar title="爱宠档案" left-show />
-    <div class="w-375px text-30px text-primary">档案</div>
+    <div class="w-full" v-for="pet in pets" :key="pet.id">
+      <div @click="editPet(pet)">
+        <pet-avatar :avatar-img-url="pet.petAvatar" />
+        <div>{{ pet.petName }}</div>
+      </div>
+    </div>
   </basic-layout>
 </template>
 

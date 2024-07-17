@@ -125,15 +125,8 @@ const remindDatesString = computed(() => {
         <nut-form-item label="类型" prop="type" class="form-item-border">
           <nut-radio-group v-model="formData.type">
             <div class="flex items-center">
-              <div v-for="(type, index) in typeList" :key="index" class="mr-15px">
-                <!-- <nut-radio :label="type.value">
-                  {{ type.text }}
-                </nut-radio> -->
-                <nut-radio :label="type.value">
-                  <template #icon> <checked-radio :checked="false" size="15px"></checked-radio> </template>
-                  <template #checkedIcon> <checked-radio :checked="true" size="15px" checked-bg-color="#f7daa1"></checked-radio> </template>
-                  {{ type.text }}
-                </nut-radio>
+              <div v-for="(type, index) in typeList" :key="index" class="mr-15px" @click="formData.type=type.value">
+                <div :class="{'bg-#f7daa1': formData.type === type.value}" class="mr-5 border-1px b-solid border-color-#f7daa1 px-10px py-2px b-rd-12px">{{ type.text }}</div>
               </div>
             </div>
           </nut-radio-group>

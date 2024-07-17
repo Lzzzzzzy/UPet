@@ -43,10 +43,6 @@ const currentPet = ref<Pet.PetInfo>(props.pets[0]);
                 </div>
             </template>
         </nut-button>
-        <!-- <div @click="showSelectPetPopup=true" class="flex items-center bg-#DEDEDE p-7px rounded-50%">
-            <div>{{ currentPet.petName }}</div>
-            <div class="text-20px i-local-more-options"></div>
-        </div> -->
         <div class="text-16px ml-5px fw-600">的今日安排</div>
     </div>
     <nut-popup v-model:visible="showSelectPetPopup" position="top">
