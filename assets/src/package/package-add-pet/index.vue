@@ -1,11 +1,28 @@
 <script setup lang="ts">
-import { switchTab } from '@tarojs/taro';
+import { switchTab, eventCenter } from '@tarojs/taro';
+import { onBeforeMount, ref, reactive } from 'vue';
+import { Pet } from "@/typings/pet";
+
+const title = ref("添加档案");
 
 definePageConfig({
-  navigationBarTitleText: '添加档案'
+  navigationBarTitleText: title.value
 });
 
-import { ref } from 'vue'
+onBeforeMount(()=>{
+  eventCenter.on("selectEditPet", (pet: Pet.PetInfo) => {
+    console.log("on selectEditPet:", typeof pet);
+    formData.name = pet.name;
+    formData.avatar = pet.avatar;
+    formData.gendar = pet.gendar;
+    formData.sterilizedState = pet.sterilizedState;
+    formData.category = pet.category;
+    formData.birthday = pet.birthday;
+    formData.id = pet.id;
+    title.value = "修改档案"
+    console.log("formData:", formData);
+  });
+})
 
 const showTypePicker = ref(false);
 
@@ -15,12 +32,13 @@ const petTypes = ref([
 ])
 const selectedPetType = ref([0])
 
-const formData = ref({
+const formData = reactive<Pet.PetInfo>({
   name: '',
-  file: '',
+  avatar: '',
   gendar: 0,  // 0 公 1 母
   sterilizedState: 0,  // 0 未绝育 1 已绝育
-  petType: 0, // petTypes
+  category: 0, // petTypes
+  birthday: ""
 })
 
 const formRef = ref()
@@ -34,7 +52,7 @@ const formRules = ref({
 const handleSubmit = () => {
   formRef.value?.validate().then(({ valid, errors }: { valid: boolean, errors: any}) => {
     if (valid) {
-      formData.value.petType = selectedPetType.value[0];
+      formData.category = selectedPetType.value[0];
       switchTab({
         url: '/pages/index/index'
       })
@@ -49,9 +67,10 @@ const uploadUrl = ref("");
 const gendarList = [{"text": "男孩", "value": 0}, {"text": "女孩", "value": 1}]
 const sterilizedStateList = [{"text": "未绝育", "value": 0}, {"text": "已绝育", "value": 1}]
 </script>
+
 <template>
   <basic-layout>
-    <custom-navbar title="添加档案" left-show />
+    <custom-navbar :title="title" left-show />
     <div class="w-full flex justify-center items-center mt-80px mb-30px flex-col">
       <nut-uploader
         :url="uploadUrl"
@@ -77,7 +96,7 @@ const sterilizedStateList = [{"text": "未绝育", "value": 0}, {"text": "已绝
       <nut-form-item label="种类" prop="type" class="form-item-border">
         <nut-cell :title="petTypes[selectedPetType[0]].text" @click="showTypePicker = true" class="!p-0">
           <template #desc>
-            <div class="i-local-more text-20px"></div>
+            <div class="i-ph-caret-right-bold text-20px text-#000"></div>
           </template>
         </nut-cell>
         <nut-popup v-model:visible="showTypePicker" position="bottom">
@@ -92,6 +111,13 @@ const sterilizedStateList = [{"text": "未绝育", "value": 0}, {"text": "已绝
         </div>
       </nut-form-item>
       <nut-form-item label="绝育" prop="type" class="form-item-border">
+        <div class="flex">
+          <div v-for="(sterilizedState, index) in sterilizedStateList" :key="index" class="mr-15px" @click="formData.sterilizedState=sterilizedState.value">
+            <div :class="{'bg-#f7daa1': formData.sterilizedState === sterilizedState.value}" class="mr-5 border-1px b-solid border-color-#f7daa1 px-10px py-2px b-rd-12px">{{ sterilizedState.text }}</div>
+          </div>
+        </div>
+      </nut-form-item>
+      <nut-form-item label="年龄" prop="type" class="form-item-border">
         <div class="flex">
           <div v-for="(sterilizedState, index) in sterilizedStateList" :key="index" class="mr-15px" @click="formData.sterilizedState=sterilizedState.value">
             <div :class="{'bg-#f7daa1': formData.sterilizedState === sterilizedState.value}" class="mr-5 border-1px b-solid border-color-#f7daa1 px-10px py-2px b-rd-12px">{{ sterilizedState.text }}</div>

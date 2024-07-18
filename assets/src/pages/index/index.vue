@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import { ref, onBeforeMount, watch, computed } from 'vue';
-import { eventCenter, useDidShow } from '@tarojs/taro';
+import { eventCenter } from '@tarojs/taro';
 import noPetRemind from '@/components/home/add-pet-remind/index.vue';
 import petTodosPage from '@/components/pet-todos/index.vue';
 import calendar from '@/components/calendar/index.vue';
-import dayjs from 'dayjs';
-import { usePageStore } from '@/store';
+import { Pet } from "@/typings/pet";
 
 /** 设置页面属性 */
 definePageConfig({
@@ -26,44 +25,60 @@ onBeforeMount(() => {
   eventCenter.on("selectpet", (pet: Pet.PetInfo) => {
     currentPet.value = pet;
   });
-  eventCenter.on("changeDate", (date: Date) => {
-    console.log("changeDate");
+  eventCenter.on("jumpToDate", (date: Date) => {
+    console.log("jumpToDate");
     currentDate.value = date;
   })
 });
 
-useDidShow(() => {
-  const pageStore = usePageStore();
-  if (pageStore.hasTodoDate) {
-    const todoDate = pageStore.getTodoDate;
-    currentDate.value = dayjs(todoDate).toDate();
-    pageStore.removeTodoDate();
-  }
-})
+// useDidShow(() => {
+//   const pageStore = usePageStore();
+//   if (pageStore.hasTodoDate) {
+//     const todoDate = pageStore.getTodoDate;
+//     currentDate.value = dayjs(todoDate).toDate();
+//     pageStore.removeTodoDate();
+//   }
+// })
 
 const pets = ref<Array<Pet.PetInfo>>([]);
 const getPetsInfo = () => {
   return [{
     id: 1,
-    petName: '旺财',
-    petAvatar: '',
-    userId: 1,
+    name: '旺财',
+    familyId: 1,
+    avatar: '',
+    birthday: "2022-10-02",
+    gendar: 0,
+    sterilizedState: 0,
+    category: 0,
   },
   {
     id: 2,
-    petName: '帅帅',
-    petAvatar: '',
-    userId: 1,
+    name: '帅帅',
+    familyId: 1,
+    avatar: '',
+    birthday: "2021-03-02",
+    gendar: 0,
+    sterilizedState: 0,
+    category: 1,
   },{
     id: 3,
-    petName: '1234',
-    petAvatar: '',
-    userId: 1,
+    name: '旺财2',
+    familyId: 1,
+    avatar: '',
+    birthday: "2012-10-02",
+    gendar: 0,
+    sterilizedState: 1,
+    category: 1,
   },{
     id: 4,
-    petName: '1123',
-    petAvatar: '',
-    userId: 1,
+    name: '1234',
+    familyId: 1,
+    avatar: '',
+    birthday: "2002-10-02",
+    gendar: 1,
+    sterilizedState: 1,
+    category: 1,
   }
 ]}
 pets.value = getPetsInfo();
@@ -77,7 +92,7 @@ watch([currentDate, currentPet], ([newVal1, newVal2], [oldVal1, oldVal2]) => {
 });
 
 const getPetTodos = (date: Date, pet: Pet.PetInfo) => {
-  if (pet?.petName === "1234") {
+  if (pet?.name === "1234") {
     return [
       {"id": 1, "time": "08:00", "title": "换水", "remark": "全部两个碗里的倒矿泉水纯净水蒸馏水都行,就是不能用自来水", "complete": false},
       {"id": 2, "time": "12:00", "title": "换粮", "remark": "全换", "complete": false},

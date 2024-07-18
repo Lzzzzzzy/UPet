@@ -2,6 +2,7 @@
 import petAvatar from '@/components/home/pet-avatar/index.vue';
 import { eventCenter, navigateTo } from "@tarojs/taro";
 import { ref, onMounted } from 'vue';
+import { Pet } from "@/typings/pet";
 
 const props = defineProps({
   pets: {
@@ -38,7 +39,7 @@ const currentPet = ref<Pet.PetInfo>(props.pets[0]);
         <nut-button @click="showSelectPetPopup=true">
             <template #default>
                 <div class="flex items-center text-16px">
-                    <div>{{ currentPet.petName }}</div>
+                    <div>{{ currentPet.name }}</div>
                     <div class="i-local-more-options"></div>
                 </div>
             </template>
@@ -47,8 +48,8 @@ const currentPet = ref<Pet.PetInfo>(props.pets[0]);
     </div>
     <nut-popup v-model:visible="showSelectPetPopup" position="top">
         <nut-grid :column-num="4"  class="mt-25%">
-            <nut-grid-item :text="pet.petName" v-for="pet in pets" :key="pet.id" @click="selectPet(pet)">
-                <pet-avatar :avatar-img-url="pet.petAvatar" />
+            <nut-grid-item :text="pet.name" v-for="pet in pets" :key="pet.id" @click="selectPet(pet)">
+                <pet-avatar :avatar-img-url="pet.avatar" />
             </nut-grid-item>
             <nut-grid-item text="添加" @click="handleToAddPet">
                 <nut-avatar class="!flex justify-center items-center">

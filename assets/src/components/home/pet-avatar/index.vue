@@ -1,18 +1,26 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-const avatarImgUrl = ref('');
+defineProps({
+  avatarImgUrl: {
+    type: String,
+    default: ""
+  },
+  size : {
+    type: String,
+    default: "normal"
+  },
+});
 </script>
 
 <template>
   <div class="pet-avatar">
     <div v-if="avatarImgUrl">
-      <nut-avatar size="normal">
+      <nut-avatar :size="size">
         <img :src="avatarImgUrl" />
       </nut-avatar>
     </div>
     <div v-else>
-      <nut-avatar size="normal" class="items-center justify-center">
-        <div class="text-20px i-local-base-pet-icon"></div>
+      <nut-avatar :size="size" class="items-center justify-center">
+        <div class="i-local-base-pet-icon" :class="{'text-20px': size === 'normal', 'text-30px': size === 'large', 'text-15px': size === 'small'}"></div>
       </nut-avatar>
     </div>
   </div>

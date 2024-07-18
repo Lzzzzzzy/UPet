@@ -15,7 +15,7 @@ const gotoMenu = (url: string) => {
     <div v-for="(menu, index) in menus" :key="index" @click="gotoMenu(menu.url)" class="personal-menu-container">
       <nut-cell :title="menu.name">
          <template #desc>
-           <div class="i-local-more text-20px"></div>
+           <div class="i-ph-caret-right-bold text-20px text-#000"></div>
          </template>
        </nut-cell>
     </div>

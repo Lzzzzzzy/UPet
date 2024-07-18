@@ -1,22 +1,31 @@
+import type { Dayjs } from "dayjs";
 /** 宠物相关模块 */
 declare namespace Pet {
   /** 宠物信息 */
   interface PetInfo {
     /** 宠物id */
-    id: number;
+    id?: number;
     /** 宠物名 */
-    petName: string;
+    name: string;
     /** 关联用户id */
-    userId: number;
+    familyId?: number;
     /** 宠物头像 */
-    petAvatar: string;
+    avatar: string;
+    /** 出生日期 */
+    birthday?: Date | string | Dayjs;
+    /** 性别 */
+    gendar: number;
+    /** 绝育状态 */
+    sterilizedState: number;
+    /** 种类 */
+    category: number;
   }
 
   /** 待办信息 */
   interface PetTodo {
     id?: number;
     title: string;
-    time: Date;
+    time: Date | string | Dayjs;
     remark: string;
     complete: boolean;
   }

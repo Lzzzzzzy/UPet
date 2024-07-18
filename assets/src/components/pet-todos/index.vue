@@ -4,6 +4,7 @@ import todoCardHeader from "@/components/pet-todos/components/pet-todo-card-head
 import addTodoButton from "@/components/add-pet-todo-button/index.vue";
 import dayjs from "dayjs";
 import { computed, PropType } from "vue";
+import { Pet } from "@/typings/pet";
 
 const props = defineProps({
   todos: {
