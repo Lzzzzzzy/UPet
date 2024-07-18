@@ -77,6 +77,20 @@ const calculateAge = (birthday: Date | string | Dayjs | null | undefined) => {
     return `${years}岁${months}个月`;
 }
 
+const showDeleteConfirmPopup = ref(false);
+const needDeletePetId = ref();
+const deletePet = (petId: number | undefined) => {
+  needDeletePetId.value = petId;
+  showDeleteConfirmPopup.value = true;
+}
+const closePopup = () => {
+  showDeleteConfirmPopup.value = false;
+  needDeletePetId.value = null;
+}
+const confirmDelete = () => {
+  closePopup();
+}
+
 </script>
 <template>
   <basic-layout>
@@ -84,7 +98,7 @@ const calculateAge = (birthday: Date | string | Dayjs | null | undefined) => {
     <div class="m-20px b-rd-16px py-30px bg-white" v-for="pet in pets" :key="pet.id">
         <nut-row :gutter="10" type="flex" justify="space-around" align="center">
             <nut-col :span="8">
-                <div class="flex items-center justify-center">
+                <div class="flex items-center justify-end">
                     <pet-avatar :avatar-img-url="pet.avatar" size="large" />
                 </div>
             </nut-col>
@@ -99,17 +113,29 @@ const calculateAge = (birthday: Date | string | Dayjs | null | undefined) => {
                 </div>
             </nut-col>
             <nut-col :span="4">
-                <nut-avatar size="small" class="!flex justify-center items-center !bg-#98c7ce" @click="editPet(pet)">
+                <nut-avatar size="small" class="!flex-center !bg-#98c7ce" @click="editPet(pet)">
                     <div class="text-20px i-local-edit"></div>
                 </nut-avatar>
             </nut-col>
             <nut-col :span="4">
-                <nut-avatar size="small" class="!flex justify-center items-center !bg-#98c7ce" @click="">
+                <nut-avatar size="small" class="!flex-center !bg-#98c7ce" @click="deletePet(pet.id)">
                     <div class="text-20px i-local-delete"></div>
                 </nut-avatar>
             </nut-col>
         </nut-row>
     </div>
+    <nut-popup v-model:visible="showDeleteConfirmPopup" round :style="{'width': '70%'}">
+      <div class="px-20px py-40px">
+        <div class="flex-col-center">
+          <div>删除档案后无法恢复</div>
+          <div>确定要删除吗?</div>
+        </div>
+        <div class="mt-20px flex justify-evenly">
+          <nut-button plain @click="confirmDelete">确定</nut-button>
+          <nut-button @click="closePopup" color="#f7daa1" class="!text-black">取消</nut-button>
+        </div>
+      </div>
+  </nut-popup>
   </basic-layout>
 </template>
 
