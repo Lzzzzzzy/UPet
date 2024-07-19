@@ -56,10 +56,13 @@ const pets = ref<Array<Pet.PetInfo>>([]);
 
 const editPet = (pet: Pet.PetInfo) => {
   navigateTo({url: `/package/package-add-pet/index`, success: () => {
-    console.log("pet:", pet, typeof pet);
     eventCenter.trigger("selectEditPet", pet);
   }})
 };
+
+const addPet = () => {
+    navigateTo({url: `/package/package-add-pet/index`})
+}
 
 const calculateAge = (birthday: Date | string | Dayjs | null | undefined) => {
     if (!birthday) {
@@ -124,6 +127,16 @@ const confirmDelete = () => {
             </nut-col>
         </nut-row>
     </div>
+
+    <div class="flex-center">
+        <nut-button @click="addPet" color="#f7daa1" class="!text-black">
+            <div class="flex-center">
+                <div class="text-15px i-local-add pr-5px"></div>
+                <div>添加</div>
+            </div>
+        </nut-button>
+    </div>
+
     <nut-popup v-model:visible="showDeleteConfirmPopup" round :style="{'width': '70%'}">
       <div class="px-20px py-40px">
         <div class="flex-col-center">
