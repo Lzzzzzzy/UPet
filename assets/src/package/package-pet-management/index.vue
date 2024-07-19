@@ -101,16 +101,16 @@ const confirmDelete = () => {
     <div class="m-20px b-rd-16px py-30px bg-white" v-for="pet in pets" :key="pet.id">
         <nut-row :gutter="10" type="flex" justify="space-around" align="center">
             <nut-col :span="8">
-                <div class="flex items-center justify-end">
+                <div class="flex items-center justify-center">
                     <pet-avatar :avatar-img-url="pet.avatar" size="large" />
                 </div>
             </nut-col>
             <nut-col :span="12">
-                <div class="flex flex-col items-center justify-between">
-                    <div class="text-16px">
+                <div class="flex flex-col items-start justify-start">
+                    <div class="text-20px">
                         {{ pet.name }}
                     </div>
-                    <div class="mt-20px text-14px">
+                    <div class="mt-20px text-12px text-coolgray">
                         {{ calculateAge(pet.birthday) }}
                     </div>
                 </div>
