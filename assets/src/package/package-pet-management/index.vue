@@ -3,7 +3,7 @@ import petAvatar from '@/components/home/pet-avatar/index.vue';
 import { onBeforeMount, ref } from 'vue';
 import { eventCenter, navigateTo } from "@tarojs/taro";
 import dayjs from 'dayjs';
-import { Pet } from "@/typings/pet";
+import type { Pet } from "@/typings/pet";
 import type { Dayjs } from 'dayjs';
 
 
@@ -105,7 +105,7 @@ const confirmDelete = () => {
                     <pet-avatar :avatar-img-url="pet.avatar" size="large" />
                 </div>
             </nut-col>
-            <nut-col :span="12">
+            <nut-col :span="8">
                 <div class="flex flex-col items-start justify-start">
                     <div class="text-20px">
                         {{ pet.name }}
