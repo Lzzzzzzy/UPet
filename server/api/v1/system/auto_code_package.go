@@ -1,14 +1,15 @@
 package system
 
 import (
-	"github.com/flipped-aurora/gin-vue-admin/server/global"
-	common "github.com/flipped-aurora/gin-vue-admin/server/model/common/request"
-	"github.com/flipped-aurora/gin-vue-admin/server/model/common/response"
-	"github.com/flipped-aurora/gin-vue-admin/server/model/system/request"
-	"github.com/flipped-aurora/gin-vue-admin/server/utils"
+	"strings"
+
+	"github.com/Lzzzzzzy/UPet/server/global"
+	common "github.com/Lzzzzzzy/UPet/server/model/common/request"
+	"github.com/Lzzzzzzy/UPet/server/model/common/response"
+	"github.com/Lzzzzzzy/UPet/server/model/system/request"
+	"github.com/Lzzzzzzy/UPet/server/utils"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
-	"strings"
 )
 
 type AutoCodePackageApi struct{}

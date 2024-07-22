@@ -9,8 +9,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/flipped-aurora/gin-vue-admin/server/global"
-	"github.com/flipped-aurora/gin-vue-admin/server/utils"
+	"github.com/Lzzzzzzy/UPet/server/global"
+	"github.com/Lzzzzzzy/UPet/server/utils"
+
 	"go.uber.org/zap"
 )
 

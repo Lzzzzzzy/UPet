@@ -5,9 +5,9 @@ import (
 
 	"go.uber.org/zap"
 
-	"github.com/flipped-aurora/gin-vue-admin/server/global"
-	"github.com/flipped-aurora/gin-vue-admin/server/model/system"
-	"github.com/flipped-aurora/gin-vue-admin/server/utils"
+	"github.com/Lzzzzzzy/UPet/server/global"
+	"github.com/Lzzzzzzy/UPet/server/model/system"
+	"github.com/Lzzzzzzy/UPet/server/utils"
 )
 
 type JwtService struct{}

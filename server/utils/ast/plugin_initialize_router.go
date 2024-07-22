@@ -2,10 +2,11 @@ package ast
 
 import (
 	"fmt"
-	"github.com/flipped-aurora/gin-vue-admin/server/global"
 	"go/ast"
 	"go/token"
 	"io"
+
+	"github.com/Lzzzzzzy/UPet/server/global"
 )
 
 // PluginInitializeRouter 插件初始化路由

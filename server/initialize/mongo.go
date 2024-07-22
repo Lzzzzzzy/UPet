@@ -3,16 +3,18 @@ package initialize
 import (
 	"context"
 	"fmt"
-	"github.com/flipped-aurora/gin-vue-admin/server/global"
-	"github.com/flipped-aurora/gin-vue-admin/server/initialize/internal"
-	"github.com/flipped-aurora/gin-vue-admin/server/utils"
+	"sort"
+	"strings"
+
+	"github.com/Lzzzzzzy/UPet/server/global"
+	"github.com/Lzzzzzzy/UPet/server/initialize/internal"
+	"github.com/Lzzzzzzy/UPet/server/utils"
+
 	"github.com/pkg/errors"
 	"github.com/qiniu/qmgo"
 	"github.com/qiniu/qmgo/options"
 	"go.mongodb.org/mongo-driver/bson"
 	option "go.mongodb.org/mongo-driver/mongo/options"
-	"sort"
-	"strings"
 )
 
 var Mongo = new(mongo)

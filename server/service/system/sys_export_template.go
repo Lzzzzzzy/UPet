@@ -4,18 +4,20 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/flipped-aurora/gin-vue-admin/server/global"
-	"github.com/flipped-aurora/gin-vue-admin/server/model/common/request"
-	"github.com/flipped-aurora/gin-vue-admin/server/model/system"
-	systemReq "github.com/flipped-aurora/gin-vue-admin/server/model/system/request"
-	"github.com/flipped-aurora/gin-vue-admin/server/utils"
-	"github.com/xuri/excelize/v2"
-	"gorm.io/gorm"
 	"mime/multipart"
 	"net/url"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/Lzzzzzzy/UPet/server/global"
+	"github.com/Lzzzzzzy/UPet/server/model/common/request"
+	"github.com/Lzzzzzzy/UPet/server/model/system"
+	systemReq "github.com/Lzzzzzzy/UPet/server/model/system/request"
+	"github.com/Lzzzzzzy/UPet/server/utils"
+
+	"github.com/xuri/excelize/v2"
+	"gorm.io/gorm"
 )
 
 type SysExportTemplateService struct {

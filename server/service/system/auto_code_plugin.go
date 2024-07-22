@@ -2,17 +2,19 @@ package system
 
 import (
 	"context"
-	"github.com/flipped-aurora/gin-vue-admin/server/global"
-	"github.com/flipped-aurora/gin-vue-admin/server/utils"
-	"github.com/mholt/archiver/v4"
-	cp "github.com/otiai10/copy"
-	"github.com/pkg/errors"
-	"go.uber.org/zap"
 	"io"
 	"mime/multipart"
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/Lzzzzzzy/UPet/server/global"
+	"github.com/Lzzzzzzy/UPet/server/utils"
+
+	"github.com/mholt/archiver/v4"
+	cp "github.com/otiai10/copy"
+	"github.com/pkg/errors"
+	"go.uber.org/zap"
 )
 
 var AutoCodePlugin = new(autoCodePlugin)

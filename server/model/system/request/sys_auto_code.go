@@ -3,10 +3,12 @@ package request
 import (
 	"encoding/json"
 	"fmt"
-	model "github.com/flipped-aurora/gin-vue-admin/server/model/system"
-	"github.com/pkg/errors"
 	"go/token"
 	"strings"
+
+	model "github.com/Lzzzzzzy/UPet/server/model/system"
+
+	"github.com/pkg/errors"
 )
 
 type AutoCode struct {

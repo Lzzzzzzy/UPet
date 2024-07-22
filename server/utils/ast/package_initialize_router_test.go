@@ -1,9 +1,10 @@
 package ast
 
 import (
-	"github.com/flipped-aurora/gin-vue-admin/server/global"
 	"path/filepath"
 	"testing"
+
+	"github.com/Lzzzzzzy/UPet/server/global"
 )
 
 func TestPackageInitializeRouter_Injection(t *testing.T) {
@@ -28,7 +29,7 @@ func TestPackageInitializeRouter_Injection(t *testing.T) {
 			fields: fields{
 				Type:            TypePackageInitializeRouter,
 				Path:            filepath.Join(global.GVA_CONFIG.AutoCode.Root, global.GVA_CONFIG.AutoCode.Server, "initialize", "router_biz.go"),
-				ImportPath:      `"github.com/flipped-aurora/gin-vue-admin/server/router"`,
+				ImportPath:      `"github.com/Lzzzzzzy/UPet/server/router"`,
 				AppName:         "RouterGroupApp",
 				GroupName:       "Example",
 				ModuleName:      "exampleRouter",
@@ -43,7 +44,7 @@ func TestPackageInitializeRouter_Injection(t *testing.T) {
 			fields: fields{
 				Type:            TypePackageInitializeRouter,
 				Path:            filepath.Join(global.GVA_CONFIG.AutoCode.Root, global.GVA_CONFIG.AutoCode.Server, "initialize", "router_biz.go"),
-				ImportPath:      `"github.com/flipped-aurora/gin-vue-admin/server/router"`,
+				ImportPath:      `"github.com/Lzzzzzzy/UPet/server/router"`,
 				AppName:         "RouterGroupApp",
 				GroupName:       "Example",
 				ModuleName:      "exampleRouter",
@@ -103,7 +104,7 @@ func TestPackageInitializeRouter_Rollback(t *testing.T) {
 			fields: fields{
 				Type:            TypePackageInitializeRouter,
 				Path:            filepath.Join(global.GVA_CONFIG.AutoCode.Root, global.GVA_CONFIG.AutoCode.Server, "initialize", "router_biz.go"),
-				ImportPath:      `"github.com/flipped-aurora/gin-vue-admin/server/router"`,
+				ImportPath:      `"github.com/Lzzzzzzy/UPet/server/router"`,
 				AppName:         "RouterGroupApp",
 				GroupName:       "Example",
 				ModuleName:      "exampleRouter",
@@ -118,7 +119,7 @@ func TestPackageInitializeRouter_Rollback(t *testing.T) {
 			fields: fields{
 				Type:            TypePackageInitializeRouter,
 				Path:            filepath.Join(global.GVA_CONFIG.AutoCode.Root, global.GVA_CONFIG.AutoCode.Server, "initialize", "router_biz.go"),
-				ImportPath:      `"github.com/flipped-aurora/gin-vue-admin/server/router"`,
+				ImportPath:      `"github.com/Lzzzzzzy/UPet/server/router"`,
 				AppName:         "RouterGroupApp",
 				GroupName:       "Example",
 				ModuleName:      "exampleRouter",

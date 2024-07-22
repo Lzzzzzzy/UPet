@@ -7,7 +7,8 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/flipped-aurora/gin-vue-admin/server/global"
+	"github.com/Lzzzzzzy/UPet/server/global"
+
 	"go.uber.org/zap"
 )
 

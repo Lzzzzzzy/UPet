@@ -3,9 +3,10 @@ package system
 import (
 	"context"
 	"encoding/json"
-	"github.com/flipped-aurora/gin-vue-admin/server/model/system/request"
 	"reflect"
 	"testing"
+
+	"github.com/Lzzzzzzy/UPet/server/model/system/request"
 )
 
 func Test_autoCodeTemplate_Create(t *testing.T) {
