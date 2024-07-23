@@ -51,12 +51,12 @@ func (petInfo *PetTodoService) GetPetTodoInfo(id uint) (e petTodo.PetTodoInfo, e
 // @description: 分页获取宠物待办信息列表
 // @param: familyID uint, info request.PageInfo
 // @return: list interface{}, total int64, err error
-func (petTodoInfo *PetTodoService) GetPetInfoList(TodoTime time.Time, info request.PageInfo) (list interface{}, total int64, err error) {
+func (petTodoInfo *PetTodoService) GetPetInfoList(todoTime time.Time, petId uint, info request.PageInfo) (list interface{}, total int64, err error) {
 	limit := info.PageSize
 	offset := info.PageSize * (info.Page - 1)
 	db := global.GVA_DB.Model(&pet.PetInfo{})
 
 	var PetTodoInfoList []petTodo.PetTodoInfo
-	err = db.Limit(limit).Offset(offset).Where("todo_time = ?", TodoTime).Find(&PetTodoInfoList).Error
+	err = db.Limit(limit).Offset(offset).Where("todo_time = ?", todoTime).Where("pet_id = ?", todoTime).Find(&PetTodoInfoList).Error
 	return PetTodoInfoList, total, err
 }

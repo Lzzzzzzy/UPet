@@ -2,11 +2,12 @@ package petTodo
 
 import (
 	"strconv"
+	"time"
 
 	"github.com/Lzzzzzzy/UPet/server/global"
-	"github.com/Lzzzzzzy/UPet/server/model/common/request"
 	"github.com/Lzzzzzzy/UPet/server/model/common/response"
 	petTodo "github.com/Lzzzzzzy/UPet/server/model/pet_todo"
+	petTodoReq "github.com/Lzzzzzzy/UPet/server/model/pet_todo/request"
 	petTodoRes "github.com/Lzzzzzzy/UPet/server/model/pet_todo/response"
 	"github.com/Lzzzzzzy/UPet/server/utils"
 	"github.com/gin-gonic/gin"
@@ -159,7 +160,7 @@ func (e *PetTodoApi) GetPetTodo(c *gin.Context) {
 // @Success   200   {object}  response.Response{data=response.PageResult,msg=string}  "分页获取权限客户列表,返回包括列表,总数,页码,每页数量"
 // @Router    /pets [get]
 func (e *PetTodoApi) GetPetTodoList(c *gin.Context) {
-	var pageInfo request.PageInfo
+	var pageInfo petTodoReq.PetTodoPageInfo
 	err := c.ShouldBindQuery(&pageInfo)
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)
@@ -170,14 +171,20 @@ func (e *PetTodoApi) GetPetTodoList(c *gin.Context) {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
-	petList, total, err := petTodoService.GetPetInfoList(pageInfo.Keyword, pageInfo)
+	format := "2006-01-02 15:04"
+	todoDate, err := time.Parse(format, pageInfo.Date)
+	if err != nil {
+		response.FailWithMessage(err.Error(), c)
+		return
+	}
+	petTodoList, total, err := petTodoService.GetPetInfoList(todoDate, pageInfo.PetId, pageInfo.PageInfo)
 	if err != nil {
 		global.GVA_LOG.Error("获取失败!", zap.Error(err))
 		response.FailWithMessage("获取失败"+err.Error(), c)
 		return
 	}
 	response.OkWithDetailed(response.PageResult{
-		List:     petList,
+		List:     petTodoList,
 		Total:    total,
 		Page:     pageInfo.Page,
 		PageSize: pageInfo.PageSize,
