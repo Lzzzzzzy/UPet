@@ -125,3 +125,17 @@ func GetUserName(c *gin.Context) string {
 		return waitUse.Username
 	}
 }
+
+// GetUserFamilyID 从Gin的Context中获取从jwt解析出来的用户家庭ID
+func GetUserFamilyID(c *gin.Context) uint {
+	if claims, exists := c.Get("claims"); !exists {
+		if cl, err := GetClaims(c); err != nil {
+			return 0
+		} else {
+			return cl.BaseClaims.ID
+		}
+	} else {
+		waitUse := claims.(*systemReq.CustomClaims)
+		return waitUse.BaseClaims.ID
+	}
+}

@@ -16,4 +16,7 @@ var (
 	OldAuthorityVerify     = Rules{"OldAuthorityId": {NotEmpty()}}
 	ChangePasswordVerify   = Rules{"Password": {NotEmpty()}, "NewPassword": {NotEmpty()}}
 	SetUserAuthorityVerify = Rules{"AuthorityId": {NotEmpty()}}
+
+	PetInfoVerify     = Rules{"Name": {NotEmpty()}, "Birthday": {NotEmpty()}, "Gender": {NotEmpty()}, "Category": {NotEmpty()}, "SterilizedState": {NotEmpty()}}
+	PetTodoInfoVerify = Rules{"Title": {NotEmpty()}, "Remind": {NotEmpty()}, "Complete": {NotEmpty()}, "Type": {NotEmpty()}, "Color": {NotEmpty()}, "TodoTime": {NotEmpty()}, "PetId": {NotEmpty()}}
 )
