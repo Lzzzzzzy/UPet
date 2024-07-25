@@ -24,7 +24,7 @@ func (fs justFilesFilesystem) Open(name string) (http.File, error) {
 		return nil, err
 	}
 
-	stat, err := f.Stat()
+	stat, _ := f.Stat()
 	if stat.IsDir() {
 		return nil, os.ErrPermission
 	}
@@ -44,6 +44,7 @@ func Routers() *gin.Engine {
 	// systemRouter := router.RouterGroupApp.System
 	// exampleRouter := router.RouterGroupApp.Example
 	petRouter := router.RouterGroupApp.Pet
+	petTodoRouter := router.RouterGroupApp.PetTodo
 	// 如果想要不使用nginx代理前端网页，可以修改 web/.env.production 下的
 	// VUE_APP_BASE_API = /
 	// VUE_APP_BASE_PATH = http://localhost
@@ -98,7 +99,8 @@ func Routers() *gin.Engine {
 
 	// }
 	{
-		petRouter.InitPetRouter(PrivateGroup) // 宠物管理路由
+		petRouter.InitPetRouter(PrivateGroup)         // 宠物管理路由
+		petTodoRouter.InitPetTodoRouter(PrivateGroup) // 待办事项路由
 	}
 
 	//插件路由安装

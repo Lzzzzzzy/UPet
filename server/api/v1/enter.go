@@ -9,5 +9,5 @@ var ApiGroupApp = new(ApiGroup)
 
 type ApiGroup struct {
 	PetApiGroup     pet.ApiGroup
-	petTodoApiGroup petTodo.ApiGroup
+	PetTodoApiGroup petTodo.ApiGroup
 }

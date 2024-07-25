@@ -18,7 +18,7 @@ const NutUIResolver = () => {
 };
 
 const config = {
-  projectName: 'Taro3',
+  projectName: 'Upet-web',
   date: '2024-06-25',
   designWidth(input) {
     // 配置 NutUI 375 尺寸

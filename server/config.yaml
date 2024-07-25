@@ -2,10 +2,10 @@
 
 # jwt configuration
 jwt:
-  signing-key: qmPlus
+  signing-key: upet
   expires-time: 7d
   buffer-time: 1d
-  issuer: qmPlus
+  issuer: upet
 # zap logger configuration
 zap:
   level: info
@@ -24,7 +24,7 @@ redis:
   useCluster: false
   #使用集群模式addr和db默认无效
   addr: 127.0.0.1:6379
-  password: ""
+  password: "upetredis"
   db: 0
   clusterAddrs:
     - "172.21.0.3:7000"
@@ -86,15 +86,15 @@ captcha:
 # mysql connect configuration
 # 未初始化之前请勿手动修改数据库信息！！！如果一定要手动初始化请看（https://gin-vue-admin.com/docs/first_master）
 mysql:
-  path: ""
-  port: ""
+  path: "127.0.0.1"
+  port: "3306"
   config: ""
-  db-name: ""
-  username: ""
-  password: ""
+  db-name: "upet_main"
+  username: "root"
+  password: "Lzy5871806"
   max-idle-conns: 10
   max-open-conns: 100
-  log-mode: ""
+  log-mode: "info"
   log-zap: false
 
 # pgsql connect configuration

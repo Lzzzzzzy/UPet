@@ -9,8 +9,8 @@ import (
 type PetRouter struct{}
 
 func (e *PetRouter) InitPetRouter(Router *gin.RouterGroup) {
-	petRouter := Router.Group("pet").Use(middleware.OperationRecord())
-	petRouterWithoutRecord := Router.Group("pet")
+	petRouter := Router.Group("api").Use(middleware.OperationRecord())
+	petRouterWithoutRecord := Router.Group("api")
 	{
 		petRouter.POST("pet", petApi.CreatePetInfo)          // 创建宠物
 		petRouter.PUT("pet/:petID", petApi.UpdatePetInfo)    // 更新宠物

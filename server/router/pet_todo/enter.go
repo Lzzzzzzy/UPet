@@ -9,5 +9,5 @@ type RouterGroup struct {
 }
 
 var (
-	petTodoApi = api.ApiGroupApp.petTodoApiGroup
+	petTodoApi = api.ApiGroupApp.PetTodoApiGroup
 )

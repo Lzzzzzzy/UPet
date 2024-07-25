@@ -1,0 +1,25 @@
+[github.com/Lzzzzzzy/UPet/server]2024-07-25 21:57:10.994	[34minfo[0m	D:/python projects/UPet/server/initialize/gorm.go:69	register table success
+[github.com/Lzzzzzzy/UPet/server]2024-07-25 21:57:11.001	[34minfo[0m	D:/python projects/UPet/server/initialize/router.go:59	use middleware cors
+[github.com/Lzzzzzzy/UPet/server]2024-07-25 21:57:11.001	[34minfo[0m	D:/python projects/UPet/server/initialize/router.go:62	register swagger handler
+[github.com/Lzzzzzzy/UPet/server]2024-07-25 21:57:11.044	[34minfo[0m	D:/python projects/UPet/server/initialize/router.go:112	router register success
+[github.com/Lzzzzzzy/UPet/server]2024-07-25 21:57:11.044	[34minfo[0m	D:/python projects/UPet/server/core/server.go:39	server run success on 	{"address": ":8888"}
+[github.com/Lzzzzzzy/UPet/server]2024-07-25 22:01:48.208	[34minfo[0m	D:/python projects/UPet/server/initialize/gorm.go:69	register table success
+[github.com/Lzzzzzzy/UPet/server]2024-07-25 22:01:48.209	[34minfo[0m	D:/python projects/UPet/server/initialize/router.go:59	use middleware cors
+[github.com/Lzzzzzzy/UPet/server]2024-07-25 22:01:48.210	[34minfo[0m	D:/python projects/UPet/server/initialize/router.go:62	register swagger handler
+[github.com/Lzzzzzzy/UPet/server]2024-07-25 22:01:48.227	[34minfo[0m	D:/python projects/UPet/server/initialize/router.go:112	router register success
+[github.com/Lzzzzzzy/UPet/server]2024-07-25 22:01:48.227	[34minfo[0m	D:/python projects/UPet/server/core/server.go:39	server run success on 	{"address": ":8888"}
+[github.com/Lzzzzzzy/UPet/server]2024-07-25 22:05:01.494	[34minfo[0m	D:/python projects/UPet/server/initialize/gorm.go:71	register table success
+[github.com/Lzzzzzzy/UPet/server]2024-07-25 22:05:01.496	[34minfo[0m	D:/python projects/UPet/server/initialize/router.go:59	use middleware cors
+[github.com/Lzzzzzzy/UPet/server]2024-07-25 22:05:01.497	[34minfo[0m	D:/python projects/UPet/server/initialize/router.go:62	register swagger handler
+[github.com/Lzzzzzzy/UPet/server]2024-07-25 22:05:01.514	[34minfo[0m	D:/python projects/UPet/server/initialize/router.go:112	router register success
+[github.com/Lzzzzzzy/UPet/server]2024-07-25 22:05:01.514	[34minfo[0m	D:/python projects/UPet/server/core/server.go:39	server run success on 	{"address": ":8888"}
+[github.com/Lzzzzzzy/UPet/server]2024-07-25 22:19:14.024	[34minfo[0m	D:/python projects/UPet/server/initialize/gorm.go:75	register table success
+[github.com/Lzzzzzzy/UPet/server]2024-07-25 22:19:14.027	[34minfo[0m	D:/python projects/UPet/server/initialize/router.go:60	use middleware cors
+[github.com/Lzzzzzzy/UPet/server]2024-07-25 22:19:14.028	[34minfo[0m	D:/python projects/UPet/server/initialize/router.go:63	register swagger handler
+[github.com/Lzzzzzzy/UPet/server]2024-07-25 22:19:14.060	[34minfo[0m	D:/python projects/UPet/server/initialize/router.go:114	router register success
+[github.com/Lzzzzzzy/UPet/server]2024-07-25 22:19:14.060	[34minfo[0m	D:/python projects/UPet/server/core/server.go:39	server run success on 	{"address": ":8888"}
+[github.com/Lzzzzzzy/UPet/server]2024-07-25 22:26:48.474	[34minfo[0m	D:/python projects/UPet/server/initialize/gorm.go:75	register table success
+[github.com/Lzzzzzzy/UPet/server]2024-07-25 22:26:48.476	[34minfo[0m	D:/python projects/UPet/server/initialize/router.go:60	use middleware cors
+[github.com/Lzzzzzzy/UPet/server]2024-07-25 22:26:48.476	[34minfo[0m	D:/python projects/UPet/server/initialize/router.go:63	register swagger handler
+[github.com/Lzzzzzzy/UPet/server]2024-07-25 22:26:48.495	[34minfo[0m	D:/python projects/UPet/server/initialize/router.go:114	router register success
+[github.com/Lzzzzzzy/UPet/server]2024-07-25 22:26:48.496	[34minfo[0m	D:/python projects/UPet/server/core/server.go:39	server run success on 	{"address": ":8888"}

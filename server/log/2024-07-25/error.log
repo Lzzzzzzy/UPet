@@ -1,0 +1,2 @@
+[github.com/Lzzzzzzy/UPet/server]2024-07-25 22:19:14.026	[31merror[0m	D:/python projects/UPet/server/service/system/jwt_black_list.go:78	加载数据库jwt黑名单失败!	{"error": "Error 1146 (42S02): Table 'upet_main.jwt_blacklists' doesn't exist"}
+[github.com/Lzzzzzzy/UPet/server]2024-07-25 22:26:48.475	[31merror[0m	D:/python projects/UPet/server/service/system/jwt_black_list.go:78	加载数据库jwt黑名单失败!	{"error": "Error 1146 (42S02): Table 'upet_main.jwt_blacklists' doesn't exist"}

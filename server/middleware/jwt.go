@@ -6,11 +6,9 @@ import (
 	"time"
 
 	"github.com/Lzzzzzzy/UPet/server/global"
-	"github.com/Lzzzzzzy/UPet/server/model/system"
 	"github.com/Lzzzzzzy/UPet/server/utils"
 
 	"github.com/golang-jwt/jwt/v4"
-	"go.uber.org/zap"
 
 	"github.com/Lzzzzzzy/UPet/server/model/common/response"
 	"github.com/Lzzzzzzy/UPet/server/service"
@@ -29,12 +27,12 @@ func JWTAuth() gin.HandlerFunc {
 			c.Abort()
 			return
 		}
-		if jwtService.IsBlacklist(token) {
-			response.NoAuth("您的帐户异地登陆或令牌失效", c)
-			utils.ClearToken(c)
-			c.Abort()
-			return
-		}
+		// if jwtService.IsBlacklist(token) {
+		// 	response.NoAuth("您的帐户异地登陆或令牌失效", c)
+		// 	utils.ClearToken(c)
+		// 	c.Abort()
+		// 	return
+		// }
 		j := utils.NewJWT()
 		// parseToken 解析token包含的信息
 		claims, err := j.ParseToken(token)
@@ -68,16 +66,16 @@ func JWTAuth() gin.HandlerFunc {
 			c.Header("new-token", newToken)
 			c.Header("new-expires-at", strconv.FormatInt(newClaims.ExpiresAt.Unix(), 10))
 			utils.SetToken(c, newToken, int(dr.Seconds()))
-			if global.GVA_CONFIG.System.UseMultipoint {
-				RedisJwtToken, err := jwtService.GetRedisJWT(newClaims.Username)
-				if err != nil {
-					global.GVA_LOG.Error("get redis jwt failed", zap.Error(err))
-				} else { // 当之前的取成功时才进行拉黑操作
-					_ = jwtService.JsonInBlacklist(system.JwtBlacklist{Jwt: RedisJwtToken})
-				}
-				// 无论如何都要记录当前的活跃状态
-				_ = jwtService.SetRedisJWT(newToken, newClaims.Username)
-			}
+			// if global.GVA_CONFIG.System.UseMultipoint {
+			// 	RedisJwtToken, err := jwtService.GetRedisJWT(newClaims.Username)
+			// 	if err != nil {
+			// 		global.GVA_LOG.Error("get redis jwt failed", zap.Error(err))
+			// 	} else { // 当之前的取成功时才进行拉黑操作
+			// 		_ = jwtService.JsonInBlacklist(system.JwtBlacklist{Jwt: RedisJwtToken})
+			// 	}
+			// 	// 无论如何都要记录当前的活跃状态
+			// 	_ = jwtService.SetRedisJWT(newToken, newClaims.Username)
+			// }
 		}
 		c.Next()
 

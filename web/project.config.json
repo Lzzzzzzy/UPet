@@ -1,7 +1,7 @@
 {
   "miniprogramRoot": "dist/",
-  "projectname": "Taro3",
-  "description": "Taro3",
+  "projectname": "Upet-web",
+  "description": "Upet 小程序页面",
   "setting": {
     "urlCheck": false,
     "es6": false,

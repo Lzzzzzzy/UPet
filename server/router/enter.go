@@ -1,15 +1,15 @@
 package router
 
 import (
-	"github.com/Lzzzzzzy/UPet/server/router/example"
 	"github.com/Lzzzzzzy/UPet/server/router/pet"
-	"github.com/Lzzzzzzy/UPet/server/router/system"
+	petTodo "github.com/Lzzzzzzy/UPet/server/router/pet_todo"
 )
 
 var RouterGroupApp = new(RouterGroup)
 
 type RouterGroup struct {
-	System  system.RouterGroup
-	Example example.RouterGroup
+	// System  system.RouterGroup
+	// Example example.RouterGroup
 	Pet     pet.RouterGroup
+	PetTodo petTodo.RouterGroup
 }
