@@ -7,6 +7,7 @@ import (
 	"github.com/Lzzzzzzy/UPet/server/model/family"
 	"github.com/Lzzzzzzy/UPet/server/model/pet"
 	petTodo "github.com/Lzzzzzzy/UPet/server/model/pet_todo"
+	"github.com/Lzzzzzzy/UPet/server/model/system"
 	"github.com/Lzzzzzzy/UPet/server/model/user"
 
 	"go.uber.org/zap"
@@ -41,7 +42,7 @@ func RegisterTables() {
 		// system.JwtBlacklist{},
 		// system.SysAuthority{},
 		// system.SysDictionary{},
-		// system.SysOperationRecord{},
+		system.SysOperationRecord{},
 		// system.SysAutoCodeHistory{},
 		// system.SysDictionaryDetail{},
 		// system.SysBaseMenuParameter{},

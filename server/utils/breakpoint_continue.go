@@ -51,14 +51,14 @@ func CheckMd5(content []byte, chunkMd5 string) (CanUpload bool) {
 //@author: [piexlmax](https://github.com/piexlmax)
 //@function: makeFileContent
 //@description: 创建切片内容
-//@param: content []byte, fileName string, FileDir string, contentNumber int
+//@param: content []byte, fileName string, fileDir string, contentNumber int
 //@return: string, error
 
-func makeFileContent(content []byte, fileName string, FileDir string, contentNumber int) (string, error) {
-	if strings.Index(fileName, "..") > -1 || strings.Index(FileDir, "..") > -1 {
+func makeFileContent(content []byte, fileName string, fileDir string, contentNumber int) (string, error) {
+	if strings.Contains(fileName, "..") || strings.Contains(fileDir, "..") {
 		return "", errors.New("文件名或路径不合法")
 	}
-	path := FileDir + fileName + "_" + strconv.Itoa(contentNumber)
+	path := fileDir + fileName + "_" + strconv.Itoa(contentNumber)
 	f, err := os.Create(path)
 	if err != nil {
 		return path, err

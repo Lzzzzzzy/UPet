@@ -9,7 +9,7 @@ type PetInfo struct {
 	Avatar          string `json:"avatar" form:"avatar" gorm:"comment:宠物头像"`                     // 宠物头像
 	Name            string `json:"name" form:"name" gorm:"comment:宠物名"`                          // 宠物名
 	Birthday        string `json:"birthday" form:"birthday" gorm:"comment:宠物生日"`                 // 宠物生日
-	Gender          string `json:"gender" form:"gender" gorm:"comment:宠物性别"`                     // 宠物性别
+	Gender          uint   `json:"gender" form:"gender" gorm:"comment:宠物性别"`                     // 宠物性别
 	Category        uint   `json:"category" form:"category" gorm:"comment:宠物类型"`                 // 宠物类型
 	SterilizedState uint   `json:"sterilizedState" form:"sterilizedState" gorm:"comment:宠物绝育状态"` // 宠物绝育状态
 	FamilyId        uint   `json:"familyId" form:"familyId" gorm:"comment:所属家庭id"`               // 所属家庭id

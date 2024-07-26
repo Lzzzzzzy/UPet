@@ -116,6 +116,17 @@ func (e *PetApi) UpdatePetInfo(c *gin.Context) {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
+	pet, err := petService.GetPetInfo(uint(petID))
+	if err != nil {
+		response.FailWithMessage(err.Error(), c)
+		return
+	}
+
+	petInfo.CreatedAt = pet.CreatedAt
+	petInfo.UpdatedBy = utils.GetUserID(c)
+	petInfo.DeletedAt = pet.DeletedAt
+	petInfo.FamilyId = pet.FamilyId
+
 	err = petService.UpdatePet(&petInfo)
 	if err != nil {
 		global.GVA_LOG.Error("更新失败!", zap.Error(err))

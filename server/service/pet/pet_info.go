@@ -54,6 +54,11 @@ func (petInfo *PetInfoService) GetPetInfoList(familyID uint, info request.PageIn
 	db := global.GVA_DB.Model(&pet.PetInfo{})
 
 	var PetInfoList []pet.PetInfo
-	err = db.Limit(limit).Offset(offset).Where("family_id = ?", familyID).Find(&PetInfoList).Error
+	err = db.Where("family_id = ?", familyID).Count(&total).Error
+	if err != nil {
+		return PetInfoList, total, err
+	} else {
+		err = db.Limit(limit).Offset(offset).Where("family_id = ?", familyID).Find(&PetInfoList).Error
+	}
 	return PetInfoList, total, err
 }
