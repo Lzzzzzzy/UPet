@@ -1,6 +1,7 @@
 package router
 
 import (
+	"github.com/Lzzzzzzy/UPet/server/router/auth"
 	"github.com/Lzzzzzzy/UPet/server/router/pet"
 	petTodo "github.com/Lzzzzzzy/UPet/server/router/pet_todo"
 )
@@ -12,4 +13,5 @@ type RouterGroup struct {
 	// Example example.RouterGroup
 	Pet     pet.RouterGroup
 	PetTodo petTodo.RouterGroup
+	Auth    auth.RouterGroup
 }

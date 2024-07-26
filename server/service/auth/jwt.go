@@ -4,7 +4,10 @@ import (
 	"context"
 
 	"github.com/Lzzzzzzy/UPet/server/global"
+	"github.com/Lzzzzzzy/UPet/server/model/system/request"
+	"github.com/Lzzzzzzy/UPet/server/model/user"
 	"github.com/Lzzzzzzy/UPet/server/utils"
+	"go.uber.org/zap"
 )
 
 type JwtService struct{}
@@ -31,4 +34,20 @@ func (jwtService *JwtService) SetRedisJWT(jwt string, userName string) (err erro
 	timer := dr
 	err = global.GVA_REDIS.Set(context.Background(), userName, jwt, timer).Err()
 	return err
+}
+
+// TokenNext 登录以后签发jwt
+func (jwtService *JwtService) CreateToken(user *user.User) (string, int64, error) {
+	j := &utils.JWT{SigningKey: []byte(global.GVA_CONFIG.JWT.SigningKey)} // 唯一签名
+	claims := j.CreateClaims(request.BaseClaims{
+		UserId:   user.ID,
+		FamilyId: user.FamilyId,
+	})
+	token, err := j.CreateToken(claims)
+	if err != nil {
+		global.GVA_LOG.Error("创建token失败!", zap.Error(err))
+		return token, 0, err
+	}
+	expire := claims.ExpiresAt.Unix() * 1000
+	return token, expire, nil
 }

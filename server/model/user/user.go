@@ -10,5 +10,5 @@ type User struct {
 	OpenId   string `json:"openId" form:"openId" gorm:"comment:微信小程序openId"`     //微信小程序openId
 	UnionId  string `json:"unionId" form:"unionId" gorm:"comment:微信公众平台UnionId"` //微信公众平台UnionId
 	FamilyId uint   `json:"familyId" form:"familyId" gorm:"comment:familyId"`    //familyId
-	IsAdmin  uint   `json:"isAdmin" form:"isAdmin" gorm:"comment:是否为管理员"`        // 是否为管理员
+	IsAdmin  bool   `json:"isAdmin" form:"isAdmin" gorm:"comment:是否为管理员"`        // 是否为管理员
 }

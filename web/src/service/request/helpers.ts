@@ -19,7 +19,7 @@ export function getRequestUrl(url: string) {
       () => {
         const { miniProgram } = getAccountInfoSync();
         const hosts = {
-          develop: 'https://getman.cn/mock', // 开发
+          develop: 'http://127.0.0.1:8888', // 开发
           trial: 'https://getman.cn/mock', // 体验
           release: 'https://getman.cn/mock' // 正式
         };

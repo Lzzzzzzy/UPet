@@ -1,7 +1,7 @@
 module.exports = {
   env: {
     NODE_ENV: '"development"',
-    HTTP_URL: '"https://getman.cn/mock"'
+    HTTP_URL: '"http://127.0.0.1:8888"'
   },
   defineConstants: {},
   mini: {

@@ -45,6 +45,7 @@ func Routers() *gin.Engine {
 	// exampleRouter := router.RouterGroupApp.Example
 	petRouter := router.RouterGroupApp.Pet
 	petTodoRouter := router.RouterGroupApp.PetTodo
+	authRouter := router.RouterGroupApp.Auth
 	// 如果想要不使用nginx代理前端网页，可以修改 web/.env.production 下的
 	// VUE_APP_BASE_API = /
 	// VUE_APP_BASE_PATH = http://localhost
@@ -66,7 +67,7 @@ func Routers() *gin.Engine {
 	PublicGroup := Router.Group(global.GVA_CONFIG.System.RouterPrefix)
 	PrivateGroup := Router.Group(global.GVA_CONFIG.System.RouterPrefix)
 
-	PrivateGroup.Use(middleware.JWTAuth()).Use(middleware.CasbinHandler())
+	PrivateGroup.Use(middleware.JWTAuth())
 
 	{
 		// 健康监测
@@ -74,10 +75,9 @@ func Routers() *gin.Engine {
 			c.JSON(http.StatusOK, "ok")
 		})
 	}
-	// {
-	// 	systemRouter.InitBaseRouter(PublicGroup) // 注册基础功能路由 不做鉴权
-	// 	systemRouter.InitInitRouter(PublicGroup) // 自动初始化相关
-	// }
+	{
+		authRouter.InitAuthRouter(PublicGroup) //用户注册路由 不做鉴权
+	}
 
 	// {
 	// 	systemRouter.InitApiRouter(PrivateGroup, PublicGroup)       // 注册功能api路由

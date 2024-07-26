@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { ref, onBeforeMount, watch, computed } from 'vue';
-import { eventCenter } from '@tarojs/taro';
+import { eventCenter, login } from '@tarojs/taro';
 import noPetRemind from '@/components/home/add-pet-remind/index.vue';
 import petTodosPage from '@/components/pet-todos/index.vue';
 import calendar from '@/components/calendar/index.vue';
 import { Pet } from "@/typings/pet";
+import { userAuth } from '@/service/api/user';
 
 /** 设置页面属性 */
 definePageConfig({
@@ -18,6 +19,19 @@ const getDotInfos = (date: Array<string>) => {
     return {"2024-07-02": ["red", "black"], "2024-07-03": ["green"], "2024-07-30": ["green"], "2024-07-31": ["orange"]}
 }
 
+const wxLogin = () => {
+  login({
+    success: function (res) {
+      if (res.code) {
+        //发起网络请求
+        userAuth(res.code)
+      } else {
+        console.log('登录失败！' + res.errMsg)
+      }
+    }
+  })
+}
+
 /** 宠物相关参数和方法 */
 const currentPet = ref<Pet.PetInfo>();
 
@@ -28,17 +42,9 @@ onBeforeMount(() => {
   eventCenter.on("jumpToDate", (date: Date) => {
     console.log("jumpToDate");
     currentDate.value = date;
-  })
+  });
+  wxLogin();
 });
-
-// useDidShow(() => {
-//   const pageStore = usePageStore();
-//   if (pageStore.hasTodoDate) {
-//     const todoDate = pageStore.getTodoDate;
-//     currentDate.value = dayjs(todoDate).toDate();
-//     pageStore.removeTodoDate();
-//   }
-// })
 
 const pets = ref<Array<Pet.PetInfo>>([]);
 const getPetsInfo = () => {

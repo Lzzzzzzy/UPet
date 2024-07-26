@@ -3,7 +3,7 @@ package utils
 var (
 	IdVerify               = Rules{"ID": []string{NotEmpty()}}
 	ApiVerify              = Rules{"Path": {NotEmpty()}, "Description": {NotEmpty()}, "ApiGroup": {NotEmpty()}, "Method": {NotEmpty()}}
-	MenuVerify             = Rules{"Path": {NotEmpty()}, "Name": {NotEmpty()}, "Component": {NotEmpty()}, "Sort": {Ge("0")}}
+	MenuVerify             = Rules{"Path": {NotEmpty()}, "Name": {NotEmpty()}, "Component": {NotEmpty()}, "Sort": {Gt("-1")}}
 	MenuMetaVerify         = Rules{"Title": {NotEmpty()}}
 	LoginVerify            = Rules{"CaptchaId": {NotEmpty()}, "Username": {NotEmpty()}, "Password": {NotEmpty()}}
 	RegisterVerify         = Rules{"Username": {NotEmpty()}, "NickName": {NotEmpty()}, "Password": {NotEmpty()}, "AuthorityId": {NotEmpty()}}
@@ -17,6 +17,7 @@ var (
 	ChangePasswordVerify   = Rules{"Password": {NotEmpty()}, "NewPassword": {NotEmpty()}}
 	SetUserAuthorityVerify = Rules{"AuthorityId": {NotEmpty()}}
 
-	PetInfoVerify     = Rules{"Name": {NotEmpty()}, "Birthday": {NotEmpty()}, "Gender": {Ge("0"), Lt("2")}, "Category": {Ge("0")}, "SterilizedState": {Ge("0"), Lt("2")}}
-	PetTodoInfoVerify = Rules{"Title": {NotEmpty()}, "Remind": {NotEmpty()}, "Complete": {Ge("0"), Lt("2")}, "Type": {Ge("0")}, "Color": {NotEmpty()}, "TodoTime": {NotEmpty()}, "PetId": {NotEmpty()}}
+	PetInfoVerify     = Rules{"Name": {NotEmpty()}, "Birthday": {NotEmpty()}, "Gender": {Gt("-1"), Lt("2")}, "Category": {Gt("-1")}, "SterilizedState": {Gt("-1"), Lt("2")}}
+	PetTodoInfoVerify = Rules{"Title": {NotEmpty()}, "Remind": {NotEmpty()}, "Complete": {Gt("-1"), Lt("2")}, "Type": {Gt("-1")}, "Color": {NotEmpty()}, "TodoTime": {NotEmpty()}, "PetId": {NotEmpty()}}
+	AuthVerify        = Rules{"Code": {NotEmpty()}}
 )

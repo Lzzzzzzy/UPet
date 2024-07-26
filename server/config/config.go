@@ -31,4 +31,7 @@ type Server struct {
 
 	// 跨域配置
 	Cors CORS `mapstructure:"cors" json:"cors" yaml:"cors"`
+
+	// 微信小程序
+	Wechat Wechat `mapstructure:"wechat" json:"wechat" yaml:"wechat"`
 }
