@@ -21,6 +21,6 @@ func (e *PetRouter) InitPetRouter(Router *gin.RouterGroup) {
 		petRouterWithoutRecord.GET("/:petID", petApi.GetPetInfo) // 获取单一宠物信息
 	}
 	{
-		petsRouterWithoutRecord.GET("/all", petApi.GetPetInfoList) // 获取宠物列表
+		petsRouterWithoutRecord.GET("", petApi.GetPetInfoList) // 获取宠物列表
 	}
 }

@@ -23,7 +23,7 @@ type PetApi struct{}
 // @Produce   application/json
 // @Param     data  body      pet.PetInfo            true  "宠物信息"
 // @Success   200   {object}  response.Response{msg=string}  "创建宠物"
-// @Router    /pet [post]
+// @Router    /api/pet [post]
 func (e *PetApi) CreatePetInfo(c *gin.Context) {
 	var petInfo pet.PetInfo
 	err := c.ShouldBindJSON(&petInfo)
@@ -57,7 +57,7 @@ func (e *PetApi) CreatePetInfo(c *gin.Context) {
 // @Produce   application/json
 // @Param     petID  path      int             true  "宠物ID"
 // @Success   200   {object}  response.Response{msg=string}  "删除宠物"
-// @Router    /pet/:petID [delete]
+// @Router    /api/pet/:petID [delete]
 func (e *PetApi) DeletePetInfo(c *gin.Context) {
 	var petInfo pet.PetInfo
 	petIdStr := c.Param("petID")
@@ -90,7 +90,7 @@ func (e *PetApi) DeletePetInfo(c *gin.Context) {
 // @Param     petID  path      int             true  "宠物ID"
 // @Param     data  body      pet.PetInfo            true  "宠物信息"
 // @Success   200   {object}  response.Response{msg=string}  "更新宠物信息"
-// @Router    /pet/:petID [put]
+// @Router    /api/pet/:petID [put]
 func (e *PetApi) UpdatePetInfo(c *gin.Context) {
 	var petInfo pet.PetInfo
 	petIdStr := c.Param("petID")
@@ -144,7 +144,7 @@ func (e *PetApi) UpdatePetInfo(c *gin.Context) {
 // @Produce   application/json
 // @Param     data  query     pet.PetInfo                                             true  "宠物ID"
 // @Success   200   {object}  response.Response{data=petRes.PetInfoResponse,msg=string}  "获取单一宠物信息"
-// @Router    /pet/:petID [get]
+// @Router    /api/pet/:petID [get]
 func (e *PetApi) GetPetInfo(c *gin.Context) {
 	var petInfo pet.PetInfo
 	petIdStr := c.Param("petID")
@@ -175,7 +175,7 @@ func (e *PetApi) GetPetInfo(c *gin.Context) {
 // @accept    application/json
 // @Produce   application/json
 // @Success   200   {object}  response.Response{data=response.PageResult,msg=string}  "分页获取权限客户列表,返回包括列表,总数,页码,每页数量"
-// @Router    /pets [get]
+// @Router    /api/pets [get]
 func (e *PetApi) GetPetInfoList(c *gin.Context) {
 	var pageInfo request.PageInfo
 	err := c.ShouldBindQuery(&pageInfo)

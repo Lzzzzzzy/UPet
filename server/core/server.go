@@ -5,7 +5,6 @@ import (
 
 	"github.com/Lzzzzzzy/UPet/server/global"
 	"github.com/Lzzzzzzy/UPet/server/initialize"
-	"github.com/Lzzzzzzy/UPet/server/service/system"
 
 	"go.uber.org/zap"
 )
@@ -26,9 +25,9 @@ func RunWindowsServer() {
 		}
 	}
 	// 从db加载jwt数据
-	if global.GVA_DB != nil {
-		system.LoadAll()
-	}
+	// if global.GVA_DB != nil {
+	// 	system.LoadAll()
+	// }
 
 	Router := initialize.Routers()
 	Router.Static("/form-generator", "./resource/page")

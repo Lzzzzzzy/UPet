@@ -5,5 +5,5 @@ import (
 )
 
 type PetTodoInfoResponse struct {
-	PetTodo petTodo.PetTodoInfo `json:"pet"`
+	PetTodo petTodo.PetTodoInfo `json:"petTodos"`
 }

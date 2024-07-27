@@ -5,10 +5,11 @@ import (
 	"time"
 
 	"github.com/Lzzzzzzy/UPet/server/global"
+	"github.com/Lzzzzzzy/UPet/server/model/common"
 	"github.com/Lzzzzzzy/UPet/server/model/common/response"
-	petTodo "github.com/Lzzzzzzy/UPet/server/model/pet_todo"
+	petTodoModel "github.com/Lzzzzzzy/UPet/server/model/pet_todo"
 	petTodoReq "github.com/Lzzzzzzy/UPet/server/model/pet_todo/request"
-	petTodoRes "github.com/Lzzzzzzy/UPet/server/model/pet_todo/response"
+	petTodoResp "github.com/Lzzzzzzy/UPet/server/model/pet_todo/response"
 	"github.com/Lzzzzzzy/UPet/server/utils"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
@@ -24,22 +25,45 @@ type PetTodoApi struct{}
 // @Produce   application/json
 // @Param     data  body      pet.PetTodo            true  "宠物待办信息"
 // @Success   200   {object}  response.Response{msg=string}  "创建宠物待办"
-// @Router    /pet/todo [post]
+// @Router    /api/pet-todo [post]
 func (e *PetTodoApi) CreatePetTodo(c *gin.Context) {
-	var petTodo petTodo.PetTodoInfo
-	err := c.ShouldBindJSON(&petTodo)
+	var petTodoResp petTodoReq.PetTodoInfo
+	err := c.ShouldBindJSON(&petTodoResp)
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
-	err = utils.Verify(petTodo, utils.PetTodoInfoVerify)
+	err = utils.Verify(petTodoResp, utils.PetTodoInfoVerify)
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
+
+	var petTodo petTodoModel.PetTodoInfo
+	petTodo.Title = petTodoResp.Title
+	petTodo.Remark = petTodoResp.Remark
+	petTodo.Remind = petTodoResp.Remind
+	petTodo.Complete = petTodoResp.Complete
+	petTodo.Type = petTodoResp.Type
+	petTodo.Color = petTodoResp.Color
+	petTodo.TodoTime = &petTodoResp.TodoTime
+	petTodo.PetId = petTodoResp.PetId
 	petTodo.CreatedBy = utils.GetUserID(c)
 	petTodo.UpdatedBy = utils.GetUserID(c)
-	err = petTodoService.CreatePetTodo(petTodo)
+
+	needCreateTodos := []*petTodoModel.PetTodoInfo{}
+	if petTodoResp.Remind {
+		remindTimes := petTodoService.FormatRemindTime(&petTodoResp)
+		for _, remindTime := range remindTimes {
+			newTodo := petTodo
+			newTodo.RemindTime = &common.CustomTime{Time: remindTime}
+			needCreateTodos = append(needCreateTodos, &newTodo)
+		}
+	} else {
+		needCreateTodos = append(needCreateTodos, &petTodo)
+	}
+
+	err = petTodoService.CreatePetTodos(needCreateTodos)
 
 	if err != nil {
 		global.GVA_LOG.Error("创建失败!", zap.Error(err))
@@ -55,12 +79,12 @@ func (e *PetTodoApi) CreatePetTodo(c *gin.Context) {
 // @Security  ApiKeyAuth
 // @accept    application/json
 // @Produce   application/json
-// @Param     todoID  path      int             true  "宠物待办ID"
+// @Param     petTodoID  path      int             true  "宠物待办ID"
 // @Success   200   {object}  response.Response{msg=string}  "删除宠物待办"
-// @Router    /pet/todo/:todoID [delete]
+// @Router    /api/pet-todo/:petTodoID [delete]
 func (e *PetTodoApi) DeletePetTodo(c *gin.Context) {
-	var petTodo petTodo.PetTodoInfo
-	todoIdStr := c.Param("todoID")
+	var petTodo petTodoModel.PetTodoInfo
+	todoIdStr := c.Param("petTodoID")
 	petTodoID, err := strconv.ParseUint(todoIdStr, 10, 64)
 	if err != nil {
 		response.FailWithMessage("宠物待办ID错误", c)
@@ -87,13 +111,13 @@ func (e *PetTodoApi) DeletePetTodo(c *gin.Context) {
 // @Security  ApiKeyAuth
 // @accept    application/json
 // @Produce   application/json
-// @Param     todoID  path      int             true  "宠物待办ID"
+// @Param     petTodoID  path      int             true  "宠物待办ID"
 // @Param     data  body      petTodo.PetTodoInfo            true  "宠物待办信息"
 // @Success   200   {object}  response.Response{msg=string}  "更新宠物待办信息"
-// @Router    /pet/todo/:todoID [put]
+// @Router    /api/pet-todo/:petTodoID [put]
 func (e *PetTodoApi) UpdatePetTodo(c *gin.Context) {
-	var petTodo petTodo.PetTodoInfo
-	todoIdStr := c.Param("todoID")
+	var petTodo petTodoModel.PetTodoInfo
+	todoIdStr := c.Param("petTodoID")
 	petTodoID, err := strconv.ParseUint(todoIdStr, 10, 64)
 	if err != nil {
 		response.FailWithMessage("宠物ID错误", c)
@@ -116,6 +140,12 @@ func (e *PetTodoApi) UpdatePetTodo(c *gin.Context) {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
+	olderPetTodo, err := petTodoService.GetPetTodoInfo(petTodo.ID)
+	if err != nil {
+		response.FailWithMessage(err.Error(), c)
+		return
+	}
+	petTodo.CreatedAt = olderPetTodo.CreatedAt
 	err = petTodoService.UpdatePetTodo(&petTodo)
 	if err != nil {
 		global.GVA_LOG.Error("更新失败!", zap.Error(err))
@@ -131,11 +161,11 @@ func (e *PetTodoApi) UpdatePetTodo(c *gin.Context) {
 // @Security  ApiKeyAuth
 // @accept    application/json
 // @Produce   application/json
-// @Param     data  query     pet.PetTodo                                             true  "宠物待办ID"
+// @Param     petTodoID  path      int             true  "宠物待办ID"
 // @Success   200   {object}  response.Response{data=petRes.PetTodoResponse,msg=string}  "获取单一宠物信息"
-// @Router    /pet/todo/:todoID [get]
+// @Router    /api/pet-todo/:petTodoID [get]
 func (e *PetTodoApi) GetPetTodo(c *gin.Context) {
-	todoIdStr := c.Param("todoID")
+	todoIdStr := c.Param("petTodoID")
 	petTodoID, err := strconv.ParseUint(todoIdStr, 10, 64)
 	if err != nil {
 		response.FailWithMessage("宠物待办ID错误", c)
@@ -148,7 +178,7 @@ func (e *PetTodoApi) GetPetTodo(c *gin.Context) {
 		response.FailWithMessage("获取失败", c)
 		return
 	}
-	response.OkWithDetailed(petTodoRes.PetTodoInfoResponse{PetTodo: data}, "获取成功", c)
+	response.OkWithDetailed(petTodoResp.PetTodoInfoResponse{PetTodo: data}, "获取成功", c)
 }
 
 // GetPetTodoList
@@ -158,7 +188,7 @@ func (e *PetTodoApi) GetPetTodo(c *gin.Context) {
 // @accept    application/json
 // @Produce   application/json
 // @Success   200   {object}  response.Response{data=response.PageResult,msg=string}  "分页获取权限客户列表,返回包括列表,总数,页码,每页数量"
-// @Router    /pets [get]
+// @Router    /api/pet-todos [get]
 func (e *PetTodoApi) GetPetTodoList(c *gin.Context) {
 	var pageInfo petTodoReq.PetTodoPageInfo
 	err := c.ShouldBindQuery(&pageInfo)
@@ -171,7 +201,7 @@ func (e *PetTodoApi) GetPetTodoList(c *gin.Context) {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
-	format := "2006-01-02 15:04"
+	format := "2006-01-02"
 	todoDate, err := time.Parse(format, pageInfo.Date)
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)

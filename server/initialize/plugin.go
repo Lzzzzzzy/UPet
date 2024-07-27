@@ -12,5 +12,5 @@ func InstallPlugin(PrivateGroup *gin.RouterGroup, PublicRouter *gin.RouterGroup,
 		return
 	}
 	bizPluginV1(PrivateGroup, PublicRouter)
-	bizPluginV2(engine)
+	// bizPluginV2(engine)
 }
