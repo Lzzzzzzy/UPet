@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import { ref, onBeforeMount, watch, computed } from 'vue';
-import { eventCenter, login } from '@tarojs/taro';
+import { eventCenter, login, redirectTo } from '@tarojs/taro';
 import noPetRemind from '@/components/home/add-pet-remind/index.vue';
 import petTodosPage from '@/components/pet-todos/index.vue';
 import calendar from '@/components/calendar/index.vue';
 import { Pet } from "@/typings/pet";
 import { userAuth } from '@/service/api/user';
+import { localStg } from '@/utils';
 
 /** 设置页面属性 */
 definePageConfig({
@@ -24,7 +25,16 @@ const wxLogin = () => {
     success: function (res) {
       if (res.code) {
         //发起网络请求
-        userAuth(res.code)
+        userAuth(res.code).then((data: any) => {
+          localStg.set("token", data.token, data.expiresAt);
+          localStg.set("userInfo", data.user, null);
+          if (!(data?.user.avatar && data?.user.nickname)) {
+            // 跳转到用户注册页面
+            redirectTo({
+              url: `/package/package-register/index`
+            });
+          }
+        })
       } else {
         console.log('登录失败！' + res.errMsg)
       }
@@ -35,7 +45,7 @@ const wxLogin = () => {
 /** 宠物相关参数和方法 */
 const currentPet = ref<Pet.PetInfo>();
 
-onBeforeMount(() => {
+onBeforeMount(async () => {
   eventCenter.on("selectpet", (pet: Pet.PetInfo) => {
     currentPet.value = pet;
   });
@@ -43,50 +53,18 @@ onBeforeMount(() => {
     console.log("jumpToDate");
     currentDate.value = date;
   });
-  wxLogin();
+
+  // const token = localStg.get("token");
+  const token = "";
+  if (!token) {
+    wxLogin();
+  }
 });
 
 const pets = ref<Array<Pet.PetInfo>>([]);
 const getPetsInfo = () => {
-  return [{
-    id: 1,
-    name: '旺财',
-    familyId: 1,
-    avatar: '',
-    birthday: "2022-10-02",
-    gendar: 0,
-    sterilizedState: 0,
-    category: 0,
-  },
-  {
-    id: 2,
-    name: '帅帅',
-    familyId: 1,
-    avatar: '',
-    birthday: "2021-03-02",
-    gendar: 0,
-    sterilizedState: 0,
-    category: 1,
-  },{
-    id: 3,
-    name: '旺财2',
-    familyId: 1,
-    avatar: '',
-    birthday: "2012-10-02",
-    gendar: 0,
-    sterilizedState: 1,
-    category: 1,
-  },{
-    id: 4,
-    name: '1234',
-    familyId: 1,
-    avatar: '',
-    birthday: "2002-10-02",
-    gendar: 1,
-    sterilizedState: 1,
-    category: 1,
-  }
-]}
+  return []
+}
 pets.value = getPetsInfo();
 
 

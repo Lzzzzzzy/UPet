@@ -1,12 +1,10 @@
 package middleware
 
 import (
-	"github.com/Lzzzzzzy/UPet/server/service"
-
 	"github.com/gin-gonic/gin"
 )
 
-var casbinService = service.ServiceGroupApp.SystemServiceGroup.CasbinService
+// var casbinService = service.ServiceGroupApp.SystemServiceGroup.CasbinService
 
 // CasbinHandler 拦截器
 func CasbinHandler() gin.HandlerFunc {

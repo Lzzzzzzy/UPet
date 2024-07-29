@@ -16,12 +16,12 @@ async function axios<T>(config: Service.RequestParam): Promise<Service.RequestRe
       header,
       timeout: REQUEST_TIMEOUT,
       success: res => {
-        const { code, message, result } = res.data as Service.BackendResultConfig<T>;
+        const { code, msg, data } = res.data as Service.BackendResultConfig<T>;
         /* 成功请求 */
         if (code === SUCCESS_CODE) {
           return resolve({
             error: null,
-            success: result
+            success: data
           });
         }
         if (REFRESH_TOKEN_CODE.includes(code)) {
@@ -29,12 +29,12 @@ async function axios<T>(config: Service.RequestParam): Promise<Service.RequestRe
         }
         /** 仅有使用服务端错误信息的请求才 toast 提示错误 */
         if (axiosConfig.useErrMsg) {
-          showErrorMsg(message);
+          showErrorMsg(msg);
         }
         return resolve({
           error: {
-            message,
-            errorCode: code
+            msg,
+            code
           },
           success: null
         });

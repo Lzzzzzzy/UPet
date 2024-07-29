@@ -12,7 +12,7 @@ function createLocalStorage<T extends StorageInterface.Local = StorageInterface.
   function set<K extends keyof T>(key: K, value: T[K], expire: number | null = DEFAULT_CACHE_TIME) {
     const storageData: StorageData<T[K]> = {
       value,
-      expire: expire !== null ? new Date().getTime() + expire * 1000 : null
+      expire,
     };
     const json = JSON.stringify(storageData);
     setStorageSync(key as string, json);

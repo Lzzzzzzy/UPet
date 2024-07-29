@@ -1,6 +1,9 @@
 package auth
 
 import (
+	"github.com/Lzzzzzzy/UPet/server/model/user"
+	"gorm.io/gorm"
+
 	authReq "github.com/Lzzzzzzy/UPet/server/model/auth/request"
 	authResp "github.com/Lzzzzzzy/UPet/server/model/auth/response"
 	"github.com/Lzzzzzzy/UPet/server/model/common/response"
@@ -35,18 +38,28 @@ func (e *AuthApi) UserAuth(c *gin.Context) {
 		response.FailWithMessage("微信用户登录失败", c)
 		return
 	}
-	user, err := registerService.RegisterUser(resp.Openid, resp.Unionid)
+	var user *user.User
+	user, err = userService.GetUserByOpenId(resp.Openid)
 	if err != nil {
-		response.FailWithMessage("微信用户注册失败", c)
-		return
+		if err == gorm.ErrRecordNotFound { // 数据库没查询到数据时注册
+			user, err = registerService.RegisterUser(resp.Openid, resp.Unionid)
+			if err != nil {
+				response.FailWithMessage("微信用户注册失败", c)
+				return
+			}
+		} else {
+			response.FailWithMessage("微信用户注册查询是否存在时失败", c)
+			return
+		}
 	}
+
 	token, expire, err := jwtService.CreateToken(user)
 	if err != nil {
 		response.FailWithMessage("jwt创建失败", c)
 		return
 	}
 	response.OkWithDetailed(authResp.LoginResponse{
-		User:      authResp.UserInfo{NickName: user.NickName, Avatar: user.Avatar},
+		User:      authResp.UserInfo{NickName: user.NickName, Avatar: user.Avatar, ID: user.ID, IsAdmin: user.IsAdmin},
 		Token:     token,
 		ExpiresAt: expire,
 	}, "登录成功", c)

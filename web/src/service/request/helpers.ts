@@ -44,7 +44,7 @@ export function getRequestHeaders(axiosConfig: Service.AxiosConfig) {
   const token = localStg.get('token');
   if (token) {
     /** 添加token */
-    header.Authorization = token;
+    header["x-token"] = token;
   }
   /** 增加类型 */
   header['Content-Type'] = axiosConfig.contentType || CONTENT_TYPE.json;

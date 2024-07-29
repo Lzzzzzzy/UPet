@@ -5,6 +5,7 @@ import (
 
 	"github.com/Lzzzzzzy/UPet/server/global"
 	"github.com/Lzzzzzzy/UPet/server/model/family"
+	"github.com/Lzzzzzzy/UPet/server/model/file"
 	"github.com/Lzzzzzzy/UPet/server/model/pet"
 	petTodo "github.com/Lzzzzzzy/UPet/server/model/pet_todo"
 	"github.com/Lzzzzzzy/UPet/server/model/system"
@@ -43,6 +44,7 @@ func RegisterTables() {
 		// system.SysAuthority{},
 		// system.SysDictionary{},
 		system.SysOperationRecord{},
+		file.FileInfo{},
 		// system.SysAutoCodeHistory{},
 		// system.SysDictionaryDetail{},
 		// system.SysBaseMenuParameter{},

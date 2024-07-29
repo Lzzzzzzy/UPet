@@ -20,4 +20,5 @@ var (
 	PetInfoVerify     = Rules{"Name": {NotEmpty()}, "Birthday": {NotEmpty()}, "Gender": {Ge("0"), Lt("2")}, "Category": {Ge("0")}, "SterilizedState": {Ge("0"), Lt("2")}}
 	PetTodoInfoVerify = Rules{"Title": {NotEmpty()}, "Type": {Ge("0")}, "Color": {Ge("0")}, "TodoTime": {NotEmpty()}, "PetId": {NotEmpty()}}
 	AuthVerify        = Rules{"Code": {NotEmpty()}}
+	UserInfoVerify    = Rules{"Avatar": {NotEmpty()}, "NickName": {NotEmpty()}}
 )

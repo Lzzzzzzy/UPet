@@ -14,7 +14,7 @@ const handleToAddPet = () => {
         <div class="flex flex-col items-center justify-center">
             <div class="text-160px i-local-cat"></div>
             <div class="text-sm my-4 text-coolgray">{{ addPetText }}</div>
-            <nut-button shape="round" class="bg-transparent border-1px b-solid border-color-#665D21" @click="handleToAddPet">
+            <nut-button color="#f7daa1" @click="handleToAddPet" class="!text-#000000" shape="round">
                 <template #icon>
                     <div class="text-20px i-local-base-pet-icon"></div>
                 </template>

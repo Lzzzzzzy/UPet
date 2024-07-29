@@ -19,9 +19,9 @@ declare namespace Service {
   /** 请求错误 */
   interface RequestError {
     /** 错误码 */
-    errorCode: string | number;
+    code: string | number;
     /** 错误信息 */
-    message: string;
+    msg: string;
   }
 
   /** 后端接口返回的数据结构配置 */
@@ -29,11 +29,9 @@ declare namespace Service {
     /** 表示后端请求状态码的属性字段 */
     code: string | number;
     /** 表示后端请求数据的属性字段 */
-    data: string;
+    data: T;
     /** 表示后端消息的属性字段 */
-    message: string;
-    /** 表示后端返回的数据结构 */
-    result: T;
+    msg: string;
   }
 
   /** 自定义的请求成功结果 */

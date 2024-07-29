@@ -1,12 +1,10 @@
 package middleware
 
 import (
-	"github.com/Lzzzzzzy/UPet/server/service"
-
 	"github.com/gin-gonic/gin"
 )
 
-var userService = service.ServiceGroupApp.SystemServiceGroup.UserService
+// var userService = service.ServiceGroupApp.SystemServiceGroup.UserService
 
 func ErrorToEmail() gin.HandlerFunc {
 	return func(c *gin.Context) {

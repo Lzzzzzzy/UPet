@@ -46,6 +46,8 @@ func Routers() *gin.Engine {
 	petRouter := router.RouterGroupApp.Pet
 	petTodoRouter := router.RouterGroupApp.PetTodo
 	authRouter := router.RouterGroupApp.Auth
+	userRouter := router.RouterGroupApp.User
+	systemRouter := router.RouterGroupApp.System
 	// 如果想要不使用nginx代理前端网页，可以修改 web/.env.production 下的
 	// VUE_APP_BASE_API = /
 	// VUE_APP_BASE_PATH = http://localhost
@@ -101,6 +103,8 @@ func Routers() *gin.Engine {
 	{
 		petRouter.InitPetRouter(PrivateGroup)         // 宠物管理路由
 		petTodoRouter.InitPetTodoRouter(PrivateGroup) // 待办事项路由
+		userRouter.InitUserRouter(PrivateGroup)       // 用户相关路由
+		systemRouter.InitFileRouter(PrivateGroup)     //文件相关路由
 	}
 
 	//插件路由安装

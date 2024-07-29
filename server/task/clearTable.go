@@ -25,12 +25,6 @@ func ClearTable(db *gorm.DB) error {
 		Interval:     "2160h",
 	})
 
-	ClearTableDetail = append(ClearTableDetail, common.ClearDB{
-		TableName:    "jwt_blacklists",
-		CompareField: "created_at",
-		Interval:     "168h",
-	})
-
 	if db == nil {
 		return errors.New("db Cannot be empty")
 	}
