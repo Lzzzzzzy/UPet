@@ -55,13 +55,13 @@ onBeforeMount(() => {
 const pets = ref<Array<Pet.PetInfo>>([]);
 
 const editPet = (pet: Pet.PetInfo) => {
-  navigateTo({url: `/package/package-add-pet/index`, success: () => {
+  navigateTo({url: `/package/package-pet/index`, success: () => {
     eventCenter.trigger("selectEditPet", pet);
   }})
 };
 
 const addPet = () => {
-    navigateTo({url: `/package/package-add-pet/index`})
+    navigateTo({url: `/package/package-pet/index`})
 }
 
 const calculateAge = (birthday: Date | string | Dayjs | null | undefined) => {

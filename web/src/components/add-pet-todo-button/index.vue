@@ -10,10 +10,11 @@ const props = defineProps({
 
 const handleToAddTodo = () => {
   navigateTo({
-    url: `/package/package-add-todo/index?selectedDate=${props.currentDate}`
+    url: `/package/package-todo/index?selectedDate=${props.currentDate}`
   });
 }
 </script>
+
 <template>
     <div>
         <nut-avatar class="!flex justify-center items-center !bg-#98c7ce !position-fixed position-bottom-100px position-right-30px" size="large" @click="handleToAddTodo">
@@ -21,6 +22,7 @@ const handleToAddTodo = () => {
         </nut-avatar>
     </div>
 </template>
+
 <style lang="scss">
 .form-item-border {
     border-bottom: 1px solid var(--nut-input-border-bottom, #eaf0fb)

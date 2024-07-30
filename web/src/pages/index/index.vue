@@ -5,8 +5,9 @@ import noPetRemind from '@/components/home/add-pet-remind/index.vue';
 import petTodosPage from '@/components/pet-todos/index.vue';
 import calendar from '@/components/calendar/index.vue';
 import { Pet } from "@/typings/pet";
-import { userAuth } from '@/service/api/user';
+import { userAuth, getPetsInfo } from '@/service/api';
 import { localStg } from '@/utils';
+
 
 /** 设置页面属性 */
 definePageConfig({
@@ -62,9 +63,6 @@ onBeforeMount(async () => {
 });
 
 const pets = ref<Array<Pet.PetInfo>>([]);
-const getPetsInfo = () => {
-  return []
-}
 pets.value = getPetsInfo();
 
 

@@ -22,7 +22,7 @@ const selectPet = (pet: Pet.PetInfo) => {
 
 const handleToAddPet = () => {
   navigateTo({
-    url: '/package/package-add-pet/index'
+    url: '/package/package-pet/index'
   });
 }
 

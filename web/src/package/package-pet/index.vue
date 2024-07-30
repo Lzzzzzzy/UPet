@@ -2,7 +2,9 @@
 import { switchTab, eventCenter } from '@tarojs/taro';
 import { computed, onBeforeMount, ref } from 'vue';
 import { Pet } from "@/typings/pet";
-import { uploadFileToSystem } from "@/service/api/file";
+import { uploadFileToSystem, addPet } from "@/service/api";
+import { formatDate } from '~/src/utils/common/datetime';
+import { dayjs } from "dayjs";
 
 const title = ref("添加档案");
 
@@ -68,20 +70,31 @@ const editText = computed(() => {
 const handleSubmit = async () => {
   const { valid } = await formRef.value?.validate();
   if (valid) {
+    isLoading.value = true;
     const avatarUrl = await uploadFileToSystem(imageUrl.value);
     formData.value.avatar = avatarUrl;
     formData.value.category = selectedPetType.value[0];
+    formData.value.birthday = formatDate(currentDate.value);
+    const resp = await addPet(formData.value);
+    console.log("resp:", resp);
+    isLoading.value = false;
     switchTab({
       url: '/pages/index/index'
     })
   }
 }
+
+const isLoading = ref(false);
+
+const showBirthdayDate = ref(false);
+
+const currentDate = ref(new Date());
 </script>
 
 <template>
   <basic-layout>
     <custom-navbar :title="title" left-show />
-    <div class="bg-#ffffff">
+    <div class="bg-#ffffff mx-10px">
       <div class="w-full flex justify-center items-center pt-80px pb-30px flex-col" :class="{'pet-avatar-container': imageUrl}">
         <nut-avatar-cropper shape="round" @confirm="onConfirmAvatar" :edit-text="editText">
           <nut-avatar size="100" shape="round">
@@ -128,17 +141,24 @@ const handleSubmit = async () => {
         </nut-form-item>
         <nut-form-item label="年龄" prop="type" class="form-item-border">
           <div class="flex">
-            <div v-for="(sterilizedState, index) in sterilizedStateList" :key="index" class="mr-15px" @click="formData.sterilizedState=sterilizedState.value">
-              <div :class="{'bg-#f7daa1': formData.sterilizedState === sterilizedState.value}" class="mr-5 border-1px b-solid border-color-#f7daa1 px-10px py-2px b-rd-12px">{{ sterilizedState.text }}</div>
-            </div>
+            {{ formatDate(currentDate) }}
           </div>
         </nut-form-item>
   
         <nut-space class="m-10px flex justify-center w-full">
-          <nut-button type="primary" @click="handleSubmit" class="!text-black" color="#f7daa1">提交</nut-button>
+          <nut-button type="primary" @click="handleSubmit" class="!text-black" color="#f7daa1" :loading="isLoading">提交</nut-button>
         </nut-space>
       </nut-form>
     </div>
+    <nut-popup v-model:visible="showBirthdayDate" position="bottom" round safe-area-inset-bottom>
+        <div class="flex items-center justify-between h-45px font-size-14px">
+          <div class="date-picker__left"></div>
+          <div class="date-picker__center">选择生日</div>
+          <div class="date-picker__right px-15px" @click="onHandleConfirmSelectDate">确认</div>
+        </div>
+        <calendar v-model="currentDate" :show-week="false" :show-change-mode-button="false" class="font-size-16px">
+        </calendar>
+      </nut-popup>
   </basic-layout>
 </template>
 

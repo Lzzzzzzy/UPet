@@ -4,7 +4,7 @@ const addPetText = "为宠物创建一个档案，立刻开启健康记录吧~"
 
 const handleToAddPet = () => {
   navigateTo({
-    url: '/package/package-add-pet/index'
+    url: '/package/package-pet/index'
   });
 }
 </script>
