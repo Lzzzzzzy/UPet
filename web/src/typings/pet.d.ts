@@ -14,7 +14,7 @@ declare namespace Pet {
     /** 出生日期 */
     birthday?: Date | string | Dayjs;
     /** 性别 */
-    gendar: number;
+    gender: number;
     /** 绝育状态 */
     sterilizedState: number;
     /** 种类 */

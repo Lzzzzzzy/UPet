@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onBeforeMount, reactive, computed } from "vue";
-import { formatDatetime, formatTime, isSameDate } from "@/utils/common/datetime";
+import { formatDatetime, formatTime, isSameDate } from "@/utils";
 import { eventCenter, getCurrentInstance } from "@tarojs/taro";
 import richTextContent from "@/components/rich-text/index.vue";
 import dayjs from "dayjs";

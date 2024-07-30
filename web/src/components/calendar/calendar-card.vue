@@ -37,8 +37,7 @@
 import { ref, computed, watch } from "vue";
 import type { Dayjs } from 'dayjs';
 import dayjs from "dayjs";
-import { getDays, isDateInArray, isSameDate } from '@/utils/common/datetime';
-import { weekName } from '@/utils/common/const';
+import { getDays, isDateInArray, isSameDate, weekName } from '@/utils';
 
 const props = defineProps({
   modelValue: {  // 当前指向的日期

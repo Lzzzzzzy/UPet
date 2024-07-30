@@ -207,7 +207,7 @@ func (e *PetTodoApi) GetPetTodoList(c *gin.Context) {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
-	petTodoList, total, err := petTodoService.GetPetInfoList(todoDate, pageInfo.PetId, pageInfo.PageInfo)
+	petTodoList, total, err := petTodoService.GetPetTodoInfoList(todoDate, pageInfo.PetId, pageInfo.PageInfo)
 	if err != nil {
 		global.GVA_LOG.Error("获取失败!", zap.Error(err))
 		response.FailWithMessage("获取失败"+err.Error(), c)

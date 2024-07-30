@@ -2,8 +2,8 @@ package pet
 
 import (
 	"github.com/Lzzzzzzy/UPet/server/global"
-	"github.com/Lzzzzzzy/UPet/server/model/common/request"
 	"github.com/Lzzzzzzy/UPet/server/model/pet"
+	petResp "github.com/Lzzzzzzy/UPet/server/model/pet/response"
 )
 
 type PetInfoService struct{}
@@ -45,20 +45,12 @@ func (petInfo *PetInfoService) GetPetInfo(id uint) (e pet.PetInfo, err error) {
 }
 
 // @function: GetPetInfoList
-// @description: 分页获取宠物信息列表
-// @param: familyID uint, info request.PageInfo
-// @return: list interface{}, total int64, err error
-func (petInfo *PetInfoService) GetPetInfoList(familyID uint, info request.PageInfo) (list interface{}, total int64, err error) {
-	limit := info.PageSize
-	offset := info.PageSize * (info.Page - 1)
+// @description: 获取全部宠物信息列表
+// @param: familyID uint
+// @return: list interface{}, err error
+func (petInfo *PetInfoService) GetPetInfoList(familyID uint) (PetInfoList *[]petResp.PetInfoResponse, err error) {
 	db := global.GVA_DB.Model(&pet.PetInfo{})
 
-	var PetInfoList []pet.PetInfo
-	err = db.Where("family_id = ?", familyID).Count(&total).Error
-	if err != nil {
-		return PetInfoList, total, err
-	} else {
-		err = db.Limit(limit).Offset(offset).Where("family_id = ?", familyID).Find(&PetInfoList).Error
-	}
-	return PetInfoList, total, err
+	err = db.Where("family_id = ?", familyID).Find(&PetInfoList).Error
+	return
 }

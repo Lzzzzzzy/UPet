@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, computed, watch, PropType } from "vue"
 import calendarCard from './calendar-card.vue'
-import { isSameDate, isBeforeDate } from "@/utils/common/datetime";
+import { isSameDate, isBeforeDate } from "@/utils";
 
 const props = defineProps({
   modelValue: {

@@ -10,8 +10,8 @@ export async function addPet(data: Pet.PetInfo) {
 }
 
 /** 宠物查询 */
-export async function getPetsInfo() {
-  const resp = await request.get<Pet.PetInfo>('/api/pet', {
+export async function getAllPetsInfo() {
+  const resp = await request.get<Array<Pet.PetInfo>>('/api/pets', {}, {
     useErrMsg: false
   });
   return resp.success;

@@ -5,8 +5,9 @@ import noPetRemind from '@/components/home/add-pet-remind/index.vue';
 import petTodosPage from '@/components/pet-todos/index.vue';
 import calendar from '@/components/calendar/index.vue';
 import { Pet } from "@/typings/pet";
-import { userAuth, getPetsInfo } from '@/service/api';
-import { localStg } from '@/utils';
+import { userAuth, getAllPetsInfo, getPetTodosOnPagenation } from '@/service/api';
+import { localStg, formatDate } from '@/utils';
+import dayjs from 'dayjs';
 
 
 /** 设置页面属性 */
@@ -45,59 +46,41 @@ const wxLogin = () => {
 
 /** 宠物相关参数和方法 */
 const currentPet = ref<Pet.PetInfo>();
+const pets = ref<Array<Pet.PetInfo>>([]);
 
 onBeforeMount(async () => {
   eventCenter.on("selectpet", (pet: Pet.PetInfo) => {
     currentPet.value = pet;
   });
   eventCenter.on("jumpToDate", (date: Date) => {
-    console.log("jumpToDate");
     currentDate.value = date;
   });
 
-  // const token = localStg.get("token");
-  const token = "";
+  const token = localStg.get("token");
   if (!token) {
     wxLogin();
   }
-});
 
-const pets = ref<Array<Pet.PetInfo>>([]);
-pets.value = getPetsInfo();
+  const petInfos = await getAllPetsInfo()
+  if (petInfos) {
+    pets.value = petInfos;
+  }
+});
 
 
 /** 待办事项相关参数和方法 */
-const petTodos = ref();
-watch([currentDate, currentPet], ([newVal1, newVal2], [oldVal1, oldVal2]) => {
-  const todos = getPetTodos(currentDate.value, currentPet.value!);
+const petTodos = ref<Array<Pet.PetTodo>>([]);
+const pagination = ref({page: 1, pageSize: 10})
+watch([currentDate, currentPet], async ([newVal1, newVal2], [oldVal1, oldVal2]) => {
+  const todos = await getPetTodos(currentDate.value, currentPet.value!);
   petTodos.value = todos;
 });
 
-const getPetTodos = (date: Date, pet: Pet.PetInfo) => {
-  if (pet?.name === "1234") {
-    return [
-      {"id": 1, "time": "08:00", "title": "换水", "remark": "全部两个碗里的倒矿泉水纯净水蒸馏水都行,就是不能用自来水", "complete": false},
-      {"id": 2, "time": "12:00", "title": "换粮", "remark": "全换", "complete": false},
-      {"id": 3, "time": "18:00", "title": "铲屎", "remark": "", "complete": false},
-    ]
-  }
-  if (date.getDate() === 2) {
-    return [
-      {"id": 1, "time": "08:00", "title": "换水", "remark": "全部两个碗里的倒矿泉水纯净水蒸馏水都行,就是不能用自来水", "complete": false},
-      {"id": 2, "time": "12:00", "title": "换粮", "remark": "全换", "complete": false},
-    ]
-  }
-  return [
-      {"id": 1, "time": "08:00", "title": "换水", "remark": "全部两个碗里的倒矿泉水纯净水蒸馏水都行,就是不能用自来水", "complete": false},
-      {"id": 2, "time": "12:00", "title": "换粮", "remark": "全换", "complete": false},
-      {"id": 3, "time": "18:00", "title": "铲屎", "remark": "", "complete": false},
-      {"id": 4, "time": "12:43", "title": "换水", "remark": "123123123123123123123123aasdasdasdsasadsadsdsdsadsdasqeqweqweqeqewqeqweqeqweq", "complete": false},
-      {"id": 5, "time": "18:00", "title": "铲屎", "remark": "", "complete": true},
-      {"id": 6, "time": "18:00", "title": "铲屎", "remark": "", "complete": false},
-      {"id": 7, "time": "18:00", "title": "铲屎", "remark": "", "complete": false},
-      {"id": 8, "time": "18:00", "title": "铲屎", "remark": "", "complete": false},
-      {"id": 9, "time": "18:00", "title": "铲屎", "remark": "", "complete": false},
-  ] 
+const getPetTodos = async (date: Date, pet: Pet.PetInfo) => {
+  const params = {page: pagination.value.page, pageSize: pagination.value.pageSize, date: formatDate(date), petId: pet.id!}
+  const resp = getPetTodosOnPagenation(params)
+  console.log("resp:", resp)
+  return [];
 }
 
 const changeCalendarMode = (value: string) => {

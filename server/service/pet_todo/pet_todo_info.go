@@ -6,7 +6,6 @@ import (
 
 	"github.com/Lzzzzzzy/UPet/server/global"
 	"github.com/Lzzzzzzy/UPet/server/model/common/request"
-	"github.com/Lzzzzzzy/UPet/server/model/pet"
 	petTodo "github.com/Lzzzzzzy/UPet/server/model/pet_todo"
 	petTodoReq "github.com/Lzzzzzzy/UPet/server/model/pet_todo/request"
 )
@@ -53,10 +52,10 @@ func (petInfo *PetTodoService) GetPetTodoInfo(id uint) (e petTodo.PetTodoInfo, e
 // @description: 分页获取宠物待办信息列表
 // @param: familyID uint, info request.PageInfo
 // @return: list interface{}, total int64, err error
-func (petTodoInfo *PetTodoService) GetPetInfoList(todoTime time.Time, petId uint, info request.PageInfo) (list interface{}, total int64, err error) {
+func (petTodoInfo *PetTodoService) GetPetTodoInfoList(todoTime time.Time, petId uint, info request.PageInfo) (list interface{}, total int64, err error) {
 	limit := info.PageSize
 	offset := info.PageSize * (info.Page - 1)
-	db := global.GVA_DB.Model(&pet.PetInfo{})
+	db := global.GVA_DB.Model(&petTodo.PetTodoInfo{})
 
 	var PetTodoInfoList []petTodo.SimplePetTodoInfo
 	err = db.Limit(limit).Offset(offset).Where("todo_time = ?", todoTime).Where("pet_id = ?", petId).Find(&PetTodoInfoList).Error

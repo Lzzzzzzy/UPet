@@ -3,7 +3,7 @@ import { switchTab, eventCenter } from '@tarojs/taro';
 import { computed, onBeforeMount, ref } from 'vue';
 import { Pet } from "@/typings/pet";
 import { uploadFileToSystem, addPet } from "@/service/api";
-import { formatDate } from '~/src/utils/common/datetime';
+import { formatDate } from '@/utils';
 import { dayjs } from "dayjs";
 
 const title = ref("添加档案");
@@ -17,7 +17,7 @@ onBeforeMount(()=>{
     console.log("on selectEditPet:", typeof pet);
     formData.value.name = pet.name;
     formData.value.avatar = pet.avatar;
-    formData.value.gendar = pet.gendar;
+    formData.value.gender = pet.gender;
     formData.value.sterilizedState = pet.sterilizedState;
     formData.value.category = pet.category;
     formData.value.birthday = pet.birthday;
@@ -38,7 +38,7 @@ const selectedPetType = ref([0])
 const formData = ref<Pet.PetInfo>({
   name: '',
   avatar: '',
-  gendar: 0,  // 0 公 1 母
+  gender: 0,  // 0 公 1 母
   sterilizedState: 0,  // 0 未绝育 1 已绝育
   category: 0, // petTypes
   birthday: ""
@@ -52,7 +52,7 @@ const formRules = ref({
   ]
 })
 
-const gendarList = [{"text": "男孩", "value": 0}, {"text": "女孩", "value": 1}]
+const genderList = [{"text": "男孩", "value": 0}, {"text": "女孩", "value": 1}]
 const sterilizedStateList = [{"text": "未绝育", "value": 0}, {"text": "已绝育", "value": 1}]
 
 const imageUrl = ref("");
@@ -71,12 +71,13 @@ const handleSubmit = async () => {
   const { valid } = await formRef.value?.validate();
   if (valid) {
     isLoading.value = true;
-    const avatarUrl = await uploadFileToSystem(imageUrl.value);
-    formData.value.avatar = avatarUrl;
+    if (imageUrl.value){
+      const avatarUrl = await uploadFileToSystem(imageUrl.value);
+      formData.value.avatar = avatarUrl;
+    }
     formData.value.category = selectedPetType.value[0];
     formData.value.birthday = formatDate(currentDate.value);
-    const resp = await addPet(formData.value);
-    console.log("resp:", resp);
+    await addPet(formData.value);
     isLoading.value = false;
     switchTab({
       url: '/pages/index/index'
@@ -94,8 +95,8 @@ const currentDate = ref(new Date());
 <template>
   <basic-layout>
     <custom-navbar :title="title" left-show />
-    <div class="bg-#ffffff mx-10px">
-      <div class="w-full flex justify-center items-center pt-80px pb-30px flex-col" :class="{'pet-avatar-container': imageUrl}">
+    <div class="bg-#ffffff mx-10px mt-20px border-rd-md">
+      <div class="w-full flex justify-center items-center py-30px flex-col" :class="{'pet-avatar-container': imageUrl}">
         <nut-avatar-cropper shape="round" @confirm="onConfirmAvatar" :edit-text="editText">
           <nut-avatar size="100" shape="round">
             <img v-if="imageUrl" :src="imageUrl" />
@@ -111,7 +112,7 @@ const currentDate = ref(new Date());
         <nut-form-item label="名字" prop="name" class="form-item-border">
           <nut-input
             v-model="formData.name"
-            placeholder="怎么称呼孩子?"
+            placeholder="毛孩子叫什么名字？"
             type="text"
           />
         </nut-form-item>
@@ -127,8 +128,8 @@ const currentDate = ref(new Date());
         </nut-form-item>
         <nut-form-item label="性别" prop="type" class="form-item-border">
           <div class="flex">
-            <div v-for="(gendar, index) in gendarList" :key="index" class="mr-15px" @click="formData.gendar=gendar.value">
-              <div :class="{'bg-#f7daa1': formData.gendar === gendar.value}" class="mr-5 border-1px b-solid border-color-#f7daa1 px-10px py-2px b-rd-12px">{{ gendar.text }}</div>
+            <div v-for="(gender, index) in genderList" :key="index" class="mr-15px" @click="formData.gender=gender.value">
+              <div :class="{'bg-#f7daa1': formData.gender === gender.value}" class="mr-5 border-1px b-solid border-color-#f7daa1 px-10px py-2px b-rd-12px">{{ gender.text }}</div>
             </div>
           </div>
         </nut-form-item>
@@ -139,8 +140,8 @@ const currentDate = ref(new Date());
             </div>
           </div>
         </nut-form-item>
-        <nut-form-item label="年龄" prop="type" class="form-item-border">
-          <div class="flex">
+        <nut-form-item label="生日" prop="type" class="form-item-border">
+          <div class="flex" @click="showBirthdayDate=true">
             {{ formatDate(currentDate) }}
           </div>
         </nut-form-item>
@@ -154,7 +155,7 @@ const currentDate = ref(new Date());
         <div class="flex items-center justify-between h-45px font-size-14px">
           <div class="date-picker__left"></div>
           <div class="date-picker__center">选择生日</div>
-          <div class="date-picker__right px-15px" @click="onHandleConfirmSelectDate">确认</div>
+          <div class="date-picker__right px-15px" @click="showBirthdayDate=false">确认</div>
         </div>
         <calendar v-model="currentDate" :show-week="false" :show-change-mode-button="false" class="font-size-16px">
         </calendar>

@@ -4,10 +4,8 @@ import (
 	"strconv"
 
 	"github.com/Lzzzzzzy/UPet/server/global"
-	"github.com/Lzzzzzzy/UPet/server/model/common/request"
 	"github.com/Lzzzzzzy/UPet/server/model/common/response"
 	"github.com/Lzzzzzzy/UPet/server/model/pet"
-	petRes "github.com/Lzzzzzzy/UPet/server/model/pet/response"
 	"github.com/Lzzzzzzy/UPet/server/utils"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/zap"
@@ -142,8 +140,8 @@ func (e *PetApi) UpdatePetInfo(c *gin.Context) {
 // @Security  ApiKeyAuth
 // @accept    application/json
 // @Produce   application/json
-// @Param     data  query     pet.PetInfo                                             true  "宠物ID"
-// @Success   200   {object}  response.Response{data=petRes.PetInfoResponse,msg=string}  "获取单一宠物信息"
+// @Param     data  query     pet.PetInfo    true  "宠物ID"
+// @Success   200   {object}  response.Response{data=pet.PetInfo,msg=string}  "获取单一宠物信息"
 // @Router    /api/pet/:petID [get]
 func (e *PetApi) GetPetInfo(c *gin.Context) {
 	var petInfo pet.PetInfo
@@ -165,7 +163,7 @@ func (e *PetApi) GetPetInfo(c *gin.Context) {
 		response.FailWithMessage("获取失败", c)
 		return
 	}
-	response.OkWithDetailed(petRes.PetInfoResponse{Pet: data}, "获取成功", c)
+	response.OkWithDetailed(data, "获取成功", c)
 }
 
 // GetPetInfoList
@@ -174,30 +172,14 @@ func (e *PetApi) GetPetInfo(c *gin.Context) {
 // @Security  ApiKeyAuth
 // @accept    application/json
 // @Produce   application/json
-// @Success   200   {object}  response.Response{data=response.PageResult,msg=string}  "分页获取权限客户列表,返回包括列表,总数,页码,每页数量"
+// @Success   200   {object}  response.Response{data=[]petResp.PetInfoResponse,msg=string}  "分页获取权限客户列表,返回包括列表,总数,页码,每页数量"
 // @Router    /api/pets [get]
 func (e *PetApi) GetPetInfoList(c *gin.Context) {
-	var pageInfo request.PageInfo
-	err := c.ShouldBindQuery(&pageInfo)
-	if err != nil {
-		response.FailWithMessage(err.Error(), c)
-		return
-	}
-	err = utils.Verify(pageInfo, utils.PageInfoVerify)
-	if err != nil {
-		response.FailWithMessage(err.Error(), c)
-		return
-	}
-	petList, total, err := petService.GetPetInfoList(utils.GetUserFamilyID(c), pageInfo)
+	petList, err := petService.GetPetInfoList(utils.GetUserFamilyID(c))
 	if err != nil {
 		global.GVA_LOG.Error("获取失败!", zap.Error(err))
 		response.FailWithMessage("获取失败"+err.Error(), c)
 		return
 	}
-	response.OkWithDetailed(response.PageResult{
-		List:     petList,
-		Total:    total,
-		Page:     pageInfo.Page,
-		PageSize: pageInfo.PageSize,
-	}, "获取成功", c)
+	response.OkWithDetailed(petList, "获取成功", c)
 }
