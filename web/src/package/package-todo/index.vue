@@ -5,6 +5,7 @@ import { eventCenter, getCurrentInstance } from "@tarojs/taro";
 import richTextContent from "@/components/rich-text/index.vue";
 import dayjs from "dayjs";
 import checkedRadio from "@/components/checked-radio/index.vue";
+import {addPetTodo} from "@/service/api";
 
 const selectedDate = ref(new Date());
 
@@ -36,14 +37,13 @@ const formRules = ref({
 })
 
 
-const handleSubmit = () => {
-  formRef.value?.validate().then(({ valid, errors }: { valid: boolean, errors: any}) => {
-    if (valid) {
-      eventCenter.trigger('refreshTodo', formData);
-    } else {
-      console.warn('error:', errors)
-    }
-  })
+const handleSubmit = async () => {
+  const { valid } = await formRef.value?.validate();
+  if (valid) {
+    const res = await addPetTodo(formData)
+    console.log("res:", res)
+    eventCenter.trigger('refreshTodo', formData);
+  }
 }
 
 

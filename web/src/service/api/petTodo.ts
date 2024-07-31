@@ -9,9 +9,22 @@ interface paginationPetTodo {
   date: string,
 }
 
+interface petTodo {
+  id?: number,
+  title: string,
+  time: string,
+  remark: string,
+  remind: boolean,
+  remindDate: Array<string>,
+  remindTime: string,
+  complete: boolean,
+  type: number,
+  color: number,
+}
+
 /** 添加宠物待办 */
-export async function addPetTodo(data: Pet.PetInfo) {
-  const resp = await request.post('/api/pet', data, {
+export async function addPetTodo(data: petTodo) {
+  const resp = await request.post('/api/pet-todo', data, {
     useErrMsg: false
   });
   return resp.success;

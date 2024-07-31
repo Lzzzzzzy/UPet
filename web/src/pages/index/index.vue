@@ -24,7 +24,7 @@ const getDotInfos = (date: Array<string>) => {
 
 const wxLogin = () => {
   login({
-    success: function (res) {
+    success: function (res:any) {
       if (res.code) {
         //发起网络请求
         userAuth(res.code).then((data: any) => {
