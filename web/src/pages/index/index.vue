@@ -69,18 +69,27 @@ onBeforeMount(async () => {
 
 
 /** 待办事项相关参数和方法 */
+const petTodosAllLoad = ref(false);
 const petTodos = ref<Array<Pet.PetTodo>>([]);
 const pagination = ref({page: 1, pageSize: 10})
 watch([currentDate, currentPet], async ([newVal1, newVal2], [oldVal1, oldVal2]) => {
-  const todos = await getPetTodos(currentDate.value, currentPet.value!);
-  petTodos.value = todos;
+  petTodosAllLoad.value = false;
+  await getPetTodos(currentDate.value, currentPet.value!, true);
 });
 
-const getPetTodos = async (date: Date, pet: Pet.PetInfo) => {
+const getPetTodos = async (date: Date, pet: Pet.PetInfo, isReplace: Boolean = false) => {
   const params = {page: pagination.value.page, pageSize: pagination.value.pageSize, date: formatDate(date), petId: pet.id!}
-  const resp = getPetTodosOnPagenation(params)
+  const resp = await getPetTodosOnPagenation(params)
   console.log("resp:", resp)
-  return [];
+  if (resp && resp.total <= petTodos.value.length){
+    petTodosAllLoad.value = true;
+  }
+  if (isReplace) {
+    petTodos.value = resp?.list || [];
+  } else {
+    petTodos.value = petTodos.value.concat(resp?.list || []);
+  }
+  console.log("petTodos:", petTodos.value)
 }
 
 const changeCalendarMode = (value: string) => {
@@ -105,7 +114,7 @@ const calendarHeight = computed(()=>{
         <calendar v-model="currentDate" :get-dot-info-func="getDotInfos" :show-week="true" @change-mode="changeCalendarMode" @update-swiper-height="updateSwiperHeight">
         </calendar>
       </div>
-      <pet-todos-page :pets="pets" :todos="petTodos" class="todo-container" :style="{'padding-top': calendarHeight}" :current-date="currentDate"></pet-todos-page>
+      <pet-todos-page :pets="pets" :todos="petTodos" class="todo-container" :style="{'padding-top': calendarHeight}" :current-date="currentDate" :current-pet-id="currentPet?.id || 0"></pet-todos-page>
     </div>
     <div v-else class="position-absolute pos-top-50% translate-middle full-width">
       <no-pet-remind></no-pet-remind>

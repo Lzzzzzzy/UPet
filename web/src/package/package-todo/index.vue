@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onBeforeMount, reactive, computed } from "vue";
 import { formatDatetime, formatTime, isSameDate } from "@/utils";
-import { eventCenter, getCurrentInstance } from "@tarojs/taro";
+import { eventCenter, getCurrentInstance, switchTab } from "@tarojs/taro";
 import richTextContent from "@/components/rich-text/index.vue";
 import dayjs from "dayjs";
 import checkedRadio from "@/components/checked-radio/index.vue";
@@ -18,7 +18,7 @@ const colorList = ["#ffffff", "#ffffcf", "#efdcd5"]
 
 const formData = reactive({
   title: '',
-  time: formatDatetime(new Date()),
+  todoTime: formatDatetime(new Date()),
   remark: '',
   remind: false,
   remindDate: [dayjs().format('YYYY-MM-DD')],
@@ -26,6 +26,7 @@ const formData = reactive({
   complete: false,
   type: typeList[0].value,
   color: 0,
+  petId: 0,
 })
 
 const formRef = ref()
@@ -40,9 +41,11 @@ const formRules = ref({
 const handleSubmit = async () => {
   const { valid } = await formRef.value?.validate();
   if (valid) {
-    const res = await addPetTodo(formData)
-    console.log("res:", res)
-    eventCenter.trigger('refreshTodo', formData);
+    await addPetTodo(formData)
+    // eventCenter.trigger('refreshTodo', formData);
+    switchTab({
+      url: '/pages/index/index'
+    })
   }
 }
 
@@ -52,15 +55,16 @@ onBeforeMount(() => {
   const params = instance?.router?.params;
   selectedDate.value = params ? dayjs(params.selectedDate).toDate() : new Date();
   if (!isSameDate(selectedDate.value, new Date())) {
-    formData.time = formatDatetime(selectedDate.value);
+    formData.todoTime = formatDatetime(selectedDate.value);
   }
+  formData.petId = parseInt(params?.petId || '0');
 })
 
 // 日期选择
 const showDatePicker = ref(false);
 const selectedTime = ref(new Date());
 const confirmSelectTime = () => {
-  formData.time = formatDatetime(selectedTime.value);
+  formData.todoTime = formatDatetime(selectedTime.value);
   showDatePicker.value = false;
 }
 
@@ -114,7 +118,7 @@ const remindDatesString = computed(() => {
         star-position="right"
       >
         <nut-form-item label="时间" class="form-item-border">
-          <div @click="showDatePicker=true" class="w-full">{{ formData.time }}</div>
+          <div @click="showDatePicker=true" class="w-full">{{ formData.todoTime }}</div>
         </nut-form-item>
         <nut-form-item label="标题" prop="title" class="form-item-border">
           <nut-input v-model="formData.title" placeholder="请输入标题" />

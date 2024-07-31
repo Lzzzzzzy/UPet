@@ -2,17 +2,24 @@ import { request } from '../request';
 import { Pet } from "@/typings/pet";
 
 
-interface paginationPetTodo {
+interface paginationPetTodosReq {
   page: number,
   pageSize: number,
   petId: number,
   date: string,
 }
 
+interface paginationPetTodosResp {
+  page: number,
+  pageSize: number,
+  total: number,
+  list: Array<Pet.PetTodo>,
+}
+
 interface petTodo {
   id?: number,
   title: string,
-  time: string,
+  todoTime: string,
   remark: string,
   remind: boolean,
   remindDate: Array<string>,
@@ -31,8 +38,8 @@ export async function addPetTodo(data: petTodo) {
 }
 
 /** 分页查询宠物待办 */
-export async function getPetTodosOnPagenation(pagination: paginationPetTodo) {
-  const resp = await request.get<Array<Pet.PetTodo>>('/api/pet-todos', pagination, {
+export async function getPetTodosOnPagenation(pagination: paginationPetTodosReq) {
+  const resp = await request.get<paginationPetTodosResp>('/api/pet-todos', pagination, {
     useErrMsg: false
   });
   return resp.success;

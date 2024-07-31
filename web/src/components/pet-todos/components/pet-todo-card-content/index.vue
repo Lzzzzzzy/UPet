@@ -2,6 +2,9 @@
 import { PropType } from "vue";
 import checkedRadio from "@/components/checked-radio/index.vue";
 import { Pet } from "@/typings/pet";
+import { formatTime } from "@/utils";
+import dayjs from "dayjs";
+import type { Dayjs } from "dayjs";
 
 defineProps({
   todo: {
@@ -10,12 +13,15 @@ defineProps({
   }
 });
 
+const getTimeStr = (timeStr: string | Date | Dayjs) => {
+  return formatTime(dayjs(timeStr).toDate())
+}
 </script>
 
 <template>
   <nut-row :gutter="10" class="my-10px" type="flex" justify="space-between">
     <nut-col :span="4">
-      <div class="bg-#ffffff py-10px border-rd-md text-center">{{ todo.time }}</div>
+      <div class="bg-#ffffff py-10px border-rd-md text-center">{{ getTimeStr(todo.time) }}</div>
     </nut-col>
     <nut-col :span="20">
       <div class="flex items-center justify-start">

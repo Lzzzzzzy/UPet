@@ -1,6 +1,7 @@
 package petTodo
 
 import (
+	"fmt"
 	"strconv"
 	"time"
 
@@ -46,7 +47,7 @@ func (e *PetTodoApi) CreatePetTodo(c *gin.Context) {
 	petTodo.Complete = petTodoResp.Complete
 	petTodo.Type = petTodoResp.Type
 	petTodo.Color = petTodoResp.Color
-	petTodo.TodoTime = &petTodoResp.TodoTime
+	petTodo.TodoTime = *petTodoResp.TodoTime
 	petTodo.PetId = petTodoResp.PetId
 	petTodo.CreatedBy = utils.GetUserID(c)
 	petTodo.UpdatedBy = utils.GetUserID(c)
@@ -201,13 +202,17 @@ func (e *PetTodoApi) GetPetTodoList(c *gin.Context) {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
-	format := "2006-01-02"
-	todoDate, err := time.Parse(format, pageInfo.Date)
+	minTime, err := time.Parse("2006-01-02 15:04:05", fmt.Sprintf("%s 00:00:00", pageInfo.Date))
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
-	petTodoList, total, err := petTodoService.GetPetTodoInfoList(todoDate, pageInfo.PetId, pageInfo.PageInfo)
+	maxTime, err := time.Parse("2006-01-02 15:04:05", fmt.Sprintf("%s 23:59:59", pageInfo.Date))
+	if err != nil {
+		response.FailWithMessage(err.Error(), c)
+		return
+	}
+	petTodoList, total, err := petTodoService.GetPetTodoInfoList(minTime, maxTime, pageInfo.PetId, pageInfo.PageInfo)
 	if err != nil {
 		global.GVA_LOG.Error("获取失败!", zap.Error(err))
 		response.FailWithMessage("获取失败"+err.Error(), c)

@@ -12,8 +12,8 @@ type CustomTime struct {
 
 func (ct *CustomTime) UnmarshalJSON(b []byte) error {
 	s := string(b)
-	s = s[1 : len(s)-1]                            // 去除双引号
-	t, err := time.Parse("2006-01-02 15:04:05", s) // 自定义时间格式
+	s = s[1 : len(s)-1]                         // 去除双引号
+	t, err := time.Parse("2006-01-02 15:04", s) // 自定义时间格式
 	if err != nil {
 		return err
 	}

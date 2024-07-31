@@ -18,10 +18,14 @@ const props = defineProps({
   currentDate: {
     type: Date,
     default: () => new Date()
+  },
+  currentPetId: {
+    type: Number,
+    required: true,
   }
 });
 
-const currentDateString = computed(() => dayjs(props.currentDate).format('YYYY-MM-DD'))
+const currentDateString = computed(() => dayjs(props.currentDate).format('YYYY-MM-DD'));
 </script>
 <template>
     <div>
@@ -29,7 +33,7 @@ const currentDateString = computed(() => dayjs(props.currentDate).format('YYYY-M
             <todo-card-header :pets="pets"></todo-card-header>
             <todo-card-content v-for="todo in todos" :key="todo.id" :todo="todo"></todo-card-content>
         </div>
-        <add-todo-button :current-date="currentDateString"></add-todo-button>
+        <add-todo-button :current-date="currentDateString" :pet-id="currentPetId"></add-todo-button>
     </div>
 </template>
 

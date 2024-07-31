@@ -5,12 +5,16 @@ const props = defineProps({
   currentDate: {
     type: String,
     required: true,
+  },
+  petId: {
+    type: Number,
+    required: true,
   }
 });
 
 const handleToAddTodo = () => {
   navigateTo({
-    url: `/package/package-todo/index?selectedDate=${props.currentDate}`
+    url: `/package/package-todo/index?selectedDate=${props.currentDate}&petId=${props.petId}`
   });
 }
 </script>

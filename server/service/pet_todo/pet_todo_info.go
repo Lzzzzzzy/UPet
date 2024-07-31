@@ -52,14 +52,17 @@ func (petInfo *PetTodoService) GetPetTodoInfo(id uint) (e petTodo.PetTodoInfo, e
 // @description: 分页获取宠物待办信息列表
 // @param: familyID uint, info request.PageInfo
 // @return: list interface{}, total int64, err error
-func (petTodoInfo *PetTodoService) GetPetTodoInfoList(todoTime time.Time, petId uint, info request.PageInfo) (list interface{}, total int64, err error) {
+func (petTodoInfo *PetTodoService) GetPetTodoInfoList(minTime, maxTime time.Time, petId uint, info request.PageInfo) (PetTodoInfoList []petTodo.SimplePetTodoInfo, total int64, err error) {
 	limit := info.PageSize
 	offset := info.PageSize * (info.Page - 1)
 	db := global.GVA_DB.Model(&petTodo.PetTodoInfo{})
 
-	var PetTodoInfoList []petTodo.SimplePetTodoInfo
-	err = db.Limit(limit).Offset(offset).Where("todo_time = ?", todoTime).Where("pet_id = ?", petId).Find(&PetTodoInfoList).Error
-	return PetTodoInfoList, total, err
+	err = db.Where("todo_time >= ?", minTime).Where("todo_time <= ?", maxTime).Where("pet_id = ?", petId).Count(&total).Error
+	if err != nil {
+		return
+	}
+	err = db.Limit(limit).Offset(offset).Where("todo_time >= ?", minTime).Where("todo_time <= ?", maxTime).Where("pet_id = ?", petId).Order("todo_time").Find(&PetTodoInfoList).Error
+	return
 }
 
 func (petTodoInfo *PetTodoService) FormatRemindTime(e *petTodoReq.PetTodoInfo) []time.Time {
