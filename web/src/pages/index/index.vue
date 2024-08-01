@@ -69,26 +69,16 @@ onBeforeMount(async () => {
 
 
 /** 待办事项相关参数和方法 */
-const petTodosAllLoad = ref(false);
 const petTodos = ref<Array<Pet.PetTodo>>([]);
-const pagination = ref({page: 1, pageSize: 10})
 watch([currentDate, currentPet], async ([newVal1, newVal2], [oldVal1, oldVal2]) => {
-  petTodosAllLoad.value = false;
-  await getPetTodos(currentDate.value, currentPet.value!, true);
+  await getPetTodos(currentDate.value, currentPet.value!);
 });
 
-const getPetTodos = async (date: Date, pet: Pet.PetInfo, isReplace: Boolean = false) => {
-  const params = {page: pagination.value.page, pageSize: pagination.value.pageSize, date: formatDate(date), petId: pet.id!}
+const getPetTodos = async (date: Date, pet: Pet.PetInfo) => {
+  const params = {date: formatDate(date), petId: pet.id!}
   const resp = await getPetTodosOnPagenation(params)
   console.log("resp:", resp)
-  if (resp && resp.total <= petTodos.value.length){
-    petTodosAllLoad.value = true;
-  }
-  if (isReplace) {
-    petTodos.value = resp?.list || [];
-  } else {
-    petTodos.value = petTodos.value.concat(resp?.list || []);
-  }
+  petTodos.value = resp || []; 
   console.log("petTodos:", petTodos.value)
 }
 
@@ -142,6 +132,6 @@ const calendarHeight = computed(()=>{
 
 .todo-container {
   transition: padding-top 0.3s; /* 确保过渡效果 */
-  padding-bottom: 100px;
+  padding-bottom: 120px;
 }
 </style>

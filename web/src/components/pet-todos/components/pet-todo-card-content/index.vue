@@ -21,7 +21,7 @@ const getTimeStr = (timeStr: string | Date | Dayjs) => {
 <template>
   <nut-row :gutter="10" class="my-10px" type="flex" justify="space-between">
     <nut-col :span="4">
-      <div class="bg-#ffffff py-10px border-rd-md text-center">{{ getTimeStr(todo.time) }}</div>
+      <div class="bg-#ffffff py-10px border-rd-md text-center">{{ getTimeStr(todo.todoTime) }}</div>
     </nut-col>
     <nut-col :span="20">
       <div class="flex items-center justify-start">

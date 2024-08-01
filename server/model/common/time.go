@@ -3,6 +3,7 @@ package common
 import (
 	"database/sql/driver"
 	"errors"
+	"fmt"
 	"time"
 )
 
@@ -19,6 +20,13 @@ func (ct *CustomTime) UnmarshalJSON(b []byte) error {
 	}
 	ct.Time = t
 	return nil
+}
+
+func (ct *CustomTime) MarshalJSON() ([]byte, error) {
+	if ct.Time.IsZero() {
+		return []byte("\"\""), nil
+	}
+	return []byte(fmt.Sprintf("\"%s\"", ct.Format("2006-01-02 15:04:05"))), nil
 }
 
 // Implement driver.Valuer interface for CustomTime

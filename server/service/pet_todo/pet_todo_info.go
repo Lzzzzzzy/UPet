@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"github.com/Lzzzzzzy/UPet/server/global"
-	"github.com/Lzzzzzzy/UPet/server/model/common/request"
 	petTodo "github.com/Lzzzzzzy/UPet/server/model/pet_todo"
 	petTodoReq "github.com/Lzzzzzzy/UPet/server/model/pet_todo/request"
 )
@@ -52,16 +51,10 @@ func (petInfo *PetTodoService) GetPetTodoInfo(id uint) (e petTodo.PetTodoInfo, e
 // @description: 分页获取宠物待办信息列表
 // @param: familyID uint, info request.PageInfo
 // @return: list interface{}, total int64, err error
-func (petTodoInfo *PetTodoService) GetPetTodoInfoList(minTime, maxTime time.Time, petId uint, info request.PageInfo) (PetTodoInfoList []petTodo.SimplePetTodoInfo, total int64, err error) {
-	limit := info.PageSize
-	offset := info.PageSize * (info.Page - 1)
+func (petTodoInfo *PetTodoService) GetPetTodoInfoList(minTime, maxTime time.Time, petId uint) (PetTodoInfoList []petTodo.SimplePetTodoInfo, err error) {
 	db := global.GVA_DB.Model(&petTodo.PetTodoInfo{})
 
-	err = db.Where("todo_time >= ?", minTime).Where("todo_time <= ?", maxTime).Where("pet_id = ?", petId).Count(&total).Error
-	if err != nil {
-		return
-	}
-	err = db.Limit(limit).Offset(offset).Where("todo_time >= ?", minTime).Where("todo_time <= ?", maxTime).Where("pet_id = ?", petId).Order("todo_time").Find(&PetTodoInfoList).Error
+	err = db.Where("todo_time >= ?", minTime).Where("todo_time <= ?", maxTime).Where("pet_id = ?", petId).Order("todo_time").Find(&PetTodoInfoList).Error
 	return
 }
 

@@ -25,7 +25,7 @@ declare namespace Pet {
   interface PetTodo {
     id?: number;
     title: string;
-    time: Date | string | Dayjs;
+    todoTime: Date | string | Dayjs;
     remark: string;
     complete: boolean;
   }

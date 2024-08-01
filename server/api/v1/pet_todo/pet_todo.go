@@ -191,7 +191,7 @@ func (e *PetTodoApi) GetPetTodo(c *gin.Context) {
 // @Success   200   {object}  response.Response{data=response.PageResult,msg=string}  "分页获取权限客户列表,返回包括列表,总数,页码,每页数量"
 // @Router    /api/pet-todos [get]
 func (e *PetTodoApi) GetPetTodoList(c *gin.Context) {
-	var pageInfo petTodoReq.PetTodoPageInfo
+	var pageInfo petTodoReq.PetTodoCondition
 	err := c.ShouldBindQuery(&pageInfo)
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)
@@ -212,16 +212,11 @@ func (e *PetTodoApi) GetPetTodoList(c *gin.Context) {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
-	petTodoList, total, err := petTodoService.GetPetTodoInfoList(minTime, maxTime, pageInfo.PetId, pageInfo.PageInfo)
+	petTodoList, err := petTodoService.GetPetTodoInfoList(minTime, maxTime, pageInfo.PetId)
 	if err != nil {
 		global.GVA_LOG.Error("获取失败!", zap.Error(err))
 		response.FailWithMessage("获取失败"+err.Error(), c)
 		return
 	}
-	response.OkWithDetailed(response.PageResult{
-		List:     petTodoList,
-		Total:    total,
-		Page:     pageInfo.Page,
-		PageSize: pageInfo.PageSize,
-	}, "获取成功", c)
+	response.OkWithDetailed(petTodoList, "获取成功", c)
 }
