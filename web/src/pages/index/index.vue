@@ -5,7 +5,7 @@ import noPetRemind from '@/components/home/add-pet-remind/index.vue';
 import petTodosPage from '@/components/pet-todos/index.vue';
 import calendar from '@/components/calendar/index.vue';
 import { Pet } from "@/typings/pet";
-import { userAuth, getAllPetsInfo, getPetTodosOnPagenation } from '@/service/api';
+import { userAuth, getAllPetsInfo, getPetTodosOnPagenation, getPetTodosMark } from '@/service/api';
 import { localStg, formatDate } from '@/utils';
 import dayjs from 'dayjs';
 
@@ -15,11 +15,13 @@ definePageConfig({
   navigationBarTitleText: '首页'
 });
 
+
 /** 日历相关参数和方法 */
 const currentDate = ref(new Date());
 const calendarMode = ref("week");
-const getDotInfos = (date: Array<string>) => {
-    return {"2024-07-02": ["red", "black"], "2024-07-03": ["green"], "2024-07-30": ["green"], "2024-07-31": ["orange"]}
+const getDotInfos = async (dates: Pet.PetMarkParam) => {
+    const data = await getPetTodosMark(dates);
+    return data;
 }
 
 const wxLogin = () => {
@@ -49,11 +51,20 @@ const currentPet = ref<Pet.PetInfo>();
 const pets = ref<Array<Pet.PetInfo>>([]);
 
 onBeforeMount(async () => {
-  eventCenter.on("selectpet", (pet: Pet.PetInfo) => {
+  eventCenter.on("selectPet", (pet: Pet.PetInfo) => {
     currentPet.value = pet;
   });
   eventCenter.on("jumpToDate", (date: Date) => {
     currentDate.value = date;
+  });
+  eventCenter.on("refreshTodo", async () => {
+    await getPetTodos(currentDate.value, currentPet.value);
+  });
+  eventCenter.on("refreshPet", async () => {
+    const petInfos = await getAllPetsInfo()
+      if (petInfos) {
+        pets.value = petInfos;
+      }
   });
 
   const token = localStg.get("token");

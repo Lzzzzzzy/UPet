@@ -21,3 +21,8 @@ type PetTodoInfo struct {
 	TodoTime   *common.CustomTime `json:"todoTime" form:"todoTime" `    // 待办时间
 	PetId      uint               `json:"petId" form:"petId" `          // 宠物ID
 }
+
+type PetTodoMarkCondition struct {
+	MinDate string `json:"minDate" form:"minDate"` //最小日期
+	MaxDate string `json:"maxDate" form:"maxDate"` // 最大日期
+}

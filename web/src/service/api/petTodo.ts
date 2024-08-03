@@ -28,10 +28,19 @@ export async function addPetTodo(data: petTodo) {
   return resp.success;
 }
 
-/** 分页查询宠物待办 */
+/** 查询宠物待办 */
 export async function getPetTodosOnPagenation(condition: petTodosReq) {
   const resp = await request.get<Array<Pet.PetTodo>>('/api/pet-todos', condition, {
     useErrMsg: false
   });
   return resp.success;
 }
+
+/** 查询宠物待办标记 */
+export async function getPetTodosMark(dates: Pet.PetMarkParam) {
+  const resp = await request.post<Array<Pet.PetTodo>>('/api/pet-todos/mark', dates, {
+    useErrMsg: false
+  });
+  return resp.success;
+}
+

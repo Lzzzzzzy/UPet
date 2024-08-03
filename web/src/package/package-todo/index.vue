@@ -42,7 +42,7 @@ const handleSubmit = async () => {
   const { valid } = await formRef.value?.validate();
   if (valid) {
     await addPetTodo(formData)
-    // eventCenter.trigger('refreshTodo', formData);
+    eventCenter.trigger('refreshTodo');
     switchTab({
       url: '/pages/index/index'
     })
@@ -75,8 +75,8 @@ const currentDate = ref([new Date()])
 
 const onHandleConfirmSelectDate = () => {
   const remindDate: Array<string> = [];
-  currentDate.value.sort((a, b) => a.getTime() - b.getTime());
-  currentDate.value.forEach((date)=>{
+  currentDate.value.sort((a: Date, b: Date) => a.getTime() - b.getTime());
+  currentDate.value.forEach((date: Date)=>{
     remindDate.push(dayjs(date).format('YYYY-MM-DD'))
   })
   formData.remindDate = remindDate;

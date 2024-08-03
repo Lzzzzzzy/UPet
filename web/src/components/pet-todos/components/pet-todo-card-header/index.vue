@@ -15,7 +15,7 @@ const showSelectPetPopup = ref(false);
 
 const selectPet = (pet: Pet.PetInfo) => {
     currentPet.value = pet;
-    eventCenter.trigger("selectpet", pet);
+    eventCenter.trigger("selectPet", pet);
     showSelectPetPopup.value = false;
 };
 
@@ -27,7 +27,7 @@ const handleToAddPet = () => {
 }
 
 onMounted(() => {
-    eventCenter.trigger("selectpet", currentPet.value);
+    eventCenter.trigger("selectPet", currentPet.value);
 })
 
 const currentPet = ref<Pet.PetInfo>(props.pets[0]);

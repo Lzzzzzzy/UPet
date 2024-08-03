@@ -79,6 +79,7 @@ const handleSubmit = async () => {
     formData.value.birthday = formatDate(currentDate.value);
     await addPet(formData.value);
     isLoading.value = false;
+    eventCenter.trigger("refreshPet");
     switchTab({
       url: '/pages/index/index'
     })

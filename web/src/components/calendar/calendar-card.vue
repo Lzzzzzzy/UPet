@@ -37,8 +37,14 @@
 import { ref, computed, watch } from "vue";
 import type { Dayjs } from 'dayjs';
 import dayjs from "dayjs";
-import { getDays, isDateInArray, isSameDate, weekName } from '@/utils';
+import { getDays, isDateInArray, isSameDate, weekName, isBeforeDate } from '@/utils';
 
+interface datInfos {
+  d: Number,
+  m: Number,
+  date: String,
+  day: Date,
+};
 const props = defineProps({
   modelValue: {  // 当前指向的日期
     type: Date,
@@ -84,13 +90,28 @@ const dateIndexes = ref([-1, 0, 1]);
 
 const dotData = computed(() => {
   if (!props.getDotInfoFunc) return [];
-  const dates: Array<any> = [];
+  const dates = {"minDate": "", "maxDate":""};
+  let minDate: Date;
+  let maxDate: Date;
 
-  days.value.map((m) => {
-      m.map((item, index) => {
-          dates.push(item.date);
+  days.value.map((m: Array<datInfos>) => {
+      m.map((item: datInfos) => {
+        if (!minDate && !maxDate) {
+          minDate = item.day;
+          maxDate = item.day;
+        } else {
+          if (isBeforeDate(item.day, minDate)) {
+            minDate = item.day;
+          }
+          if (isBeforeDate(maxDate, item.day)) {
+            maxDate = item.day;
+          }
+        }
+          // dates.push(item.date);
       });
   });
+  dates.minDate = dayjs(minDate).format("YYYY-MM-DD");
+  dates.maxDate = dayjs(maxDate).format("YYYY-MM-DD");
   return props.getDotInfoFunc(dates);
 });
 

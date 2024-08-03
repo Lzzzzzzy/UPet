@@ -29,4 +29,9 @@ declare namespace Pet {
     remark: string;
     complete: boolean;
   }
+
+  interface PetMarkParam {
+    minDate: string;
+    maxDate: string;
+  }
 }

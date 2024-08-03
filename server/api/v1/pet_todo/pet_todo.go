@@ -51,6 +51,7 @@ func (e *PetTodoApi) CreatePetTodo(c *gin.Context) {
 	petTodo.PetId = petTodoResp.PetId
 	petTodo.CreatedBy = utils.GetUserID(c)
 	petTodo.UpdatedBy = utils.GetUserID(c)
+	petTodo.FamilyId = utils.GetUserFamilyID(c)
 
 	needCreateTodos := []*petTodoModel.PetTodoInfo{}
 	if petTodoResp.Remind {
@@ -219,4 +220,45 @@ func (e *PetTodoApi) GetPetTodoList(c *gin.Context) {
 		return
 	}
 	response.OkWithDetailed(petTodoList, "获取成功", c)
+}
+
+// GetPetTodoMark
+// @Tags      PetTodo
+// @Summary   获取指定日期中宠物待办标记
+// @Security  ApiKeyAuth
+// @accept    application/json
+// @Produce   application/json
+// @Success   200   {object}  response.Response{data=response.PageResult,msg=string}  "分页获取权限客户列表,返回包括列表,总数,页码,每页数量"
+// @Router    /api/pet-todos/mark [post]
+func (e *PetTodoApi) GetPetTodoMarkList(c *gin.Context) {
+	var dates petTodoReq.PetTodoMarkCondition
+	err := c.ShouldBindJSON(&dates)
+	if err != nil {
+		response.FailWithMessage(err.Error(), c)
+		return
+	}
+	minTime, err := time.Parse("2006-01-02 15:04:05", fmt.Sprintf("%s 00:00:00", dates.MinDate))
+	if err != nil {
+		response.FailWithMessage(err.Error(), c)
+		return
+	}
+	maxTime, err := time.Parse("2006-01-02 15:04:05", fmt.Sprintf("%s 23:59:59", dates.MaxDate))
+	if err != nil {
+		response.FailWithMessage(err.Error(), c)
+		return
+	}
+	petTodoColors, err := petTodoService.GetPetTodoInfoMarkList(minTime, maxTime, utils.GetUserFamilyID(c))
+	if err != nil {
+		global.GVA_LOG.Error("获取失败!", zap.Error(err))
+		response.FailWithMessage("获取失败"+err.Error(), c)
+		return
+	}
+	markList := map[string]int{}
+	for _, info := range petTodoColors {
+		todoDate := info.TodoTime.Format("2006-01-02")
+		if int(info.Color) >= markList[todoDate] {
+			markList[todoDate] = int(info.Color)
+		}
+	}
+	response.OkWithDetailed(markList, "获取成功", c)
 }

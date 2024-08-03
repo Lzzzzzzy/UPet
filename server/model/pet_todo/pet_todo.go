@@ -18,6 +18,7 @@ type PetTodoInfo struct {
 	PetId      uint               `json:"petId" form:"petId" gorm:"comment:宠物ID"`                        // 宠物ID
 	CreatedBy  uint               `json:"createdBy" form:"createdBy" gorm:"comment:创建人"`                 // 创建人
 	UpdatedBy  uint               `json:"updatedBy" form:"updatedBy" gorm:"comment:更新人"`                 // 更新人
+	FamilyId   uint               `json:"familyId" form:"familyId" gorm:"comment:家庭ID"`                  // 家庭ID
 }
 
 type SimplePetTodoInfo struct {
@@ -31,4 +32,10 @@ type SimplePetTodoInfo struct {
 	Color      uint               `json:"color" form:"color" gorm:"comment:背景颜色"`                        // 背景颜色
 	TodoTime   *common.CustomTime `json:"todoTime" form:"todoTime" gorm:"comment:待办时间"`                  // 待办时间
 	PetId      uint               `json:"petId" form:"petId" gorm:"comment:宠物ID"`                        // 宠物ID
+}
+
+type SimplePetTodoColor struct {
+	ID       uint               `gorm:"primarykey" json:"id"`                         // 主键ID
+	Color    uint               `json:"color" form:"color" gorm:"comment:背景颜色"`       // 背景颜色
+	TodoTime *common.CustomTime `json:"todoTime" form:"todoTime" gorm:"comment:待办时间"` // 待办时间
 }

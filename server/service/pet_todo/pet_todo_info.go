@@ -67,3 +67,14 @@ func (petTodoInfo *PetTodoService) FormatRemindTime(e *petTodoReq.PetTodoInfo) [
 	}
 	return remindTime
 }
+
+// @function: GetPetTodoInfoList
+// @description: 分页获取宠物待办信息列表
+// @param: familyID uint, info request.PageInfo
+// @return: list interface{}, total int64, err error
+func (petTodoInfo *PetTodoService) GetPetTodoInfoMarkList(minTime, maxTime time.Time, FamilyId uint) (PetTodoColorList []petTodo.SimplePetTodoColor, err error) {
+	db := global.GVA_DB.Model(&petTodo.PetTodoInfo{})
+
+	err = db.Where("todo_time >= ?", minTime).Where("todo_time <= ?", maxTime).Where("family_id = ?", FamilyId).Order("todo_time").Find(&PetTodoColorList).Error
+	return
+}
