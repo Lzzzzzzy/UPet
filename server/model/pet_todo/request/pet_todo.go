@@ -26,3 +26,7 @@ type PetTodoMarkCondition struct {
 	MinDate string `json:"minDate" form:"minDate"` //最小日期
 	MaxDate string `json:"maxDate" form:"maxDate"` // 最大日期
 }
+
+type PetTodoComplete struct {
+	Complete bool `json:"complete" form:"complete"` // 是否完成
+}

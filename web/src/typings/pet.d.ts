@@ -28,6 +28,11 @@ declare namespace Pet {
     todoTime: Date | string | Dayjs;
     remark: string;
     complete: boolean;
+    remind: boolean;
+    remindTime: Date | string | Dayjs | null;
+    type: number;
+    petId: number;
+    color: number;
   }
 
   interface PetMarkParam {

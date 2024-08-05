@@ -24,7 +24,7 @@
               <div class="date-num" :class="{ active: isActiveDay(elem.date), today: elem.isToday }">{{ elem.d }}</div>
               <div class="dot-container">
                 <!-- 日期下面的标记小圆点 -->
-                <div v-for="(color, i) in elem.dotColors" :key="i" :style="{ background: color }" class="dot"></div>
+                <div :style="{ background: elem.dotColor }" class="dot" v-if="elem.dotColor"></div>
               </div>
             </template>
           </nut-grid-item>
@@ -34,16 +34,17 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref, computed, watch } from "vue";
+import { ref, computed, watch, onBeforeMount } from "vue";
 import type { Dayjs } from 'dayjs';
 import dayjs from "dayjs";
 import { getDays, isDateInArray, isSameDate, weekName, isBeforeDate } from '@/utils';
+import { eventCenter } from "@tarojs/taro";
 
 interface datInfos {
   d: Number,
   m: Number,
   date: String,
-  day: Date,
+  day: Dayjs,
 };
 const props = defineProps({
   modelValue: {  // 当前指向的日期
@@ -51,7 +52,7 @@ const props = defineProps({
     required: true,
   },
   getDotInfoFunc: {
-    type: Function,
+    type: Function || null || undefined,
     required: false,
   },
   isWeek: {
@@ -67,6 +68,12 @@ const props = defineProps({
     default: false,
   }
 });
+
+onBeforeMount(() => {
+  eventCenter.on("refreshDotData", () => {
+    getDotData(true);
+  })
+})
 
 const emit = defineEmits(["update:modelValue", "changeSelectedDates", "updateSwiperHeight"]);
 
@@ -88,36 +95,53 @@ const current = ref(1);
 const previousIndex = ref(1);
 const dateIndexes = ref([-1, 0, 1]);
 
-const dotData = computed(() => {
+const minDate = ref();
+const maxDate = ref();
+const dotDataCache = ref([]); 
+
+const getDotData = (refresh: Boolean = false) => {
   if (!props.getDotInfoFunc) return [];
   const dates = {"minDate": "", "maxDate":""};
-  let minDate: Date;
-  let maxDate: Date;
-
+  let min: Date;
+  let max: Date;
   days.value.map((m: Array<datInfos>) => {
       m.map((item: datInfos) => {
-        if (!minDate && !maxDate) {
-          minDate = item.day;
-          maxDate = item.day;
+        if (!min && !max) {
+          min = item.day;
+          max = item.day;
         } else {
-          if (isBeforeDate(item.day, minDate)) {
-            minDate = item.day;
+          if (isBeforeDate(item.day, min)) {
+            min = item.day;
           }
-          if (isBeforeDate(maxDate, item.day)) {
-            maxDate = item.day;
+          if (isBeforeDate(max, item.day)) {
+            max = item.day;
           }
         }
-          // dates.push(item.date);
       });
   });
-  dates.minDate = dayjs(minDate).format("YYYY-MM-DD");
-  dates.maxDate = dayjs(maxDate).format("YYYY-MM-DD");
-  return props.getDotInfoFunc(dates);
-});
+
+  if ((!minDate.value || !maxDate.value) || (!isSameDate(min, minDate.value) || !isSameDate(max, maxDate.value)) || refresh){
+    minDate.value = min;
+    maxDate.value = max;
+    dates.minDate = dayjs(minDate.value).format("YYYY-MM-DD");
+    dates.maxDate = dayjs(maxDate.value).format("YYYY-MM-DD");
+    props.getDotInfoFunc(dates).then((result: any) => {
+      dotDataCache.value = result;
+      return dotDataCache.value;
+    });
+  }
+  return dotDataCache.value;
+}
 
 const days = computed(() => {
   return dateIndexes.value.map((item) => getDays(item, currentDate.value, calendarType.value));
 });
+
+watch(days.value, (newVal) => {
+  getDotData();
+}, {
+  immediate: true,
+})
 
 const isActiveDay = (date: string) => {
   let res = false;
@@ -129,15 +153,23 @@ const isActiveDay = (date: string) => {
   return res;
 };
 
+const getColorByIndex = (idx: number) => {
+  const colorList = ["#94938D", "#E6CF00", "#E25342"];
+  return colorList[idx];
+}
+
 const swipersDays = computed(() => {
   const dates: Array<any> = [];
+  const dotDataValue = dotDataCache.value;
   days.value.map(m => {
     const swiperDays: Array<any> = [];
     m.map((item, index) => {
       const dateInfo = {
         ...item,
         isToday: isSameDate(dayjs(), item.date),
-        dotColors: dotData.value[item.date] || [],
+      }
+      if (dotDataValue && (dotDataValue[item.date] || dotDataValue[item.date] === 0)) {
+        dateInfo.dotColor = getColorByIndex(dotDataValue[item.date]);
       }
       swiperDays.push(dateInfo);
     })

@@ -47,7 +47,7 @@ const wxLogin = () => {
 }
 
 /** 宠物相关参数和方法 */
-const currentPet = ref<Pet.PetInfo>();
+const currentPet = ref<Pet.PetInfo>({});
 const pets = ref<Array<Pet.PetInfo>>([]);
 
 onBeforeMount(async () => {
@@ -88,9 +88,7 @@ watch([currentDate, currentPet], async ([newVal1, newVal2], [oldVal1, oldVal2]) 
 const getPetTodos = async (date: Date, pet: Pet.PetInfo) => {
   const params = {date: formatDate(date), petId: pet.id!}
   const resp = await getPetTodosOnPagenation(params)
-  console.log("resp:", resp)
   petTodos.value = resp || []; 
-  console.log("petTodos:", petTodos.value)
 }
 
 const changeCalendarMode = (value: string) => {

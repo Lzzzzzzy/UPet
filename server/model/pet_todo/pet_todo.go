@@ -35,7 +35,7 @@ type SimplePetTodoInfo struct {
 }
 
 type SimplePetTodoColor struct {
-	ID       uint               `gorm:"primarykey" json:"id"`                         // 主键ID
-	Color    uint               `json:"color" form:"color" gorm:"comment:背景颜色"`       // 背景颜色
-	TodoTime *common.CustomTime `json:"todoTime" form:"todoTime" gorm:"comment:待办时间"` // 待办时间
+	ID         uint               `gorm:"primarykey" json:"id"`                             // 主键ID
+	Color      uint               `json:"color" form:"color" gorm:"comment:背景颜色"`           // 背景颜色
+	RemindTime *common.CustomTime `json:"remindTime" form:"remindTime" gorm:"comment:待办时间"` // 待办时间
 }

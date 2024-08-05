@@ -9,6 +9,14 @@ const props = defineProps({
   },
   placeholder: {
     type: String,
+  },
+  showUploader: {
+    type: Boolean,
+    default: false,
+  },
+  readOnly: {
+    type: Boolean,
+    default: false,
   }
 });
 
@@ -43,8 +51,8 @@ const uploadUrl = ref("");
 
 <template>
   <div>
-    <editor id="editor" class="editor break-words h-50px min-h-0" :placeholder="placeholder" @ready="onEditorReady" @input="onEditorInput"></editor>
-    <div class="flex items-center justify-end mt-5px">
+    <editor id="editor" class="editor break-words h-50px min-h-0" :placeholder="placeholder" @ready="onEditorReady" @input="onEditorInput" :readOnly="readOnly"></editor>
+    <div class="flex items-center justify-end mt-5px" v-if="showUploader">
       <nut-uploader :url="uploadUrl">
         <div class="i-local-image text-25px text-#333333"></div>
       </nut-uploader>

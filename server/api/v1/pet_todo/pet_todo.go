@@ -3,7 +3,6 @@ package petTodo
 import (
 	"fmt"
 	"strconv"
-	"time"
 
 	"github.com/Lzzzzzzy/UPet/server/global"
 	"github.com/Lzzzzzzy/UPet/server/model/common"
@@ -62,7 +61,9 @@ func (e *PetTodoApi) CreatePetTodo(c *gin.Context) {
 			needCreateTodos = append(needCreateTodos, &newTodo)
 		}
 	} else {
-		needCreateTodos = append(needCreateTodos, &petTodo)
+		newTodo := petTodo
+		newTodo.RemindTime = &newTodo.TodoTime
+		needCreateTodos = append(needCreateTodos, &newTodo)
 	}
 
 	err = petTodoService.CreatePetTodos(needCreateTodos)
@@ -203,12 +204,12 @@ func (e *PetTodoApi) GetPetTodoList(c *gin.Context) {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
-	minTime, err := time.Parse("2006-01-02 15:04:05", fmt.Sprintf("%s 00:00:00", pageInfo.Date))
+	minTime, err := utils.ParseStringToTime(fmt.Sprintf("%s 00:00:00", pageInfo.Date))
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
-	maxTime, err := time.Parse("2006-01-02 15:04:05", fmt.Sprintf("%s 23:59:59", pageInfo.Date))
+	maxTime, err := utils.ParseStringToTime(fmt.Sprintf("%s 23:59:59", pageInfo.Date))
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)
 		return
@@ -237,12 +238,12 @@ func (e *PetTodoApi) GetPetTodoMarkList(c *gin.Context) {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
-	minTime, err := time.Parse("2006-01-02 15:04:05", fmt.Sprintf("%s 00:00:00", dates.MinDate))
+	minTime, err := utils.ParseStringToTime(fmt.Sprintf("%s 00:00:00", dates.MinDate))
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
-	maxTime, err := time.Parse("2006-01-02 15:04:05", fmt.Sprintf("%s 23:59:59", dates.MaxDate))
+	maxTime, err := utils.ParseStringToTime(fmt.Sprintf("%s 23:59:59", dates.MaxDate))
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)
 		return
@@ -255,10 +256,50 @@ func (e *PetTodoApi) GetPetTodoMarkList(c *gin.Context) {
 	}
 	markList := map[string]int{}
 	for _, info := range petTodoColors {
-		todoDate := info.TodoTime.Format("2006-01-02")
+		todoDate := info.RemindTime.Format("2006-01-02")
 		if int(info.Color) >= markList[todoDate] {
 			markList[todoDate] = int(info.Color)
 		}
 	}
 	response.OkWithDetailed(markList, "获取成功", c)
+}
+
+// UpdatePetTodo
+// @Tags      PetTodo
+// @Summary   更新宠物待办信息
+// @Security  ApiKeyAuth
+// @accept    application/json
+// @Produce   application/json
+// @Param     petTodoID  path      int             true  "宠物待办ID"
+// @Param     data  body      petTodo.PetTodoInfo            true  "宠物待办信息"
+// @Success   200   {object}  response.Response{msg=string}  "更新宠物待办信息"
+// @Router    /api/pet-todos/:petTodoID/complete [put]
+func (e *PetTodoApi) UpdatePetTodoComplete(c *gin.Context) {
+	var petTodoComplete petTodoReq.PetTodoComplete
+	todoIdStr := c.Param("petTodoID")
+	petTodoID, err := strconv.ParseUint(todoIdStr, 10, 64)
+	if err != nil {
+		response.FailWithMessage("宠物待办ID错误", c)
+		return
+	}
+
+	err = c.ShouldBindJSON(&petTodoComplete)
+	if err != nil {
+		response.FailWithMessage(err.Error(), c)
+		return
+	}
+
+	olderPetTodo, err := petTodoService.GetPetTodoInfo(uint(petTodoID))
+	if err != nil {
+		response.FailWithMessage(err.Error(), c)
+		return
+	}
+	olderPetTodo.Complete = petTodoComplete.Complete
+	err = petTodoService.UpdatePetTodo(&olderPetTodo)
+	if err != nil {
+		global.GVA_LOG.Error("更新失败!", zap.Error(err))
+		response.FailWithMessage("更新失败", c)
+		return
+	}
+	response.OkWithMessage("更新成功", c)
 }

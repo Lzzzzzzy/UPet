@@ -14,7 +14,7 @@ const typeList = [
   { text: "待办事项", value: 1 },
 ]
 
-const colorList = ["#ffffff", "#ffffcf", "#efdcd5"]
+const colorList = ["#ffffff", "#E6CF00", "#E25342"]
 
 const formData = reactive({
   title: '',
@@ -43,6 +43,7 @@ const handleSubmit = async () => {
   if (valid) {
     await addPetTodo(formData)
     eventCenter.trigger('refreshTodo');
+    eventCenter.trigger('refreshDotData');
     switchTab({
       url: '/pages/index/index'
     })
@@ -84,7 +85,6 @@ const onHandleConfirmSelectDate = () => {
 }
 
 const onUpdateRemark = (data: string) => {
-  console.log("data:", data);
   formData.remark = data;
 }
 
@@ -124,7 +124,7 @@ const remindDatesString = computed(() => {
           <nut-input v-model="formData.title" placeholder="请输入标题" />
         </nut-form-item>
         <nut-form-item label="备注" prop="remark" class="form-item-border">
-          <rich-text-content :data="formData.remark" placeholder="备注，您也可以上传图片,例如确诊单或者希望给医生展示的症状" @update-data="onUpdateRemark"></rich-text-content>
+          <rich-text-content :data="formData.remark" placeholder="备注，您也可以上传图片,例如确诊单或者希望给医生展示的症状" @update-data="onUpdateRemark" :showUploader="true"></rich-text-content>
         </nut-form-item>
         <nut-form-item label="类型" prop="type" class="form-item-border">
           <nut-radio-group v-model="formData.type">

@@ -7,6 +7,7 @@ import (
 	"github.com/Lzzzzzzy/UPet/server/global"
 	petTodo "github.com/Lzzzzzzy/UPet/server/model/pet_todo"
 	petTodoReq "github.com/Lzzzzzzy/UPet/server/model/pet_todo/request"
+	"github.com/Lzzzzzzy/UPet/server/utils"
 )
 
 type PetTodoService struct{}
@@ -54,15 +55,15 @@ func (petInfo *PetTodoService) GetPetTodoInfo(id uint) (e petTodo.PetTodoInfo, e
 func (petTodoInfo *PetTodoService) GetPetTodoInfoList(minTime, maxTime time.Time, petId uint) (PetTodoInfoList []petTodo.SimplePetTodoInfo, err error) {
 	db := global.GVA_DB.Model(&petTodo.PetTodoInfo{})
 
-	err = db.Where("todo_time >= ?", minTime).Where("todo_time <= ?", maxTime).Where("pet_id = ?", petId).Order("todo_time").Find(&PetTodoInfoList).Error
+	err = db.Where("remind_time >= ?", minTime).Where("remind_time <= ?", maxTime).Where("pet_id = ?", petId).Order("remind_time").Find(&PetTodoInfoList).Error
 	return
 }
 
 func (petTodoInfo *PetTodoService) FormatRemindTime(e *petTodoReq.PetTodoInfo) []time.Time {
 	remindTime := make([]time.Time, len(e.RemindDate))
 	for i, v := range e.RemindDate {
-		timeStr := fmt.Sprintf("%s %s", v, e.RemindTime)
-		t, _ := time.Parse("2006-01-02 15:04:05", timeStr)
+		timeStr := fmt.Sprintf("%s %s:00", v, e.RemindTime)
+		t, _ := utils.ParseStringToTime(timeStr)
 		remindTime[i] = t
 	}
 	return remindTime
@@ -75,6 +76,16 @@ func (petTodoInfo *PetTodoService) FormatRemindTime(e *petTodoReq.PetTodoInfo) [
 func (petTodoInfo *PetTodoService) GetPetTodoInfoMarkList(minTime, maxTime time.Time, FamilyId uint) (PetTodoColorList []petTodo.SimplePetTodoColor, err error) {
 	db := global.GVA_DB.Model(&petTodo.PetTodoInfo{})
 
-	err = db.Where("todo_time >= ?", minTime).Where("todo_time <= ?", maxTime).Where("family_id = ?", FamilyId).Order("todo_time").Find(&PetTodoColorList).Error
+	err = db.Where("remind_time >= ?", minTime).Where("remind_time <= ?", maxTime).Where("family_id = ?", FamilyId).Order("remind_time").Find(&PetTodoColorList).Error
 	return
+}
+
+// @function: UpdatePetTodoComplete
+// @description: 更新宠物待办完成情况
+// @param: todoId uint, complete bool
+// @return: err error
+func (petTodoInfo *PetTodoService) UpdatePetTodoComplete(todoId uint, complete bool) (err error) {
+	db := global.GVA_DB.Model(&petTodo.PetTodoInfo{})
+	err = db.Where("id = ?", todoId).Select("Complete").Updates(petTodo.PetTodoInfo{Complete: complete}).Error
+	return err
 }

@@ -11,9 +11,6 @@ const props = defineProps({
   getDotInfoFunc: {
     type: Function,
     required: false,
-    default: () => {
-      return ()=>{}
-    }
   },
   showWeek: {
     type: Boolean,

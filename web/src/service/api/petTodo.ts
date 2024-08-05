@@ -44,3 +44,16 @@ export async function getPetTodosMark(dates: Pet.PetMarkParam) {
   return resp.success;
 }
 
+/**
+ * Updates the complete status of a todo item.
+ *
+ * @param {number} todoId - The ID of the todo item to update.
+ * @param {boolean} complete - The new complete status of the todo item.
+ * @return {Promise} A promise that resolves to the success status of the update operation.
+ */
+export async function updateTodoCompleteStatus(todoId: number, complete: boolean) {
+  const resp = await request.put(`/api/pet-todo/${todoId}/complete`, { complete }, {
+    useErrMsg: false
+  });
+  return resp.success;
+}
