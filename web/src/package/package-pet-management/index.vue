@@ -5,54 +5,21 @@ import { eventCenter, navigateTo } from "@tarojs/taro";
 import dayjs from 'dayjs';
 import type { Pet } from "@/typings/pet";
 import type { Dayjs } from 'dayjs';
+import { getAllPetsInfo } from '@/service/api';
 
-
-const getPetsInfo = () => {
-  return [{
-    id: 1,
-    name: '旺财',
-    familyId: 1,
-    avatar: '',
-    birthday: "2022-10-02",
-    gendar: 0,
-    sterilizedState: 0,
-    category: 0,
-  },
-  {
-    id: 2,
-    name: '帅帅',
-    familyId: 1,
-    avatar: '',
-    birthday: "2021-03-02",
-    gendar: 0,
-    sterilizedState: 0,
-    category: 1,
-  },{
-    id: 3,
-    name: '旺财2',
-    familyId: 1,
-    avatar: '',
-    birthday: "2012-10-02",
-    gendar: 0,
-    sterilizedState: 1,
-    category: 1,
-  },{
-    id: 4,
-    name: '1234',
-    familyId: 1,
-    avatar: '',
-    birthday: "2002-10-02",
-    gendar: 1,
-    sterilizedState: 1,
-    category: 1,
-  }
-]}
 
 onBeforeMount(() => {
-  pets.value = getPetsInfo();
+  getPetsInfo();
 })
 
 const pets = ref<Array<Pet.PetInfo>>([]);
+
+const getPetsInfo = async () => {
+  const petInfos = await getAllPetsInfo()
+  if (petInfos) {
+    pets.value = petInfos;
+  }
+}
 
 const editPet = (pet: Pet.PetInfo) => {
   navigateTo({url: `/package/package-pet/index`, success: () => {

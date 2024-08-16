@@ -89,3 +89,13 @@ func (petTodoInfo *PetTodoService) UpdatePetTodoComplete(todoId uint, complete b
 	err = db.Where("id = ?", todoId).Select("Complete").Updates(petTodo.PetTodoInfo{Complete: complete}).Error
 	return err
 }
+
+// @function: GetPetTodoInfo
+// @description: 获取宠物待办信息
+// @param: id uint
+// @return: customer model.PetInfo, err error
+func (petInfo *PetTodoService) SearchPetTodoInfo(content string, familyId uint) (PetTodoInfoList []petTodo.SimplePetTodoInfo, err error) {
+	contentStr := "%" + content + "%"
+	err = global.GVA_DB.Where("family_id = ?", familyId).Where("title like ?", contentStr).Or("remark like ?", contentStr).Order("remind_time desc").Find(&PetTodoInfoList).Error
+	return
+}

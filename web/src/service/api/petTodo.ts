@@ -45,7 +45,7 @@ export async function getPetTodosMark(dates: Pet.PetMarkParam) {
 }
 
 /**
- * Updates the complete status of a todo item.
+ * 更新宠物待办完成情况
  *
  * @param {number} todoId - The ID of the todo item to update.
  * @param {boolean} complete - The new complete status of the todo item.
@@ -53,6 +53,19 @@ export async function getPetTodosMark(dates: Pet.PetMarkParam) {
  */
 export async function updateTodoCompleteStatus(todoId: number, complete: boolean) {
   const resp = await request.put(`/api/pet-todo/${todoId}/complete`, { complete }, {
+    useErrMsg: false
+  });
+  return resp.success;
+}
+
+/**
+ * 搜索宠物待办信息
+ *
+ * @param {string} content - Need search content.
+ * @return {Promise} A promise that resolves to the success status of the update operation.
+ */
+export async function searchPetTodoInfo(content: string) {
+  const resp = await request.get(`/api/pet-todo/infos`, { content }, {
     useErrMsg: false
   });
   return resp.success;

@@ -303,3 +303,28 @@ func (e *PetTodoApi) UpdatePetTodoComplete(c *gin.Context) {
 	}
 	response.OkWithMessage("更新成功", c)
 }
+
+// SearchPetTodo
+// @Tags      PetTodo
+// @Summary   搜索宠物待办信息
+// @Security  ApiKeyAuth
+// @accept    application/json
+// @Produce   application/json
+// @Param     content  params      string    true  "搜索内容"
+// @Success   200   {object}  response.Response{data=petRes.PetTodoResponse,msg=string}  "查询宠物待办信息"
+// @Router    /api/pet-todos/infos [get]
+func (e *PetTodoApi) SearchPetTodo(c *gin.Context) {
+	var params petTodoReq.SearchCondition
+	err := c.BindQuery(&params)
+	if err != nil {
+		response.FailWithMessage("参数解析失败", c)
+	}
+
+	petTodoList, err := petTodoService.SearchPetTodoInfo(params.Content, utils.GetUserFamilyID(c))
+	if err != nil {
+		global.GVA_LOG.Error("获取失败!", zap.Error(err))
+		response.FailWithMessage("获取失败", c)
+		return
+	}
+	response.OkWithDetailed(petTodoList, "获取成功", c)
+}

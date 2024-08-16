@@ -22,7 +22,8 @@ func (e *PetTodoRouter) InitPetTodoRouter(Router *gin.RouterGroup) {
 		petTodoRouterWithoutRecord.GET("/:petTodoID", petTodoApi.GetPetTodo) // 获取单一宠物待办信息
 	}
 	{
-		petsTodoRouterWithoutRecord.GET("", petTodoApi.GetPetTodoList)          // 获取宠物待办列表
-		petsTodoRouterWithoutRecord.POST("mark", petTodoApi.GetPetTodoMarkList) // 获取宠物待办列表
+		petsTodoRouterWithoutRecord.GET("", petTodoApi.GetPetTodoList)           // 获取宠物待办列表
+		petsTodoRouterWithoutRecord.POST("/mark", petTodoApi.GetPetTodoMarkList) // 获取指定日期中宠物待办标记
+		petsTodoRouterWithoutRecord.GET("/infos", petTodoApi.SearchPetTodo)      // 搜索宠物待办列表
 	}
 }

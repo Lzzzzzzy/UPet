@@ -7,7 +7,6 @@ import calendar from '@/components/calendar/index.vue';
 import { Pet } from "@/typings/pet";
 import { userAuth, getAllPetsInfo, getPetTodosOnPagenation, getPetTodosMark } from '@/service/api';
 import { localStg, formatDate } from '@/utils';
-import dayjs from 'dayjs';
 
 
 /** 设置页面属性 */
@@ -51,7 +50,8 @@ const currentPet = ref<Pet.PetInfo>({});
 const pets = ref<Array<Pet.PetInfo>>([]);
 
 onBeforeMount(async () => {
-  eventCenter.on("selectPet", (pet: Pet.PetInfo) => {
+  eventCenter.on("selectPet", (petId: number) => {
+    const pet = pets.value.find((p: Pet.PetInfo) => p.id === petId);
     currentPet.value = pet;
   });
   eventCenter.on("jumpToDate", (date: Date) => {
@@ -62,9 +62,9 @@ onBeforeMount(async () => {
   });
   eventCenter.on("refreshPet", async () => {
     const petInfos = await getAllPetsInfo()
-      if (petInfos) {
-        pets.value = petInfos;
-      }
+    if (petInfos) {
+      pets.value = petInfos;
+    }
   });
 
   const token = localStg.get("token");

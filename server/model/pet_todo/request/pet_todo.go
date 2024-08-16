@@ -30,3 +30,7 @@ type PetTodoMarkCondition struct {
 type PetTodoComplete struct {
 	Complete bool `json:"complete" form:"complete"` // 是否完成
 }
+
+type SearchCondition struct {
+	Content string `json:"content" form:"content"` // 内容
+}
