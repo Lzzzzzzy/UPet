@@ -1,28 +1,12 @@
 <script setup lang="ts">
 import { onBeforeMount, ref, computed } from 'vue';
 import type { UserInfo } from "@/typings/family";
+import { getFamilyMemberList } from '@/service/api';
+import { localStg } from '@/utils';
 
-const getAllFamilyMember = () => {
-  return [
-    {
-      "id": 1,
-      "name": "爸爸",
-      "isAdmin": false,
-      "avatar": ""
-    },
-    {
-      "id": 2,
-      "name": "妈妈",
-      "isAdmin": false,
-      "avatar": ""
-    },
-    {
-      "id": 3,
-      "name": "对象",
-      "isAdmin": false,
-      "avatar": ""
-    },
-]
+const getAllFamilyMember = async () => {
+  const member = await getFamilyMemberList()
+  return member
 }
 
 const familyMembers = ref<Array<UserInfo>>();
@@ -36,12 +20,7 @@ onBeforeMount(() => {
   }
 })
 
-const me = {
-  "id": 4,
-  "name": "刘",
-  "isAdmin": true,
-  "avatar": ""
-}
+const me: UserInfo = localStg.get("userInfo");
 
 const showDeleteConfirmPopup = ref(false);
 const needDeleteMember = ref<UserInfo>();

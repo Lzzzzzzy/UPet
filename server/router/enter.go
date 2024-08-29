@@ -2,6 +2,7 @@ package router
 
 import (
 	"github.com/Lzzzzzzy/UPet/server/router/auth"
+	"github.com/Lzzzzzzy/UPet/server/router/family"
 	"github.com/Lzzzzzzy/UPet/server/router/pet"
 	petTodo "github.com/Lzzzzzzy/UPet/server/router/pet_todo"
 	"github.com/Lzzzzzzy/UPet/server/router/system"
@@ -16,4 +17,5 @@ type RouterGroup struct {
 	PetTodo petTodo.RouterGroup
 	Auth    auth.RouterGroup
 	User    user.RouterGroup
+	Family  family.RouterGroup
 }

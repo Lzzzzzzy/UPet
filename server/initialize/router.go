@@ -48,6 +48,7 @@ func Routers() *gin.Engine {
 	authRouter := router.RouterGroupApp.Auth
 	userRouter := router.RouterGroupApp.User
 	systemRouter := router.RouterGroupApp.System
+	familyRouter := router.RouterGroupApp.Family
 	// 如果想要不使用nginx代理前端网页，可以修改 web/.env.production 下的
 	// VUE_APP_BASE_API = /
 	// VUE_APP_BASE_PATH = http://localhost
@@ -80,31 +81,12 @@ func Routers() *gin.Engine {
 	{
 		authRouter.InitAuthRouter(PublicGroup) //用户注册路由 不做鉴权
 	}
-
-	// {
-	// 	systemRouter.InitApiRouter(PrivateGroup, PublicGroup)       // 注册功能api路由
-	// 	systemRouter.InitJwtRouter(PrivateGroup)                    // jwt相关路由
-	// 	systemRouter.InitUserRouter(PrivateGroup)                   // 注册用户路由
-	// 	systemRouter.InitMenuRouter(PrivateGroup)                   // 注册menu路由
-	// 	systemRouter.InitSystemRouter(PrivateGroup)                 // system相关路由
-	// 	systemRouter.InitCasbinRouter(PrivateGroup)                 // 权限相关路由
-	// 	systemRouter.InitAutoCodeRouter(PrivateGroup, PublicGroup)  // 创建自动化代码
-	// 	systemRouter.InitAuthorityRouter(PrivateGroup)              // 注册角色路由
-	// 	systemRouter.InitSysDictionaryRouter(PrivateGroup)          // 字典管理
-	// 	systemRouter.InitAutoCodeHistoryRouter(PrivateGroup)        // 自动化代码历史
-	// 	systemRouter.InitSysOperationRecordRouter(PrivateGroup)     // 操作记录
-	// 	systemRouter.InitSysDictionaryDetailRouter(PrivateGroup)    // 字典详情管理
-	// 	systemRouter.InitAuthorityBtnRouterRouter(PrivateGroup)     // 按钮权限管理
-	// 	systemRouter.InitSysExportTemplateRouter(PrivateGroup)      // 导出模板
-	// 	exampleRouter.InitCustomerRouter(PrivateGroup)              // 客户路由
-	// 	exampleRouter.InitFileUploadAndDownloadRouter(PrivateGroup) // 文件上传下载功能路由
-
-	// }
 	{
 		petRouter.InitPetRouter(PrivateGroup)         // 宠物管理路由
 		petTodoRouter.InitPetTodoRouter(PrivateGroup) // 待办事项路由
 		userRouter.InitUserRouter(PrivateGroup)       // 用户相关路由
 		systemRouter.InitFileRouter(PrivateGroup)     //文件相关路由
+		familyRouter.InitFamilyRouter(PrivateGroup)   //家庭相关路由
 	}
 
 	//插件路由安装
