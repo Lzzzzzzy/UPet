@@ -7,6 +7,7 @@ import dayjs from "dayjs";
 import type { Dayjs } from "dayjs";
 import { updateTodoCompleteStatus } from "@/service/api";
 import richTextContent from "@/components/rich-text/index.vue";
+import { eventCenter } from "@tarojs/taro";
 
 const props = defineProps({
   todo: {
@@ -29,6 +30,10 @@ const changeComplete = () => {
   props.todo.complete = !props.todo.complete;
   updateTodoCompleteStatus(props.todo.id!, props.todo.complete);
 }
+
+const editTodoInfo = () => {
+  eventCenter.trigger("editTodo", props.todo.id);
+}
 </script>
 
 <template>
@@ -38,7 +43,7 @@ const changeComplete = () => {
     </nut-col>
     <nut-col :span="20">
       <div class="flex items-center justify-start">
-        <div class="flex flex-col border-rd-md bg-#ffffff">
+        <div class="flex flex-col border-rd-md bg-#ffffff" @click="editTodoInfo">
           <div class="dot-container my-4px mr-2px" v-if="todo.color">
             <div :style="{ background: getBorderColor(todo.color) }" class="dot"></div>
           </div>

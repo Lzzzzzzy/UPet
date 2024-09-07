@@ -115,7 +115,7 @@ const confirmDelete = () => {
           <nut-button @click="closePopup" color="#f7daa1" class="!text-black">取消</nut-button>
         </div>
       </div>
-  </nut-popup>
+    </nut-popup>
   </basic-layout>
 </template>
 

@@ -70,3 +70,30 @@ export async function searchPetTodoInfo(content: string) {
   });
   return resp.success;
 }
+
+/**
+ * 根据id查询宠物待办信息
+ *
+ * @param {number} todoId - Need search todo id.
+ * @return {Promise} A promise that resolves to the success status of the update operation.
+ */
+export async function getPetTodoInfoById(todoId: number) {
+  const resp = await request.get(`/api/pet-todo/${todoId}`, null, {
+    useErrMsg: false
+  });
+  return resp.success;
+}
+
+
+/**
+ * 删除宠物待办信息
+ *
+ * @param {number} todoId - Need search todo id.
+ * @return {Promise} A promise that resolves to the success status of the update operation.
+ */
+export async function deletePetTodoInfoById(todoId: number) {
+  const resp = await request.delete(`/api/pet-todo/${todoId}`, null, {
+    useErrMsg: false
+  });
+  return resp.success;
+}

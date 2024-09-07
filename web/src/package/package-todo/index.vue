@@ -5,14 +5,18 @@ import { eventCenter, getCurrentInstance, switchTab } from "@tarojs/taro";
 import richTextContent from "@/components/rich-text/index.vue";
 import dayjs from "dayjs";
 import checkedRadio from "@/components/checked-radio/index.vue";
-import {addPetTodo} from "@/service/api";
+import {addPetTodo, getPetTodoInfoById, deletePetTodoInfoById} from "@/service/api";
+
+const editMode = ref(false);
 
 const selectedDate = ref(new Date());
 
 const typeList = [
   { text: "日常记录", value: 0 },
   { text: "待办事项", value: 1 },
-]
+];
+
+const showDeleteConfirmPopup = ref(false);
 
 const colorList = ["#ffffff", "#E6CF00", "#E25342"]
 
@@ -27,6 +31,23 @@ const formData = reactive({
   type: typeList[0].value,
   color: 0,
   petId: 0,
+})
+
+eventCenter.on('editTodoInfo', async (todoId: number) => {
+  editMode.value = true;
+  
+  const data: any = await getPetTodoInfoById(todoId);
+  formData.title = data.title;
+  formData.todoTime = data.todoTime;
+  formData.remark = data.remark;
+  formData.remind = data.remind;
+  formData.remindDate = data.remindDate;
+  formData.remindTime = data.remindTime;
+  formData.complete = data.complete;
+  formData.type = data.type;
+  formData.color = data.color;
+  formData.petId = data.petId;
+  formData.id = todoId;
 })
 
 const formRef = ref()
@@ -48,6 +69,13 @@ const handleSubmit = async () => {
       url: '/pages/index/index'
     })
   }
+}
+
+const handleDeleteTodo = async () => {
+  await deletePetTodoInfoById(formData.id);
+  switchTab({
+    url: '/pages/index/index'
+  });
 }
 
 
@@ -161,6 +189,7 @@ const remindDatesString = computed(() => {
 
         <nut-space class="m-10px flex justify-center w-full">
           <nut-button color="#f7daa1" @click="handleSubmit" class="!text-#000000">提交</nut-button>
+          <nut-button color="#e25342" @click="showDeleteConfirmPopup=true" class="!text-#000000" v-if="editMode">删除</nut-button>
         </nut-space>
       </nut-form>
       <nut-popup v-model:visible="showDatePicker" position="bottom" round safe-area-inset-bottom>
@@ -190,6 +219,19 @@ const remindDatesString = computed(() => {
           cancel-text=" "
         ></nut-date-picker>
       </nut-popup>
+
+      <nut-popup v-model:visible="showDeleteConfirmPopup" round :style="{'width': '70%'}">
+      <div class="px-20px py-40px">
+        <div class="flex-col-center">
+          <div>删除后无法恢复</div>
+          <div>确定要删除吗?</div>
+        </div>
+        <div class="mt-20px flex justify-evenly">
+          <nut-button plain @click="handleDeleteTodo">确定</nut-button>
+          <nut-button @click="closeDeleteConfirmPopup" color="#f7daa1" class="!text-black">取消</nut-button>
+        </div>
+      </div>
+    </nut-popup>
     </div>
   </basic-layout>
 </template>
