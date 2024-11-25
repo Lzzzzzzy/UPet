@@ -41,7 +41,7 @@ const confirmRegister = async () => {
 
     const { valid } = await formRef.value?.validate();
     if (valid) {
-      isLoading.vaue = true;
+      isLoading.value = true;
       const avatarUrl = await uploadFileToSystem(userAvatarUrl.value);
       formData.value.avatar = avatarUrl;
       await userInfoComplete(formData.value);

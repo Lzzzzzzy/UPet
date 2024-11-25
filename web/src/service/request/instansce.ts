@@ -1,6 +1,8 @@
 import { request } from '@tarojs/taro';
-import { REQUEST_TIMEOUT, SUCCESS_CODE, REFRESH_TOKEN_CODE } from '@/constants';
-import { getRequestUrl, getRequestHeaders, handleExpireToken, showErrorMsg } from './helpers';
+import { REQUEST_TIMEOUT, SUCCESS_CODE, NO_AUTH_CODE } from '@/constants';
+import { getRequestUrl, getRequestHeaders, showErrorMsg } from './helpers';
+import { userLogin } from '@/service/api';
+
 
 async function axios<T>(config: Service.RequestParam): Promise<Service.RequestResult<T>> {
   const { method, url, data } = config;
@@ -17,6 +19,7 @@ async function axios<T>(config: Service.RequestParam): Promise<Service.RequestRe
       timeout: REQUEST_TIMEOUT,
       success: res => {
         const { code, msg, data } = res.data as Service.BackendResultConfig<T>;
+        console.log("code:", code)
         /* 成功请求 */
         if (code === SUCCESS_CODE) {
           return resolve({
@@ -24,8 +27,12 @@ async function axios<T>(config: Service.RequestParam): Promise<Service.RequestRe
             success: data
           });
         }
-        if (REFRESH_TOKEN_CODE.includes(code)) {
-          handleExpireToken();
+        if (code === NO_AUTH_CODE) {
+          userLogin();
+          return resolve({
+            error: null,
+            success: data
+          });
         }
         /** 仅有使用服务端错误信息的请求才 toast 提示错误 */
         if (axiosConfig.useErrMsg) {

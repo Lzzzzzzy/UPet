@@ -4,7 +4,8 @@ import { switchTab, eventCenter } from '@tarojs/taro';
 import dayjs from "dayjs";
 import { useAppStore } from '@/store';
 import { Pet } from "@/typings/pet";
-import { searchPetTodoInfo } from "@/api/pet";
+import { searchPetTodoInfo } from "@/service/api";
+import { RichText } from "@tarojs/components";
 
 
 definePageConfig({
@@ -36,14 +37,19 @@ const skipToIndex = (petTodo: Pet.PetTodo) => {
   <basic-layout show-tab-bar>
     <custom-navbar title="搜索" />
     <div class="w-full text-30px fixed-header">
-      <nut-searchbar v-model="searchText" @search="search" autofocus :clearable="false" placeholder="请输入检索内容"></nut-searchbar>
+      <nut-searchbar v-model="searchText" @search="search" autofocus :clearable="false" placeholder="请输入检索内容">
+        <template #rightout> 
+          <div class="i-local-search text-black" @click="search"></div>
+         </template>
+      </nut-searchbar>
     </div>
     <div class="pb-45px pt-50px">
       <div v-for="(todo, index) in searchedTodos" :key="index">
         <div class="flex flex-col p-10px bg-#ffffff search-content-border" @click="skipToIndex(todo)">
           <div class="text-16px">{{ todo.title }}</div>
-          <div class="text-12px mt-5px break-words" v-if="todo.remark">{{ todo.remark }}</div>
-          <div class="mt-5px text-#717171 text-12px"> {{ todo.time }} </div>
+          <!-- <div class="text-12px mt-5px break-words" v-if="todo.remark">{{ todo.remark }}</div> -->
+          <rich-text :nodes="todo.remark" v-if="todo.remark" class="text-12px break-words pt-10px"></rich-text>
+          <div class="mt-5px text-#717171 text-12px"> {{ todo.todoTime }} </div>
         </div>
       </div>
     </div>

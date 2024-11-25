@@ -1,7 +1,5 @@
 import { getEnv, getAccountInfoSync, showToast } from '@tarojs/taro';
 import { CONTENT_TYPE, ERROR_MSG_DURATION } from '@/constants';
-import { useAuthStore } from '@/store';
-import { useRouterPush } from '@/composables';
 import { localStg, exeStrategyActions } from '@/utils';
 
 const env = getEnv();
@@ -49,16 +47,6 @@ export function getRequestHeaders(axiosConfig: Service.AxiosConfig) {
   /** 增加类型 */
   header['Content-Type'] = axiosConfig.contentType || CONTENT_TYPE.json;
   return header;
-}
-
-/** token过期 */
-export function handleExpireToken() {
-  const { resetAuthStore } = useAuthStore();
-  const { toLogin } = useRouterPush();
-  resetAuthStore();
-  toLogin();
-
-  return null;
 }
 
 export function showErrorMsg(message: string) {

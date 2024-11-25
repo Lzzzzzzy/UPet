@@ -5,7 +5,7 @@ import { eventCenter, navigateTo } from "@tarojs/taro";
 import dayjs from 'dayjs';
 import type { Pet } from "@/typings/pet";
 import type { Dayjs } from 'dayjs';
-import { getAllPetsInfo } from '@/service/api';
+import { getAllPetsInfo, deletePetInfo } from '@/service/api';
 
 
 onBeforeMount(() => {
@@ -57,7 +57,9 @@ const closePopup = () => {
   showDeleteConfirmPopup.value = false;
   needDeletePetId.value = null;
 }
-const confirmDelete = () => {
+const confirmDelete = async () => {
+  await deletePetInfo(needDeletePetId.value);
+  await getPetsInfo();
   closePopup();
 }
 
@@ -111,8 +113,8 @@ const confirmDelete = () => {
           <div>确定要删除吗?</div>
         </div>
         <div class="mt-20px flex justify-evenly">
-          <nut-button plain @click="confirmDelete">确定</nut-button>
-          <nut-button @click="closePopup" color="#f7daa1" class="!text-black">取消</nut-button>
+          <nut-button @click="confirmDelete" class="!text-#f56c6c">删除</nut-button>
+          <nut-button @click="closePopup" class="!text-black">取消</nut-button>
         </div>
       </div>
     </nut-popup>

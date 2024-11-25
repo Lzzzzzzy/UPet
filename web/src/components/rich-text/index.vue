@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { createSelectorQuery } from '@tarojs/taro';
+import { uploadFileToSystem } from "@/service/api";
 
 const props = defineProps({
   data: {
@@ -47,13 +48,25 @@ const onEditorInput = ({ detail: { html, delta, text } }: {detail: editorChangeD
 };
 
 const uploadUrl = ref("");
+const uploadRef = ref();
+const defaultFileList = ref([]);
+
+const submitUpload = () => {
+  console.log(defaultFileList.value);
+}
 </script>
 
 <template>
   <div>
+    <div v-if="defaultFileList" class="flex">
+      <div v-for="item in defaultFileList" :key="item.uid" class="w-fit">
+        <img :src="item.url" class="w-50px !h-50px" />
+      </div>
+    </div>
     <editor id="editor" class="editor break-words h-50px min-h-0" :placeholder="placeholder" @ready="onEditorReady" @input="onEditorInput" :readOnly="readOnly"></editor>
     <div class="flex items-center justify-end mt-5px" v-if="showUploader">
-      <nut-uploader :url="uploadUrl">
+
+      <nut-uploader maximum="5" :auto-upload="false" ref="uploadRef" v-model:file-list="defaultFileList">
         <div class="i-local-image text-25px text-#333333"></div>
       </nut-uploader>
     </div>
@@ -61,5 +74,9 @@ const uploadUrl = ref("");
 </template>
 
 <style lang="scss">
-
+.nut-uploader {
+  .nut-uploader__preview {
+    display: none;
+  }
+}
 </style>

@@ -7,7 +7,8 @@ import dayjs from "dayjs";
 import type { Dayjs } from "dayjs";
 import { updateTodoCompleteStatus } from "@/service/api";
 import richTextContent from "@/components/rich-text/index.vue";
-import { eventCenter } from "@tarojs/taro";
+import { navigateTo, eventCenter } from "@tarojs/taro";
+import { RichText } from "@tarojs/components";
 
 const props = defineProps({
   todo: {
@@ -20,7 +21,7 @@ const getTimeStr = (timeStr: string | Date | Dayjs) => {
   return formatTime(dayjs(timeStr).toDate())
 }
 
-const colorList = ["#FFFFFF", "#E6CF00", "#E25342"];
+const colorList = ["#ffffff", "#E6A23C", "#F56C6C"]
 
 const getBorderColor = (idx: number) => {
   return colorList[idx];
@@ -31,8 +32,13 @@ const changeComplete = () => {
   updateTodoCompleteStatus(props.todo.id!, props.todo.complete);
 }
 
-const editTodoInfo = () => {
-  eventCenter.trigger("editTodo", props.todo.id);
+const updateTodo = () => {
+  navigateTo({
+    url: `/package/package-todo/index`,
+    success() {
+      eventCenter.trigger('editTodoData', props.todo);
+    },
+  });
 }
 </script>
 
@@ -43,13 +49,12 @@ const editTodoInfo = () => {
     </nut-col>
     <nut-col :span="20">
       <div class="flex items-center justify-start">
-        <div class="flex flex-col border-rd-md bg-#ffffff" @click="editTodoInfo">
+        <div class="flex flex-col border-rd-md bg-#ffffff pb-10px" @click="updateTodo">
           <div class="dot-container my-4px mr-2px" v-if="todo.color">
             <div :style="{ background: getBorderColor(todo.color) }" class="dot"></div>
           </div>
           <div class="text-16px px-10px fw-600" :class="{'mt-10px': !todo.color}">{{ todo.title }}</div>
-          <div class="text-12px break-words p-10px" v-if="todo.remark">{{ todo.remark }}</div>
-          <rich-text-content :data="todo.remark" v-if="todo.remark" :read-only="true"></rich-text-content>
+          <rich-text :nodes="todo.remark" v-if="todo.remark" class="text-12px break-words pt-10px px-10px"></rich-text>
         </div>
         <div class="mx-10px">
           <checked-radio bg-color="unset" checked-bg-color="#f7daa1" :checked="todo.complete" size="20px" @click="changeComplete"></checked-radio>

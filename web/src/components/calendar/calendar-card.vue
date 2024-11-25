@@ -154,13 +154,14 @@ const isActiveDay = (date: string) => {
 };
 
 const getColorByIndex = (idx: number) => {
-  const colorList = ["#94938D", "#E6CF00", "#E25342"];
+  const colorList = ["#94938D", "#E6A23C", "#F56C6C"];
   return colorList[idx];
 }
 
 const swipersDays = computed(() => {
   const dates: Array<any> = [];
   const dotDataValue = dotDataCache.value;
+  getDotData();
   days.value.map(m => {
     const swiperDays: Array<any> = [];
     m.map((item, index) => {

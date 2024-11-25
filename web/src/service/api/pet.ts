@@ -16,3 +16,11 @@ export async function getAllPetsInfo() {
   });
   return resp.success;
 }
+
+/** 删除宠物 */
+export async function deletePetInfo(id: number) {
+  const resp = await request.delete(`/api/pet/${id}`, {}, {
+    useErrMsg: false
+  });
+  return resp.success;
+}

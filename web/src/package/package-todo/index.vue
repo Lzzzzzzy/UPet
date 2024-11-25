@@ -5,9 +5,7 @@ import { eventCenter, getCurrentInstance, switchTab } from "@tarojs/taro";
 import richTextContent from "@/components/rich-text/index.vue";
 import dayjs from "dayjs";
 import checkedRadio from "@/components/checked-radio/index.vue";
-import {addPetTodo, getPetTodoInfoById, deletePetTodoInfoById} from "@/service/api";
-
-const editMode = ref(false);
+import { addPetTodo, editPetTodo, deletePetTodo } from "@/service/api";
 
 const selectedDate = ref(new Date());
 
@@ -18,7 +16,9 @@ const typeList = [
 
 const showDeleteConfirmPopup = ref(false);
 
-const colorList = ["#ffffff", "#E6CF00", "#E25342"]
+const colorList = ["#ffffff", "#E6A23C", "#F56C6C"]
+
+const pageMode = ref("add");
 
 const formData = reactive({
   title: '',
@@ -31,6 +31,7 @@ const formData = reactive({
   type: typeList[0].value,
   color: 0,
   petId: 0,
+  id: 0,
 })
 
 eventCenter.on('editTodoInfo', async (todoId: number) => {
@@ -62,7 +63,11 @@ const formRules = ref({
 const handleSubmit = async () => {
   const { valid } = await formRef.value?.validate();
   if (valid) {
-    await addPetTodo(formData)
+    if (pageMode.value === 'add') {
+      await addPetTodo(formData)
+    } else {
+      await editPetTodo(formData, formData.id)
+    }
     eventCenter.trigger('refreshTodo');
     eventCenter.trigger('refreshDotData');
     switchTab({
@@ -87,6 +92,22 @@ onBeforeMount(() => {
     formData.todoTime = formatDatetime(selectedDate.value);
   }
   formData.petId = parseInt(params?.petId || '0');
+
+  eventCenter.on("editTodoData", (data) => {
+    pageMode.value = 'edit';
+    formData.title = data.title;
+    formData.todoTime = formatDatetime(dayjs(data.todoTime).toDate());
+    formData.remark = data.remark;
+    formData.remind = data.remind;
+    formData.remindDate = data.remindDate || [dayjs().format('YYYY-MM-DD')];
+    formData.remindTime = formatTime(dayjs(data.remindTime).toDate());
+    formData.complete = data.complete;
+    formData.type = data.type;
+    formData.color = data.color;
+    formData.petId = data.petId;
+    formData.id = data.id;
+    console.log("formData:", formData);
+  })
 })
 
 // 日期选择
@@ -134,10 +155,31 @@ const remindDatesString = computed(() => {
   return `已选 ${formData.remindDate.length} 天`
 });
 
+const title = computed(() => {
+  if (pageMode.value === 'add') {
+    return '添加'
+  }
+  return '编辑'
+})
+
+const handleConfirmDelete = async () => {
+  await deletePetTodo(formData.id);
+  eventCenter.trigger('refreshTodo');
+  eventCenter.trigger('refreshDotData');
+  switchTab({
+    url: '/pages/index/index'
+  });
+}
+
+const showDeleteConfirmPopup = ref(false);
+
+const handleDelete = () => {
+  showDeleteConfirmPopup.value = true;
+}
 </script>
 <template>
   <basic-layout>
-    <custom-navbar title="添加记录" left-show />
+    <custom-navbar :title=title left-show />
     <div class="w-full text-20px">
       <nut-form
         ref="formRef"
@@ -189,7 +231,9 @@ const remindDatesString = computed(() => {
 
         <nut-space class="m-10px flex justify-center w-full">
           <nut-button color="#f7daa1" @click="handleSubmit" class="!text-#000000">提交</nut-button>
-          <nut-button color="#e25342" @click="showDeleteConfirmPopup=true" class="!text-#000000" v-if="editMode">删除</nut-button>
+          <nut-button color="#f56c6c" @click="handleDelete" class="!text-#ffffff" v-if="pageMode === 'edit'">
+            删除
+          </nut-button>
         </nut-space>
       </nut-form>
       <nut-popup v-model:visible="showDatePicker" position="bottom" round safe-area-inset-bottom>
@@ -219,19 +263,19 @@ const remindDatesString = computed(() => {
           cancel-text=" "
         ></nut-date-picker>
       </nut-popup>
-
-      <nut-popup v-model:visible="showDeleteConfirmPopup" round :style="{'width': '70%'}">
-      <div class="px-20px py-40px">
-        <div class="flex-col-center">
-          <div>删除后无法恢复</div>
-          <div>确定要删除吗?</div>
+      <nut-popup v-model:visible="showDeleteConfirmPopup" position="bottom" round safe-area-inset-bottom>
+        <div class="flex-center my-20px ">
+          确定要删除吗?
         </div>
-        <div class="mt-20px flex justify-evenly">
-          <nut-button plain @click="handleDeleteTodo">确定</nut-button>
-          <nut-button @click="closeDeleteConfirmPopup" color="#f7daa1" class="!text-black">取消</nut-button>
+        <div class="flex items-center justify-around mx-20%">
+          <nut-button @click="handleConfirmDelete" class="!text-#f56c6c">
+            删除
+          </nut-button>
+          <nut-button @click="showDeleteConfirmPopup = false">
+            取消
+          </nut-button>
         </div>
-      </div>
-    </nut-popup>
+      </nut-popup>
     </div>
   </basic-layout>
 </template>

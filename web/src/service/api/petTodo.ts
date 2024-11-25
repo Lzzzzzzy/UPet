@@ -65,7 +65,23 @@ export async function updateTodoCompleteStatus(todoId: number, complete: boolean
  * @return {Promise} A promise that resolves to the success status of the update operation.
  */
 export async function searchPetTodoInfo(content: string) {
-  const resp = await request.get(`/api/pet-todo/infos`, { content }, {
+  const resp = await request.get(`/api/pet-todos/infos`, { content }, {
+    useErrMsg: false
+  });
+  return resp.success;
+}
+
+/** 编辑宠物待办 */
+export async function editPetTodo(data: petTodo, id: number) {
+  const resp = await request.put(`/api/pet-todo/${id}`, data, {
+    useErrMsg: false
+  });
+  return resp.success;
+}
+
+/** 删除宠物待办 */
+export async function deletePetTodo(id: number) {
+  const resp = await request.delete(`/api/pet-todo/${id}`, {}, {
     useErrMsg: false
   });
   return resp.success;

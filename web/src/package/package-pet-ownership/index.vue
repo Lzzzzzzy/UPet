@@ -119,7 +119,7 @@ const confirmGrant = () => {
       </nut-row>
   </div>
 
-  <div class="flex-center" v-if="me.isAdmin">
+  <div class="flex-center mt-10px" v-if="me.isAdmin">
       <nut-button @click="addMember" color="#f7daa1" class="!text-black">
           <div class="flex-center">
               <div class="text-15px i-local-add pr-5px"></div>

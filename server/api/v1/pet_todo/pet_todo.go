@@ -119,37 +119,60 @@ func (e *PetTodoApi) DeletePetTodo(c *gin.Context) {
 // @Success   200   {object}  response.Response{msg=string}  "更新宠物待办信息"
 // @Router    /api/pet-todo/:petTodoID [put]
 func (e *PetTodoApi) UpdatePetTodo(c *gin.Context) {
-	var petTodo petTodoModel.PetTodoInfo
+	var petTodoResp petTodoReq.PetTodoInfo
 	todoIdStr := c.Param("petTodoID")
 	petTodoID, err := strconv.ParseUint(todoIdStr, 10, 64)
 	if err != nil {
-		response.FailWithMessage("宠物ID错误", c)
+		response.FailWithMessage(err.Error(), c)
 		return
 	}
 
-	err = c.ShouldBindJSON(&petTodo)
+	err = c.ShouldBindJSON(&petTodoResp)
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
-	petTodo.ID = uint(petTodoID)
-	err = utils.Verify(petTodo.GVA_MODEL, utils.IdVerify)
+	err = utils.Verify(petTodoResp, utils.PetTodoInfoVerify)
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
-	err = utils.Verify(petTodo, utils.PetTodoInfoVerify)
-	if err != nil {
-		response.FailWithMessage(err.Error(), c)
-		return
-	}
-	olderPetTodo, err := petTodoService.GetPetTodoInfo(petTodo.ID)
+
+	var petTodo petTodoModel.PetTodoInfo
+	petTodo.Title = petTodoResp.Title
+	petTodo.Remark = petTodoResp.Remark
+	petTodo.Remind = petTodoResp.Remind
+	petTodo.Complete = petTodoResp.Complete
+	petTodo.Type = petTodoResp.Type
+	petTodo.Color = petTodoResp.Color
+	petTodo.TodoTime = *petTodoResp.TodoTime
+	petTodo.PetId = petTodoResp.PetId
+	petTodo.CreatedBy = utils.GetUserID(c)
+	petTodo.UpdatedBy = utils.GetUserID(c)
+	petTodo.FamilyId = utils.GetUserFamilyID(c)
+
+	olderPetTodo, err := petTodoService.GetPetTodoInfo(uint(petTodoID))
 	if err != nil {
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
 	petTodo.CreatedAt = olderPetTodo.CreatedAt
-	err = petTodoService.UpdatePetTodo(&petTodo)
+
+	needCreateTodos := []*petTodoModel.PetTodoInfo{}
+	if petTodo.Remind {
+		remindTimes := petTodoService.FormatRemindTime(&petTodoResp)
+		for _, remindTime := range remindTimes {
+			newTodo := petTodo
+			newTodo.RemindTime = &common.CustomTime{Time: remindTime}
+			needCreateTodos = append(needCreateTodos, &newTodo)
+		}
+	} else {
+		newTodo := petTodo
+		newTodo.RemindTime = &newTodo.TodoTime
+		needCreateTodos = append(needCreateTodos, &newTodo)
+	}
+	petTodoService.DeletePetTodo(olderPetTodo)
+	err = petTodoService.CreatePetTodos(needCreateTodos)
 	if err != nil {
 		global.GVA_LOG.Error("更新失败!", zap.Error(err))
 		response.FailWithMessage("更新失败", c)

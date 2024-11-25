@@ -5,7 +5,7 @@ import noPetRemind from '@/components/home/add-pet-remind/index.vue';
 import petTodosPage from '@/components/pet-todos/index.vue';
 import calendar from '@/components/calendar/index.vue';
 import { Pet } from "@/typings/pet";
-import { userAuth, getAllPetsInfo, getPetTodosOnPagenation, getPetTodosMark } from '@/service/api';
+import { userLogin, getAllPetsInfo, getPetTodosOnPagenation, getPetTodosMark } from '@/service/api';
 import { localStg, formatDate } from '@/utils';
 
 
@@ -24,25 +24,7 @@ const getDotInfos = async (dates: Pet.PetMarkParam) => {
 }
 
 const wxLogin = () => {
-  login({
-    success: function (res:any) {
-      if (res.code) {
-        //发起网络请求
-        userAuth(res.code).then((data: any) => {
-          localStg.set("token", data.token, data.expiresAt);
-          localStg.set("userInfo", data.user, null);
-          if (!(data?.user.avatar && data?.user.nickname)) {
-            // 跳转到用户注册页面
-            redirectTo({
-              url: `/package/package-register/index`
-            });
-          }
-        })
-      } else {
-        console.log('登录失败！' + res.errMsg)
-      }
-    }
-  })
+  userLogin()
 }
 
 /** 宠物相关参数和方法 */

@@ -1,4 +1,6 @@
 import { request } from '../request';
+import { login, redirectTo } from '@tarojs/taro';
+import { localStg } from '@/utils';
 
 interface UserInfo {
   avatar: string,
@@ -25,4 +27,26 @@ export async function userInfoComplete(data: any) {
     useErrMsg: false
   });
   return resp.success;
+}
+
+export function userLogin() {
+  login({
+    success: function (res:any) {
+      if (res.code) {
+        //发起网络请求
+        userAuth(res.code).then((data: any) => {
+          localStg.set("token", data.token, data.expiresAt);
+          localStg.set("userInfo", data.user, null);
+          if (!(data?.user.avatar && data?.user.nickname)) {
+            // 跳转到用户注册页面
+            redirectTo({
+              url: `/package/package-register/index`
+            });
+          }
+        })
+      } else {
+        console.log('登录失败！' + res.errMsg)
+      }
+    }
+  })
 }

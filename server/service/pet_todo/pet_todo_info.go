@@ -96,6 +96,7 @@ func (petTodoInfo *PetTodoService) UpdatePetTodoComplete(todoId uint, complete b
 // @return: customer model.PetInfo, err error
 func (petInfo *PetTodoService) SearchPetTodoInfo(content string, familyId uint) (PetTodoInfoList []petTodo.SimplePetTodoInfo, err error) {
 	contentStr := "%" + content + "%"
-	err = global.GVA_DB.Where("family_id = ?", familyId).Where("title like ?", contentStr).Or("remark like ?", contentStr).Order("remind_time desc").Find(&PetTodoInfoList).Error
+	db := global.GVA_DB.Model(&petTodo.PetTodoInfo{})
+	err = db.Where("family_id = ?", familyId).Where("title like ?", contentStr).Or("remark like ?", contentStr).Order("remind_time desc").Find(&PetTodoInfoList).Error
 	return
 }
