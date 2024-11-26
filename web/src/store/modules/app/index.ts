@@ -11,7 +11,6 @@ export const useAppStore = defineStore('app-store', {
     activeTab: useRoutePath()
   }),
   getters: {
-    /** 是否登录 */
     getActiveTab: state => state.activeTab
   },
   actions: {

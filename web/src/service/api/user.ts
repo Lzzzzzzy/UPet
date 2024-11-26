@@ -29,9 +29,9 @@ export async function userInfoComplete(data: any) {
   return resp.success;
 }
 
-export function userLogin() {
+export function userLogin(redirectUrl?: string) {
   login({
-    success: function (res:any) {
+    success: function (res: any) {
       if (res.code) {
         //发起网络请求
         userAuth(res.code).then((data: any) => {
@@ -40,7 +40,7 @@ export function userLogin() {
           if (!(data?.user.avatar && data?.user.nickname)) {
             // 跳转到用户注册页面
             redirectTo({
-              url: `/package/package-register/index`
+              url: `/package/package-register/index?redirectTo=${redirectUrl}`
             });
           }
         })
@@ -49,4 +49,11 @@ export function userLogin() {
       }
     }
   })
+}
+
+export async function getUserInfo(userId: number | string) {
+  const resp = await request.get(`/api/user/${userId}`, {}, {
+    useErrMsg: false
+  });
+  return resp.success;
 }

@@ -13,6 +13,7 @@ func (e *FamilyRouter) InitFamilyRouter(Router *gin.RouterGroup) {
 	{
 		familyRouter.POST("/member/:memberId", familyApi.GrantFamilyManagePermission) // 转让家庭管理权限
 		familyRouter.GET("/members", familyApi.GetFamilyMembers)                      // 获取家庭成员信息
-		familyRouter.DELETE("/family/member/:memberId", familyApi.DeleteFamilyMember) // 删除家庭成员
+		familyRouter.DELETE("/member/:memberId", familyApi.DeleteFamilyMember)        // 删除家庭成员
+		familyRouter.POST("/join/:familyId", familyApi.JoinFamily)                    // 加入家庭
 	}
 }

@@ -42,3 +42,23 @@ func (userService *UserService) UpdateUser(e *user.User) (err error) {
 	err = global.GVA_DB.Save(e).Error
 	return err
 }
+
+func (userService *UserService) UpdateUserAdmin(oldUserId, newUserId uint) error {
+	tx := global.GVA_DB.Begin()
+	oldUserInfo, err := userService.GetUserById(oldUserId)
+	if err != nil {
+		return err
+	}
+	newUserInfo, err := userService.GetUserById(newUserId)
+	if err != nil {
+		return err
+	}
+	oldUserInfo.IsAdmin = false
+	newUserInfo.IsAdmin = true
+	err = tx.Commit().Error
+	if err != nil {
+		tx.Rollback()
+		return err
+	}
+	return nil
+}

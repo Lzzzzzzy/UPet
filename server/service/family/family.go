@@ -28,3 +28,25 @@ func (familyService *FamilyService) GetFamilyMembers(familyId uint) (UserInfoLis
 	err = db.Where("family_id = ?", familyId).Find(&UserInfoList).Error
 	return
 }
+
+// @function: GetFamilyOtherMembers
+// @description: 获取除自己外的家庭成员列表
+// @param: familyId 家庭id
+// @return: err error
+func (familyService *FamilyService) GetFamilyOtherMembers(familyId, userId uint) (UserInfoList *[]user.User, err error) {
+	db := global.GVA_DB.Model(&user.User{})
+
+	err = db.Where("family_id = ?", familyId).Where("id != ?", userId).Find(&UserInfoList).Error
+	return
+}
+
+// @function: DeleteFamily
+// @description: 删除家庭
+// @param: familyId 家庭id
+// @return: err error
+func (familyService *FamilyService) DeleteFamily(familyId uint) (err error) {
+	family := family.Family{}
+	family.ID = familyId
+	err = global.GVA_DB.Delete(&family).Error
+	return
+}
