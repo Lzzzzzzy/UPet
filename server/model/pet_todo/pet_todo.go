@@ -8,9 +8,9 @@ import (
 type PetTodoInfo struct {
 	global.GVA_MODEL
 	Title      string             `json:"title" form:"title" gorm:"comment:标题"`                          // 标题
-	Remark     string             `json:"remark" form:"remark" gorm:"comment:备注"`                        // 备注
+	Remark     string             `json:"remark" form:"remark" gorm:"type:text;comment:备注"`              // 备注
 	Remind     bool               `json:"remind" form:"remind" gorm:"comment:是否提醒"`                      // 是否提醒， 0：否，1：是
-	RemindTime *common.CustomTime `json:"remindTime" form:"remindTime" gorm:"comment:提醒时间 default:null"` // 提醒时间
+	RemindTime *common.CustomTime `json:"remindTime" form:"remindTime" gorm:"comment:提醒时间;default:null"` // 提醒时间
 	Complete   bool               `json:"complete" form:"complete" gorm:"comment:是否完成"`                  // 是否完成，0：否，1：是
 	Type       uint               `json:"type" form:"type" gorm:"comment:提醒类型"`                          // 提醒类型， 0：日常记录， 1：待办事项
 	Color      uint               `json:"color" form:"color" gorm:"comment:背景颜色"`                        // 背景颜色

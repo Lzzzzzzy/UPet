@@ -14,7 +14,6 @@ definePageConfig({
 
 onBeforeMount(()=>{
   eventCenter.on("selectEditPet", (pet: Pet.PetInfo) => {
-    console.log("on selectEditPet:", typeof pet);
     formData.value.name = pet.name;
     formData.value.avatar = pet.avatar;
     formData.value.gender = pet.gender;
@@ -23,7 +22,6 @@ onBeforeMount(()=>{
     formData.value.birthday = pet.birthday;
     formData.value.id = pet.id;
     title.value = "修改档案"
-    console.log("formData:", formData);
   });
 })
 

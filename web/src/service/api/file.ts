@@ -14,5 +14,11 @@ export async function uploadFileToSystem(tempUrl: string) {
     name: 'file',
     header: getRequestHeaders(config),
   });
-  return JSON.parse(resp.data)?.data?.url || "";
+  let fileUrl = "";
+  fileUrl = JSON.parse(resp.data)?.data?.url || ""
+  if (fileUrl) {
+    fileUrl = getRequestUrl(`/${fileUrl}`);
+  }
+  console.log("fileUrl:", fileUrl);
+  return fileUrl || "";
 }

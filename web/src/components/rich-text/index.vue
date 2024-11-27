@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import { createSelectorQuery } from '@tarojs/taro';
+import { ref, watch } from 'vue';
+import { createSelectorQuery, eventCenter, chooseImage } from '@tarojs/taro';
 import { uploadFileToSystem } from "@/service/api";
 
 const props = defineProps({
@@ -15,21 +15,19 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
-  readOnly: {
-    type: Boolean,
-    default: false,
-  }
 });
 
 
 const editorCtx = ref();
 const onEditorReady = () => {
   createSelectorQuery().select('#editor').context((res) => {
-    console.log(res.context);
     editorCtx.value = res.context;
-    setContent();
   }).exec()
 };
+
+watch(() => props.data, () => {
+  setContent();
+})
 
 const setContent = () => {
   editorCtx.value.setContents({
@@ -43,33 +41,72 @@ interface editorChangeDetail {
   text: string;
 }
 const emit = defineEmits(["updateData"]);
-const onEditorInput = ({ detail: { html, delta, text } }: {detail: editorChangeDetail}) => {
-  emit("updateData", html);
+
+const htmlText = ref("");
+
+const updateText = () => {
+  emit("updateData", htmlText.value);
+}
+
+const onEditorInput = ({ detail: { html, delta, text } }: { detail: editorChangeDetail }) => {
+  htmlText.value = html;
+  updateText();
 };
 
-const uploadUrl = ref("");
-const uploadRef = ref();
-const defaultFileList = ref([]);
+const imgsList = ref([]);
+const imgMap = ref({});
 
-const submitUpload = () => {
-  console.log(defaultFileList.value);
+const uploadImgsAndFormatHtmlText = async () => {
+  const promises = imgsList.value.map(async (fileUrl: string) => {
+    const pictureUrl = await uploadFileToSystem(fileUrl);
+    imgMap.value[fileUrl] = pictureUrl;
+  })
+  await Promise.all(promises);
+  imgsList.value.forEach((localUrl: string) => {
+    const remoteUrl = imgMap.value[localUrl];
+    htmlText.value = htmlText.value.replace(localUrl, remoteUrl);
+  })
+  updateText();
+  eventCenter.trigger("imgsUploaded");
 }
+
+eventCenter.on("uploadPicture", async (res: any) => {
+  await uploadImgsAndFormatHtmlText();
+})
+
+const handleUploadImage = async () => {
+  try {
+    const res = await chooseImage({
+      count: 1,
+      sizeType: ['original', 'compressed'],
+      sourceType: ['album', 'camera']
+    });
+
+    const tempFilePath = res.tempFilePaths[0];
+    imgsList.value.push(tempFilePath);
+
+    // // 插入图片到编辑器
+    editorCtx.value.insertImage({
+      src: tempFilePath,
+      alt: 'image'
+    });
+
+  } catch (error) {
+    console.error('上传失败', error);
+  }
+};
 </script>
 
 <template>
   <div>
-    <div v-if="defaultFileList" class="flex">
-      <div v-for="item in defaultFileList" :key="item.uid" class="w-fit">
+    <div v-if="imgsList" class="flex">
+      <div v-for="item in imgsList" :key="item.uid" class="w-fit">
         <img :src="item.url" class="w-50px !h-50px" />
       </div>
     </div>
-    <editor id="editor" class="editor break-words h-50px min-h-0" :placeholder="placeholder" @ready="onEditorReady" @input="onEditorInput" :readOnly="readOnly"></editor>
-    <div class="flex items-center justify-end mt-5px" v-if="showUploader">
-
-      <nut-uploader maximum="5" :auto-upload="false" ref="uploadRef" v-model:file-list="defaultFileList">
-        <div class="i-local-image text-25px text-#333333"></div>
-      </nut-uploader>
-    </div>
+    <editor id="editor" class="editor break-words max-h-150px min-h-0" :placeholder="placeholder" :showImgToolbar="true"
+      @ready="onEditorReady" @input="onEditorInput" />
+    <div class="i-local-image text-25px text-#333333" @click="handleUploadImage" v-if="showUploader"></div>
   </div>
 </template>
 

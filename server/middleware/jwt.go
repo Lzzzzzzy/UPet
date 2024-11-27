@@ -6,17 +6,17 @@ import (
 	"time"
 
 	"github.com/Lzzzzzzy/UPet/server/global"
+	"github.com/Lzzzzzzy/UPet/server/service"
 	"github.com/Lzzzzzzy/UPet/server/utils"
 
 	"github.com/golang-jwt/jwt/v4"
 
 	"github.com/Lzzzzzzy/UPet/server/model/common/response"
-	"github.com/Lzzzzzzy/UPet/server/service"
 
 	"github.com/gin-gonic/gin"
 )
 
-var jwtService = service.ServiceGroupApp.AuthServiceGroup.JwtService
+var userService = service.ServiceGroupApp.UserServiceGroup.UserService
 
 func JWTAuth() gin.HandlerFunc {
 	return func(c *gin.Context) {
@@ -37,7 +37,7 @@ func JWTAuth() gin.HandlerFunc {
 		// parseToken 解析token包含的信息
 		claims, err := j.ParseToken(token)
 		if err != nil {
-			if errors.Is(err, utils.TokenExpired) {
+			if errors.Is(err, utils.ErrTokenExpired) {
 				response.NoAuth("授权已过期", c)
 				utils.ClearToken(c)
 				c.Abort()
@@ -51,12 +51,13 @@ func JWTAuth() gin.HandlerFunc {
 
 		// 已登录用户被管理员禁用 需要使该用户的jwt失效 此处比较消耗性能 如果需要 请自行打开
 		// 用户被删除的逻辑 需要优化 此处比较消耗性能 如果需要 请自行打开
-
-		//if user, err := userService.FindUserByUuid(claims.UUID.String()); err != nil || user.Enable == 2 {
-		//	_ = jwtService.JsonInBlacklist(system.JwtBlacklist{Jwt: token})
-		//	response.FailWithDetailed(gin.H{"reload": true}, err.Error(), c)
-		//	c.Abort()
-		//}
+		userId := claims.UserId
+		if user, err := userService.GetUserById(userId); err != nil || user == nil {
+			response.NoAuth("用户不存在或已被删除", c)
+			utils.ClearToken(c)
+			c.Abort()
+			return
+		}
 		c.Set("claims", claims)
 		if claims.ExpiresAt.Unix()-time.Now().Unix() < claims.BufferTime {
 			dr, _ := utils.ParseDuration(global.GVA_CONFIG.JWT.ExpiresTime)

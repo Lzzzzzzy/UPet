@@ -9,12 +9,12 @@ import { addPetTodo, editPetTodo, deletePetTodo } from "@/service/api";
 
 const selectedDate = ref(new Date());
 
+const loading = ref(false);
+
 const typeList = [
   { text: "日常记录", value: 0 },
   { text: "待办事项", value: 1 },
 ];
-
-const showDeleteConfirmPopup = ref(false);
 
 const colorList = ["#ffffff", "#E6A23C", "#F56C6C"]
 
@@ -36,7 +36,7 @@ const formData = reactive({
 
 eventCenter.on('editTodoInfo', async (todoId: number) => {
   editMode.value = true;
-  
+
   const data: any = await getPetTodoInfoById(todoId);
   formData.title = data.title;
   formData.todoTime = data.todoTime;
@@ -59,8 +59,7 @@ const formRules = ref({
   ]
 })
 
-
-const handleSubmit = async () => {
+eventCenter.on('imgsUploaded', async () => {
   const { valid } = await formRef.value?.validate();
   if (valid) {
     if (pageMode.value === 'add') {
@@ -70,10 +69,16 @@ const handleSubmit = async () => {
     }
     eventCenter.trigger('refreshTodo');
     eventCenter.trigger('refreshDotData');
+    loading.value = false;
     switchTab({
       url: '/pages/index/index'
     })
   }
+})
+
+const handleSubmit = async () => {
+  loading.value = true;
+  eventCenter.trigger('uploadPicture')
 }
 
 const handleDeleteTodo = async () => {
@@ -106,7 +111,6 @@ onBeforeMount(() => {
     formData.color = data.color;
     formData.petId = data.petId;
     formData.id = data.id;
-    console.log("formData:", formData);
   })
 })
 
@@ -126,7 +130,7 @@ const currentDate = ref([new Date()])
 const onHandleConfirmSelectDate = () => {
   const remindDate: Array<string> = [];
   currentDate.value.sort((a: Date, b: Date) => a.getTime() - b.getTime());
-  currentDate.value.forEach((date: Date)=>{
+  currentDate.value.forEach((date: Date) => {
     remindDate.push(dayjs(date).format('YYYY-MM-DD'))
   })
   formData.remindDate = remindDate;
@@ -163,9 +167,11 @@ const title = computed(() => {
 })
 
 const handleConfirmDelete = async () => {
+  loading.value = true;
   await deletePetTodo(formData.id);
   eventCenter.trigger('refreshTodo');
   eventCenter.trigger('refreshDotData');
+  loading.value = false;
   switchTab({
     url: '/pages/index/index'
   });
@@ -181,26 +187,23 @@ const handleDelete = () => {
   <basic-layout>
     <custom-navbar :title=title left-show />
     <div class="w-full text-20px">
-      <nut-form
-        ref="formRef"
-        :model-value="formData"
-        :rules="formRules"
-        star-position="right"
-      >
+      <nut-form ref="formRef" :model-value="formData" :rules="formRules" star-position="right">
         <nut-form-item label="时间" class="form-item-border">
-          <div @click="showDatePicker=true" class="w-full">{{ formData.todoTime }}</div>
+          <div @click="showDatePicker = true" class="w-full">{{ formData.todoTime }}</div>
         </nut-form-item>
         <nut-form-item label="标题" prop="title" class="form-item-border">
           <nut-input v-model="formData.title" placeholder="请输入标题" />
         </nut-form-item>
         <nut-form-item label="备注" prop="remark" class="form-item-border">
-          <rich-text-content :data="formData.remark" placeholder="备注，您也可以上传图片,例如确诊单或者希望给医生展示的症状" @update-data="onUpdateRemark" :showUploader="true"></rich-text-content>
+          <rich-text-content :data="formData.remark" placeholder="备注，您也可以上传图片,例如确诊单或者希望给医生展示的症状"
+            @update-data="onUpdateRemark" :showUploader="true"></rich-text-content>
         </nut-form-item>
         <nut-form-item label="类型" prop="type" class="form-item-border">
           <nut-radio-group v-model="formData.type">
             <div class="flex items-center">
-              <div v-for="(type, index) in typeList" :key="index" class="mr-15px" @click="formData.type=type.value">
-                <div :class="{'bg-#f7daa1': formData.type === type.value}" class="mr-5 border-1px b-solid border-color-#f7daa1 px-10px py-2px b-rd-12px">{{ type.text }}</div>
+              <div v-for="(type, index) in typeList" :key="index" class="mr-15px" @click="formData.type = type.value">
+                <div :class="{ 'bg-#f7daa1': formData.type === type.value }"
+                  class="mr-5 border-1px b-solid border-color-#f7daa1 px-10px py-2px b-rd-12px">{{ type.text }}</div>
               </div>
             </div>
           </nut-radio-group>
@@ -210,40 +213,37 @@ const handleDelete = () => {
             <div class="flex items-center">
               <div v-for="(color, index) in colorList" :key="index">
                 <nut-radio :label="index">
-                  <template #icon> <checked-radio :bg-color="color" :checked="false" size="25px" :checked-bg-color="color"></checked-radio> </template>
-                  <template #checkedIcon> <checked-radio :bg-color="color" :checked="true" size="25px" :checked-bg-color="color"></checked-radio> </template>
+                  <template #icon> <checked-radio :bg-color="color" :checked="false" size="25px"
+                      :checked-bg-color="color"></checked-radio> </template>
+                  <template #checkedIcon> <checked-radio :bg-color="color" :checked="true" size="25px"
+                      :checked-bg-color="color"></checked-radio> </template>
                 </nut-radio>
               </div>
             </div>
           </nut-radio-group>
         </nut-form-item>
-        <nut-form-item label="需要提醒" prop="remind" class="form-item-border" v-if="formData.type===1">
-            <nut-switch v-model="formData.remind" active-color="#f7daa1" />
+        <nut-form-item label="需要提醒" prop="remind" class="form-item-border" v-if="formData.type === 1">
+          <nut-switch v-model="formData.remind" active-color="#f7daa1" />
         </nut-form-item>
         <nut-form-item label="提醒日期" prop="remindDate" class="form-item-border" v-if="formData.remind">
-            <div @click="showRepeatDate=true" class="text-#315efb">
-              {{ remindDatesString }}
-            </div>
+          <div @click="showRepeatDate = true" class="text-#315efb">
+            {{ remindDatesString }}
+          </div>
         </nut-form-item>
         <nut-form-item label="提醒时间" prop="remindTime" class="form-item-border" v-if="formData.remind">
-          <div @click="showRepeatTimePicker=true" class="text-#315efb">{{ formData.remindTime }}</div>
+          <div @click="showRepeatTimePicker = true" class="text-#315efb">{{ formData.remindTime }}</div>
         </nut-form-item>
 
         <nut-space class="m-10px flex justify-center w-full">
-          <nut-button color="#f7daa1" @click="handleSubmit" class="!text-#000000">提交</nut-button>
+          <nut-button color="#f7daa1" @click="handleSubmit" class="!text-#000000" :loading="loading">提交</nut-button>
           <nut-button color="#f56c6c" @click="handleDelete" class="!text-#ffffff" v-if="pageMode === 'edit'">
             删除
           </nut-button>
         </nut-space>
       </nut-form>
       <nut-popup v-model:visible="showDatePicker" position="bottom" round safe-area-inset-bottom>
-        <nut-date-picker
-          v-model="selectedTime"
-          type="hour-minute"
-          :three-dimensional="false"
-          @confirm="confirmSelectTime"
-          cancel-text=" "
-        ></nut-date-picker>
+        <nut-date-picker v-model="selectedTime" type="hour-minute" :three-dimensional="false"
+          @confirm="confirmSelectTime" cancel-text=" "></nut-date-picker>
       </nut-popup>
       <nut-popup v-model:visible="showRepeatDate" position="bottom" round safe-area-inset-bottom>
         <div class="flex items-center justify-between h-45px font-size-14px">
@@ -255,20 +255,15 @@ const handleDelete = () => {
         </calendar>
       </nut-popup>
       <nut-popup v-model:visible="showRepeatTimePicker" position="bottom" round safe-area-inset-bottom>
-        <nut-date-picker
-          v-model="remindTime"
-          type="hour-minute"
-          :three-dimensional="false"
-          @confirm="confirmRepeatTime"
-          cancel-text=" "
-        ></nut-date-picker>
+        <nut-date-picker v-model="remindTime" type="hour-minute" :three-dimensional="false" @confirm="confirmRepeatTime"
+          cancel-text=" "></nut-date-picker>
       </nut-popup>
       <nut-popup v-model:visible="showDeleteConfirmPopup" position="bottom" round safe-area-inset-bottom>
         <div class="flex-center my-20px ">
           确定要删除吗?
         </div>
         <div class="flex items-center justify-around mx-20%">
-          <nut-button @click="handleConfirmDelete" class="!text-#f56c6c">
+          <nut-button @click="handleConfirmDelete" class="!text-#f56c6c" :loading="loading">
             删除
           </nut-button>
           <nut-button @click="showDeleteConfirmPopup = false">
@@ -281,7 +276,6 @@ const handleDelete = () => {
 </template>
 
 <style lang="scss">
-
 .ellipsis-style {
   text-overflow: ellipsis;
   white-space: nowrap;
