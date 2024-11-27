@@ -99,11 +99,6 @@ const handleUploadImage = async () => {
 
 <template>
   <div>
-    <div v-if="imgsList" class="flex">
-      <div v-for="item in imgsList" :key="item.uid" class="w-fit">
-        <img :src="item.url" class="w-50px !h-50px" />
-      </div>
-    </div>
     <editor id="editor" class="editor break-words max-h-150px min-h-0" :placeholder="placeholder" :showImgToolbar="true"
       @ready="onEditorReady" @input="onEditorInput" />
     <div class="i-local-image text-25px text-#333333" @click="handleUploadImage" v-if="showUploader"></div>
