@@ -74,18 +74,12 @@ eventCenter.on('imgsUploaded', async () => {
       url: '/pages/index/index'
     })
   }
+  loading.value = false;
 })
 
 const handleSubmit = async () => {
   loading.value = true;
   eventCenter.trigger('uploadPicture')
-}
-
-const handleDeleteTodo = async () => {
-  await deletePetTodoInfoById(formData.id);
-  switchTab({
-    url: '/pages/index/index'
-  });
 }
 
 
@@ -165,23 +159,6 @@ const title = computed(() => {
   }
   return '编辑'
 })
-
-const handleConfirmDelete = async () => {
-  loading.value = true;
-  await deletePetTodo(formData.id);
-  eventCenter.trigger('refreshTodo');
-  eventCenter.trigger('refreshDotData');
-  loading.value = false;
-  switchTab({
-    url: '/pages/index/index'
-  });
-}
-
-const showDeleteConfirmPopup = ref(false);
-
-const handleDelete = () => {
-  showDeleteConfirmPopup.value = true;
-}
 </script>
 <template>
   <basic-layout>
@@ -236,9 +213,6 @@ const handleDelete = () => {
 
         <nut-space class="m-10px flex justify-center w-full">
           <nut-button color="#f7daa1" @click="handleSubmit" class="!text-#000000" :loading="loading">提交</nut-button>
-          <nut-button color="#f56c6c" @click="handleDelete" class="!text-#ffffff" v-if="pageMode === 'edit'">
-            删除
-          </nut-button>
         </nut-space>
       </nut-form>
       <nut-popup v-model:visible="showDatePicker" position="bottom" round safe-area-inset-bottom>
@@ -257,19 +231,6 @@ const handleDelete = () => {
       <nut-popup v-model:visible="showRepeatTimePicker" position="bottom" round safe-area-inset-bottom>
         <nut-date-picker v-model="remindTime" type="hour-minute" :three-dimensional="false" @confirm="confirmRepeatTime"
           cancel-text=" "></nut-date-picker>
-      </nut-popup>
-      <nut-popup v-model:visible="showDeleteConfirmPopup" position="bottom" round safe-area-inset-bottom>
-        <div class="flex-center my-20px ">
-          确定要删除吗?
-        </div>
-        <div class="flex items-center justify-around mx-20%">
-          <nut-button @click="handleConfirmDelete" class="!text-#f56c6c" :loading="loading">
-            删除
-          </nut-button>
-          <nut-button @click="showDeleteConfirmPopup = false">
-            取消
-          </nut-button>
-        </div>
       </nut-popup>
     </div>
   </basic-layout>

@@ -26,7 +26,9 @@ const onEditorReady = () => {
 };
 
 watch(() => props.data, () => {
-  setContent();
+  if (!htmlText.value) {
+    setContent();
+  }
 })
 
 const setContent = () => {

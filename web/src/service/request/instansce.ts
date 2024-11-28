@@ -19,7 +19,6 @@ async function axios<T>(config: Service.RequestParam): Promise<Service.RequestRe
       timeout: REQUEST_TIMEOUT,
       success: res => {
         const { code, msg, data } = res.data as Service.BackendResultConfig<T>;
-        console.log("code:", code)
         /* 成功请求 */
         if (code === SUCCESS_CODE) {
           return resolve({
