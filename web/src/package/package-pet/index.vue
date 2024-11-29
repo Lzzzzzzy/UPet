@@ -12,7 +12,7 @@ definePageConfig({
   navigationBarTitleText: title.value
 });
 
-onBeforeMount(()=>{
+onBeforeMount(() => {
   eventCenter.on("selectEditPet", (pet: Pet.PetInfo) => {
     formData.value.name = pet.name;
     formData.value.avatar = pet.avatar;
@@ -30,6 +30,7 @@ const showTypePicker = ref(false);
 const petTypes = ref([
   { text: '猫猫', value: 0 },
   { text: '狗狗', value: 1 },
+  { text: '其他', value: 2 },
 ])
 const selectedPetType = ref([0])
 
@@ -50,8 +51,8 @@ const formRules = ref({
   ]
 })
 
-const genderList = [{"text": "男孩", "value": 0}, {"text": "女孩", "value": 1}]
-const sterilizedStateList = [{"text": "未绝育", "value": 0}, {"text": "已绝育", "value": 1}]
+const genderList = [{ "text": "男孩", "value": 0 }, { "text": "女孩", "value": 1 }]
+const sterilizedStateList = [{ "text": "未绝育", "value": 0 }, { "text": "已绝育", "value": 1 }]
 
 const imageUrl = ref("");
 const onConfirmAvatar = (url: string) => {
@@ -69,7 +70,7 @@ const handleSubmit = async () => {
   const { valid } = await formRef.value?.validate();
   if (valid) {
     isLoading.value = true;
-    if (imageUrl.value){
+    if (imageUrl.value) {
       const avatarUrl = await uploadFileToSystem(imageUrl.value);
       formData.value.avatar = avatarUrl;
     }
@@ -95,25 +96,16 @@ const currentDate = ref(new Date());
   <basic-layout>
     <custom-navbar :title="title" left-show />
     <div class="bg-#ffffff mx-10px mt-20px border-rd-md">
-      <div class="w-full flex justify-center items-center py-30px flex-col" :class="{'pet-avatar-container': imageUrl}">
+      <div class="w-full flex justify-center items-center py-30px flex-col" :class="{ 'pet-avatar-container': imageUrl }">
         <nut-avatar-cropper shape="round" @confirm="onConfirmAvatar" :edit-text="editText">
           <nut-avatar size="100" shape="round">
             <img v-if="imageUrl" :src="imageUrl" />
           </nut-avatar>
         </nut-avatar-cropper>
       </div>
-      <nut-form
-        ref="formRef"
-        :model-value="formData"
-        :rules="formRules"
-        star-position="right"
-      >
+      <nut-form ref="formRef" :model-value="formData" :rules="formRules" star-position="right">
         <nut-form-item label="名字" prop="name" class="form-item-border">
-          <nut-input
-            v-model="formData.name"
-            placeholder="毛孩子叫什么名字？"
-            type="text"
-          />
+          <nut-input v-model="formData.name" placeholder="毛孩子叫什么名字？" type="text" />
         </nut-form-item>
         <nut-form-item label="种类" prop="type" class="form-item-border">
           <nut-cell :title="petTypes[selectedPetType[0]].text" @click="showTypePicker = true" class="!p-0">
@@ -122,43 +114,50 @@ const currentDate = ref(new Date());
             </template>
           </nut-cell>
           <nut-popup v-model:visible="showTypePicker" position="bottom">
-            <nut-picker v-model="selectedPetType" :columns="petTypes" @confirm="showTypePicker = false" @cancel="showTypePicker = false" />
+            <nut-picker v-model="selectedPetType" :columns="petTypes" @confirm="showTypePicker = false"
+              @cancel="showTypePicker = false" />
           </nut-popup>
         </nut-form-item>
         <nut-form-item label="性别" prop="type" class="form-item-border">
           <div class="flex">
-            <div v-for="(gender, index) in genderList" :key="index" class="mr-15px" @click="formData.gender=gender.value">
-              <div :class="{'bg-#f7daa1': formData.gender === gender.value}" class="mr-5 border-1px b-solid border-color-#f7daa1 px-10px py-2px b-rd-12px">{{ gender.text }}</div>
+            <div v-for="(gender, index) in genderList" :key="index" class="mr-15px"
+              @click="formData.gender = gender.value">
+              <div :class="{ 'bg-#f7daa1': formData.gender === gender.value }"
+                class="mr-5 border-1px b-solid border-color-#f7daa1 px-10px py-2px b-rd-12px">{{ gender.text }}</div>
             </div>
           </div>
         </nut-form-item>
         <nut-form-item label="绝育" prop="type" class="form-item-border">
           <div class="flex">
-            <div v-for="(sterilizedState, index) in sterilizedStateList" :key="index" class="mr-15px" @click="formData.sterilizedState=sterilizedState.value">
-              <div :class="{'bg-#f7daa1': formData.sterilizedState === sterilizedState.value}" class="mr-5 border-1px b-solid border-color-#f7daa1 px-10px py-2px b-rd-12px">{{ sterilizedState.text }}</div>
+            <div v-for="(sterilizedState, index) in sterilizedStateList" :key="index" class="mr-15px"
+              @click="formData.sterilizedState = sterilizedState.value">
+              <div :class="{ 'bg-#f7daa1': formData.sterilizedState === sterilizedState.value }"
+                class="mr-5 border-1px b-solid border-color-#f7daa1 px-10px py-2px b-rd-12px">{{ sterilizedState.text }}
+              </div>
             </div>
           </div>
         </nut-form-item>
         <nut-form-item label="生日" prop="type" class="form-item-border">
-          <div class="flex" @click="showBirthdayDate=true">
+          <div class="flex" @click="showBirthdayDate = true">
             {{ formatDate(currentDate) }}
           </div>
         </nut-form-item>
-  
+
         <nut-space class="m-10px flex justify-center w-full">
-          <nut-button type="primary" @click="handleSubmit" class="!text-black" color="#f7daa1" :loading="isLoading">提交</nut-button>
+          <nut-button type="primary" @click="handleSubmit" class="!text-black" color="#f7daa1"
+            :loading="isLoading">提交</nut-button>
         </nut-space>
       </nut-form>
     </div>
     <nut-popup v-model:visible="showBirthdayDate" position="bottom" round safe-area-inset-bottom>
-        <div class="flex items-center justify-between h-45px font-size-14px">
-          <div class="date-picker__left"></div>
-          <div class="date-picker__center">选择生日</div>
-          <div class="date-picker__right px-15px" @click="showBirthdayDate=false">确认</div>
-        </div>
-        <calendar v-model="currentDate" :show-week="false" :show-change-mode-button="false" class="font-size-16px">
-        </calendar>
-      </nut-popup>
+      <div class="flex items-center justify-between h-45px font-size-14px">
+        <div class="date-picker__left"></div>
+        <div class="date-picker__center">选择生日</div>
+        <div class="date-picker__right px-15px" @click="showBirthdayDate = false">确认</div>
+      </div>
+      <calendar v-model="currentDate" :show-week="false" :show-change-mode-button="false" class="font-size-16px">
+      </calendar>
+    </nut-popup>
   </basic-layout>
 </template>
 
