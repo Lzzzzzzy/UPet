@@ -25,7 +25,7 @@ type PetTodoApi struct{}
 // @Produce   application/json
 // @Param     data  body      request.PetTodoInfo            true  "宠物待办信息"
 // @Success   200   {object}  response.Response{msg=string}  "创建宠物待办"
-// @Router    /api/pet-todo [post]
+// @Router    /pet-todo [post]
 func (e *PetTodoApi) CreatePetTodo(c *gin.Context) {
 	var petTodoResp petTodoReq.PetTodoInfo
 	err := c.ShouldBindJSON(&petTodoResp)
@@ -84,7 +84,7 @@ func (e *PetTodoApi) CreatePetTodo(c *gin.Context) {
 // @Produce   application/json
 // @Param     petTodoID  path      int             true  "宠物待办ID"
 // @Success   200   {object}  response.Response{msg=string}  "删除宠物待办"
-// @Router    /api/pet-todo/:petTodoID [delete]
+// @Router    /pet-todo/:petTodoID [delete]
 func (e *PetTodoApi) DeletePetTodo(c *gin.Context) {
 	var petTodo petTodoModel.PetTodoInfo
 	todoIdStr := c.Param("petTodoID")
@@ -117,7 +117,7 @@ func (e *PetTodoApi) DeletePetTodo(c *gin.Context) {
 // @Param     petTodoID  path      int             true  "宠物待办ID"
 // @Param     data  body      petTodo.PetTodoInfo            true  "宠物待办信息"
 // @Success   200   {object}  response.Response{msg=string}  "更新宠物待办信息"
-// @Router    /api/pet-todo/:petTodoID [put]
+// @Router    /pet-todo/:petTodoID [put]
 func (e *PetTodoApi) UpdatePetTodo(c *gin.Context) {
 	var petTodoResp petTodoReq.PetTodoInfo
 	todoIdStr := c.Param("petTodoID")
@@ -189,7 +189,7 @@ func (e *PetTodoApi) UpdatePetTodo(c *gin.Context) {
 // @Produce   application/json
 // @Param     petTodoID  path      int             true  "宠物待办ID"
 // @Success   200   {object}  response.Response{data=response.PetTodoInfoResponse,msg=string}  "获取单一宠物信息"
-// @Router    /api/pet-todo/:petTodoID [get]
+// @Router    /pet-todo/:petTodoID [get]
 func (e *PetTodoApi) GetPetTodo(c *gin.Context) {
 	todoIdStr := c.Param("petTodoID")
 	petTodoID, err := strconv.ParseUint(todoIdStr, 10, 64)
@@ -215,7 +215,7 @@ func (e *PetTodoApi) GetPetTodo(c *gin.Context) {
 // @Produce   application/json
 // @Param     data  query     request.PetTodoCondition  true  "条件"
 // @Success   200   {object}  response.Response{data=response.PageResult,msg=string}  "分页获取权限客户列表,返回包括列表,总数,页码,每页数量"
-// @Router    /api/pet-todos [get]
+// @Router    /pet-todos [get]
 func (e *PetTodoApi) GetPetTodoList(c *gin.Context) {
 	var pageInfo petTodoReq.PetTodoCondition
 	err := c.ShouldBindQuery(&pageInfo)
@@ -254,7 +254,7 @@ func (e *PetTodoApi) GetPetTodoList(c *gin.Context) {
 // @accept    application/json
 // @Produce   application/json
 // @Success   200   {object}  response.Response{data=response.PageResult,msg=string}  "分页获取权限客户列表,返回包括列表,总数,页码,每页数量"
-// @Router    /api/pet-todos/mark [post]
+// @Router    /pet-todos/mark [post]
 func (e *PetTodoApi) GetPetTodoMarkList(c *gin.Context) {
 	var dates petTodoReq.PetTodoMarkCondition
 	err := c.ShouldBindJSON(&dates)
@@ -297,7 +297,7 @@ func (e *PetTodoApi) GetPetTodoMarkList(c *gin.Context) {
 // @Param     petTodoID  path      int             true  "宠物待办ID"
 // @Param     data  body      petTodo.PetTodoInfo            true  "宠物待办信息"
 // @Success   200   {object}  response.Response{msg=string}  "更新宠物待办信息"
-// @Router    /api/pet-todos/:petTodoID/complete [put]
+// @Router    /pet-todos/:petTodoID/complete [put]
 func (e *PetTodoApi) UpdatePetTodoComplete(c *gin.Context) {
 	var petTodoComplete petTodoReq.PetTodoComplete
 	todoIdStr := c.Param("petTodoID")
@@ -336,7 +336,7 @@ func (e *PetTodoApi) UpdatePetTodoComplete(c *gin.Context) {
 // @Produce   application/json
 // @Param     content  query      request.SearchCondition    true  "搜索内容"
 // @Success   200   {object}  response.Response{data=petTodo.SimplePetTodoInfo,msg=string}  "查询宠物待办信息"
-// @Router    /api/pet-todos/infos [get]
+// @Router    /pet-todos/infos [get]
 func (e *PetTodoApi) SearchPetTodo(c *gin.Context) {
 	var params petTodoReq.SearchCondition
 	err := c.BindQuery(&params)

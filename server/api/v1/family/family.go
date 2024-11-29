@@ -17,7 +17,7 @@ type FamilyApi struct{}
 // @Tags      Family
 // @Summary   获取家庭成员列表
 // @Success   200   {object}  response.Response{msg=string}  "家庭成员列表"
-// @Router    /api/family/members [get]
+// @Router    /family/members [get]
 func (e *FamilyApi) GetFamilyMembers(c *gin.Context) {
 	familyId := utils.GetUserFamilyID(c)
 	members, err := familyService.GetFamilyMembers(familyId)
@@ -34,7 +34,7 @@ func (e *FamilyApi) GetFamilyMembers(c *gin.Context) {
 // @Tags      Family
 // @Summary   删除家庭成员
 // @Success   200   {object}  response.Response{msg=string}  "删除结果"
-// @Router    /api/family/member/:memberId [delete]
+// @Router    /family/member/:memberId [delete]
 func (e *FamilyApi) DeleteFamilyMember(c *gin.Context) {
 	memberIdStr := c.Param("memberId")
 	memberId, err := strconv.ParseUint(memberIdStr, 10, 64)
@@ -60,7 +60,7 @@ func (e *FamilyApi) DeleteFamilyMember(c *gin.Context) {
 // @Tags      Family
 // @Summary   转让家庭管理权限
 // @Success   200   {object}  response.Response{msg=string}  "转让结果"
-// @Router    /api/family/member/:memberId [post]
+// @Router    /family/member/:memberId [post]
 func (e *FamilyApi) GrantFamilyManagePermission(c *gin.Context) {
 	memberIdStr := c.Param("memberId")
 	memberId, err := strconv.ParseUint(memberIdStr, 10, 64)
@@ -83,7 +83,7 @@ func (e *FamilyApi) GrantFamilyManagePermission(c *gin.Context) {
 // @Tags      Family
 // @Summary   加入家庭
 // @Success   200   {object}  response.Response{msg=string}  "加入结果"
-// @Router    /api/family/join/:familyId [post]
+// @Router    /family/join/:familyId [post]
 func (e *FamilyApi) JoinFamily(c *gin.Context) {
 	familyIdStr := c.Param("familyId")
 	familyId, err := strconv.ParseUint(familyIdStr, 10, 64)
@@ -119,7 +119,7 @@ func (e *FamilyApi) JoinFamily(c *gin.Context) {
 		} else {
 			needRemoveFamily = true
 		}
-	} 
+	}
 
 	// 更新用户家庭
 	userInfo.FamilyId = uint(familyId)

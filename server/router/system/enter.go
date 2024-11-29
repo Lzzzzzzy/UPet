@@ -6,6 +6,7 @@ type RouterGroup struct {
 	InitRouter
 	DictionaryDetailRouter
 	FileRouter
+	SystemRouter
 }
 
 var (
@@ -13,4 +14,5 @@ var (
 	dictionaryDetailApi = api.ApiGroupApp.SystemApiGroup.DictionaryDetailApi
 	dictionaryApi       = api.ApiGroupApp.SystemApiGroup.DictionaryApi
 	fileApi             = api.ApiGroupApp.SystemApiGroup.FileApi
+	systemApi           = api.ApiGroupApp.SystemApiGroup.SystemApi
 )

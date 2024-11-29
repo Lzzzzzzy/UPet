@@ -20,7 +20,7 @@ type AuthApi struct{}
 // @Produce   application/json
 // @Param     data  body      authReq.AuthInfo            true  "微信签发的code"
 // @Success   200   {object}  response.Response{msg=string}  "用户登录或注册"
-// @Router    /api/auth [post]
+// @Router    /auth [post]
 func (e *AuthApi) UserAuth(c *gin.Context) {
 	var authInfo authReq.AuthInfo
 	err := c.ShouldBindJSON(&authInfo)

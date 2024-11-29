@@ -15,7 +15,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/api/auth": {
+        "/auth": {
             "post": {
                 "consumes": [
                     "application/json"
@@ -60,7 +60,66 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/family/join/:familyId": {
+        "/email/emailTest": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "System"
+                ],
+                "summary": "发送测试邮件",
+                "responses": {
+                    "200": {
+                        "description": "{\"success\":true,\"data\":{},\"msg\":\"发送成功\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/email/sendEmail": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "System"
+                ],
+                "summary": "发送邮件",
+                "parameters": [
+                    {
+                        "description": "发送邮件必须的参数",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/response.Email"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "{\"success\":true,\"data\":{},\"msg\":\"发送成功\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/family/join/:familyId": {
             "post": {
                 "tags": [
                     "Family"
@@ -88,7 +147,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/family/member/:memberId": {
+        "/family/member/:memberId": {
             "post": {
                 "tags": [
                     "Family"
@@ -142,7 +201,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/family/members": {
+        "/family/members": {
             "get": {
                 "tags": [
                     "Family"
@@ -170,7 +229,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/file": {
+        "/file": {
             "post": {
                 "consumes": [
                     "multipart/form-data"
@@ -219,7 +278,84 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/pet": {
+        "/init/checkdb": {
+            "post": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "CheckDB"
+                ],
+                "summary": "初始化用户数据库",
+                "responses": {
+                    "200": {
+                        "description": "初始化用户数据库",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "object",
+                                            "additionalProperties": true
+                                        },
+                                        "msg": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/init/initdb": {
+            "post": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "InitDB"
+                ],
+                "summary": "初始化用户数据库",
+                "parameters": [
+                    {
+                        "description": "初始化数据库参数",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.InitDB"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "初始化用户数据库",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/pet": {
             "post": {
                 "security": [
                     {
@@ -269,7 +405,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/pet-todo": {
+        "/pet-todo": {
             "post": {
                 "security": [
                     {
@@ -319,7 +455,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/pet-todo/:petTodoID": {
+        "/pet-todo/:petTodoID": {
             "get": {
                 "security": [
                     {
@@ -471,7 +607,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/pet-todos": {
+        "/pet-todos": {
             "get": {
                 "security": [
                     {
@@ -527,7 +663,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/pet-todos/:petTodoID/complete": {
+        "/pet-todos/:petTodoID/complete": {
             "put": {
                 "security": [
                     {
@@ -584,7 +720,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/pet-todos/infos": {
+        "/pet-todos/infos": {
             "get": {
                 "security": [
                     {
@@ -634,7 +770,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/pet-todos/mark": {
+        "/pet-todos/mark": {
             "post": {
                 "security": [
                     {
@@ -676,7 +812,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/pet/:petID": {
+        "/pet/:petID": {
             "get": {
                 "security": [
                     {
@@ -893,7 +1029,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/pets": {
+        "/pets": {
             "get": {
                 "security": [
                     {
@@ -928,227 +1064,6 @@ const docTemplate = `{
                                             }
                                         },
                                         "msg": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                }
-            }
-        },
-        "/api/user": {
-            "put": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "User"
-                ],
-                "summary": "完善用户信息",
-                "parameters": [
-                    {
-                        "description": "用户信息",
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/request.UserInfo"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "用户信息保存结果",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/response.Response"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "msg": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                }
-            }
-        },
-        "/api/user/:id": {
-            "get": {
-                "tags": [
-                    "User"
-                ],
-                "summary": "查询用户信息",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "用户id",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "用户信息",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/response.Response"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        " msg": {
-                                            "type": "string"
-                                        },
-                                        "data": {
-                                            "$ref": "#/definitions/request.UserInfo"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                }
-            }
-        },
-        "/email/emailTest": {
-            "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "System"
-                ],
-                "summary": "发送测试邮件",
-                "responses": {
-                    "200": {
-                        "description": "{\"success\":true,\"data\":{},\"msg\":\"发送成功\"}",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            }
-        },
-        "/email/sendEmail": {
-            "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "System"
-                ],
-                "summary": "发送邮件",
-                "parameters": [
-                    {
-                        "description": "发送邮件必须的参数",
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/response.Email"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "{\"success\":true,\"data\":{},\"msg\":\"发送成功\"}",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            }
-        },
-        "/init/checkdb": {
-            "post": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "CheckDB"
-                ],
-                "summary": "初始化用户数据库",
-                "responses": {
-                    "200": {
-                        "description": "初始化用户数据库",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/response.Response"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
-                                            "type": "object",
-                                            "additionalProperties": true
-                                        },
-                                        "msg": {
-                                            "type": "string"
-                                        }
-                                    }
-                                }
-                            ]
-                        }
-                    }
-                }
-            }
-        },
-        "/init/initdb": {
-            "post": {
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "InitDB"
-                ],
-                "summary": "初始化用户数据库",
-                "parameters": [
-                    {
-                        "description": "初始化数据库参数",
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/request.InitDB"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "初始化用户数据库",
-                        "schema": {
-                            "allOf": [
-                                {
-                                    "$ref": "#/definitions/response.Response"
-                                },
-                                {
-                                    "type": "object",
-                                    "properties": {
-                                        "data": {
                                             "type": "string"
                                         }
                                     }
@@ -2369,6 +2284,91 @@ const docTemplate = `{
                                     "properties": {
                                         "data": {
                                             "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/user": {
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "User"
+                ],
+                "summary": "完善用户信息",
+                "parameters": [
+                    {
+                        "description": "用户信息",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/request.UserInfo"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "用户信息保存结果",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "msg": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/user/:id": {
+            "get": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "查询用户信息",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "用户id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "用户信息",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        " msg": {
+                                            "type": "string"
+                                        },
+                                        "data": {
+                                            "$ref": "#/definitions/request.UserInfo"
                                         }
                                     }
                                 }

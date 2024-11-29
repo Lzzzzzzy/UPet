@@ -82,11 +82,14 @@ func Routers() *gin.Engine {
 		authRouter.InitAuthRouter(PublicGroup) //用户注册路由 不做鉴权
 	}
 	{
-		petRouter.InitPetRouter(PrivateGroup)         // 宠物管理路由
-		petTodoRouter.InitPetTodoRouter(PrivateGroup) // 待办事项路由
-		userRouter.InitUserRouter(PrivateGroup)       // 用户相关路由
-		systemRouter.InitFileRouter(PrivateGroup)     //文件相关路由
-		familyRouter.InitFamilyRouter(PrivateGroup)   //家庭相关路由
+		petRouter.InitPetRouter(PrivateGroup)                    // 宠物管理路由
+		petTodoRouter.InitPetTodoRouter(PrivateGroup)            // 待办事项路由
+		userRouter.InitUserRouter(PrivateGroup)                  // 用户相关路由
+		systemRouter.InitFileRouter(PrivateGroup)                //文件相关路由
+		familyRouter.InitFamilyRouter(PrivateGroup)              //家庭相关路由
+		systemRouter.InitInitRouter(PrivateGroup)                //初始化相关路由
+		systemRouter.InitSystemRouter(PrivateGroup)              //系统API路由
+		systemRouter.InitSysDictionaryDetailRouter(PrivateGroup) // 字典详情路由
 	}
 
 	//插件路由安装

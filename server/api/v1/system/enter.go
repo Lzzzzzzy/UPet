@@ -7,6 +7,7 @@ type ApiGroup struct {
 	DictionaryDetailApi
 	FileApi
 	DictionaryApi
+	SystemApi
 }
 
 var (

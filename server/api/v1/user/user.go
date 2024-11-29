@@ -18,7 +18,7 @@ type UserApi struct{}
 // @Produce   application/json
 // @Param     data  body      request.UserInfo            true  "用户信息"
 // @Success   200   {object}  response.Response{msg=string}  "用户信息保存结果"
-// @Router    /api/user [put]
+// @Router    /user [put]
 func (e *UserApi) UserInfoComplete(c *gin.Context) {
 	var userInfo userReq.UserInfo
 	err := c.ShouldBindJSON(&userInfo)
@@ -53,7 +53,7 @@ func (e *UserApi) UserInfoComplete(c *gin.Context) {
 // @Summary   查询用户信息
 // @Param     id  path      int            true  "用户id"
 // @Success   200   {object}  response.Response{data=request.UserInfo, msg=string}  "用户信息"
-// @Router    /api/user/:id [get]
+// @Router    /user/:id [get]
 func (e *UserApi) GetUser(c *gin.Context) {
 	userIdStr := c.Param("id")
 	userId, err := strconv.ParseUint(userIdStr, 10, 64)

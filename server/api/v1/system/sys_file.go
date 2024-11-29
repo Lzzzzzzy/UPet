@@ -17,7 +17,7 @@ type FileApi struct{}
 // @Produce   application/json
 // @Param     file  formData      file    true  "文件内容"
 // @Success   200   {object}  response.Response{data=map[string]string, msg=string}  "用户登录或注册"
-// @Router    /api/file [post]
+// @Router    /file [post]
 func (e *FileApi) UploadFile(c *gin.Context) {
 	var file file.FileInfo
 	noSave := c.DefaultQuery("noSave", "0")

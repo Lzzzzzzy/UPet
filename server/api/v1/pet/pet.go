@@ -21,7 +21,7 @@ type PetApi struct{}
 // @Produce   application/json
 // @Param     data  body      pet.PetInfo            true  "宠物信息"
 // @Success   200   {object}  response.Response{msg=string}  "创建宠物"
-// @Router    /api/pet [post]
+// @Router    /pet [post]
 func (e *PetApi) CreatePetInfo(c *gin.Context) {
 	var petInfo pet.PetInfo
 	err := c.ShouldBindJSON(&petInfo)
@@ -55,7 +55,7 @@ func (e *PetApi) CreatePetInfo(c *gin.Context) {
 // @Produce   application/json
 // @Param     petID  path      int             true  "宠物ID"
 // @Success   200   {object}  response.Response{msg=string}  "删除宠物"
-// @Router    /api/pet/:petID [delete]
+// @Router    /pet/:petID [delete]
 func (e *PetApi) DeletePetInfo(c *gin.Context) {
 	var petInfo pet.PetInfo
 	petIdStr := c.Param("petID")
@@ -88,7 +88,7 @@ func (e *PetApi) DeletePetInfo(c *gin.Context) {
 // @Param     petID  path      int             true  "宠物ID"
 // @Param     data  body      pet.PetInfo            true  "宠物信息"
 // @Success   200   {object}  response.Response{msg=string}  "更新宠物信息"
-// @Router    /api/pet/:petID [put]
+// @Router    /pet/:petID [put]
 func (e *PetApi) UpdatePetInfo(c *gin.Context) {
 	var petInfo pet.PetInfo
 	petIdStr := c.Param("petID")
@@ -142,7 +142,7 @@ func (e *PetApi) UpdatePetInfo(c *gin.Context) {
 // @Produce   application/json
 // @Param     data  query     pet.PetInfo    true  "宠物ID"
 // @Success   200   {object}  response.Response{data=pet.PetInfo,msg=string}  "获取单一宠物信息"
-// @Router    /api/pet/:petID [get]
+// @Router    /pet/:petID [get]
 func (e *PetApi) GetPetInfo(c *gin.Context) {
 	var petInfo pet.PetInfo
 	petIdStr := c.Param("petID")
@@ -173,7 +173,7 @@ func (e *PetApi) GetPetInfo(c *gin.Context) {
 // @accept    application/json
 // @Produce   application/json
 // @Success   200   {object}  response.Response{data=[]response.PetInfoResponse,msg=string}  "获取宠物信息列表"
-// @Router    /api/pets [get]
+// @Router    /pets [get]
 func (e *PetApi) GetPetInfoList(c *gin.Context) {
 	petList, err := petService.GetPetInfoList(utils.GetUserFamilyID(c))
 	if err != nil {
