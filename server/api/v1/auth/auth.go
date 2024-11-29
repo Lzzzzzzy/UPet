@@ -18,7 +18,7 @@ type AuthApi struct{}
 // @Summary   微信第三方登录
 // @accept    application/json
 // @Produce   application/json
-// @Param     data  body      auth.AuthInfo            true  "微信签发的code"
+// @Param     data  body      authReq.AuthInfo            true  "微信签发的code"
 // @Success   200   {object}  response.Response{msg=string}  "用户登录或注册"
 // @Router    /api/auth [post]
 func (e *AuthApi) UserAuth(c *gin.Context) {

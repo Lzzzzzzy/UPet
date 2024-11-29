@@ -172,7 +172,7 @@ func (e *PetApi) GetPetInfo(c *gin.Context) {
 // @Security  ApiKeyAuth
 // @accept    application/json
 // @Produce   application/json
-// @Success   200   {object}  response.Response{data=[]petResp.PetInfoResponse,msg=string}  "分页获取权限客户列表,返回包括列表,总数,页码,每页数量"
+// @Success   200   {object}  response.Response{data=[]response.PetInfoResponse,msg=string}  "获取宠物信息列表"
 // @Router    /api/pets [get]
 func (e *PetApi) GetPetInfoList(c *gin.Context) {
 	petList, err := petService.GetPetInfoList(utils.GetUserFamilyID(c))

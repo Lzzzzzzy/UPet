@@ -1,4 +1,9 @@
 definitions:
+  common.CustomTime:
+    properties:
+      time.Time:
+        type: string
+    type: object
   config.AliyunOSS:
     properties:
       access-key-id:
@@ -16,33 +21,15 @@ definitions:
     type: object
   config.Autocode:
     properties:
+      ai-path:
+        type: string
+      module:
+        type: string
       root:
         type: string
       server:
         type: string
-      server-api:
-        type: string
-      server-initialize:
-        type: string
-      server-model:
-        type: string
-      server-plug:
-        type: string
-      server-request:
-        type: string
-      server-router:
-        type: string
-      server-service:
-        type: string
-      transfer-restart:
-        type: boolean
       web:
-        type: string
-      web-api:
-        type: string
-      web-form:
-        type: string
-      web-table:
         type: string
     type: object
   config.AwsS3:
@@ -444,7 +431,7 @@ definitions:
           $ref: '#/definitions/config.DiskList'
         type: array
       email:
-        $ref: '#/definitions/github_com_flipped-aurora_gin-vue-admin_server_config.Email'
+        $ref: '#/definitions/github_com_Lzzzzzzy_UPet_server_config.Email'
       excel:
         $ref: '#/definitions/config.Excel'
       hua-wei-obs:
@@ -477,6 +464,10 @@ definitions:
         $ref: '#/definitions/config.System'
       tencent-cos:
         $ref: '#/definitions/config.TencentCOS'
+      wechat:
+        allOf:
+        - $ref: '#/definitions/config.Wechat'
+        description: 微信小程序
       zap:
         $ref: '#/definitions/config.Zap'
     type: object
@@ -614,6 +605,22 @@ definitions:
       secret-key:
         type: string
     type: object
+  config.Wechat:
+    properties:
+      miniprogram:
+        allOf:
+        - $ref: '#/definitions/config.WechatMiniprogram'
+        description: 小程序配置
+    type: object
+  config.WechatMiniprogram:
+    properties:
+      app-id:
+        description: 微信appid
+        type: string
+      app-secret:
+        description: 微信app secret
+        type: string
+    type: object
   config.Zap:
     properties:
       director:
@@ -644,103 +651,7 @@ definitions:
         description: 栈名
         type: string
     type: object
-  example.ExaCustomer:
-    properties:
-      ID:
-        description: 主键ID
-        type: integer
-      createdAt:
-        description: 创建时间
-        type: string
-      customerName:
-        description: 客户名
-        type: string
-      customerPhoneData:
-        description: 客户手机号
-        type: string
-      sysUser:
-        allOf:
-        - $ref: '#/definitions/system.SysUser'
-        description: 管理详情
-      sysUserAuthorityID:
-        description: 管理角色ID
-        type: integer
-      sysUserId:
-        description: 管理ID
-        type: integer
-      updatedAt:
-        description: 更新时间
-        type: string
-    type: object
-  example.ExaFile:
-    properties:
-      ID:
-        description: 主键ID
-        type: integer
-      chunkTotal:
-        type: integer
-      createdAt:
-        description: 创建时间
-        type: string
-      exaFileChunk:
-        items:
-          $ref: '#/definitions/example.ExaFileChunk'
-        type: array
-      fileMd5:
-        type: string
-      fileName:
-        type: string
-      filePath:
-        type: string
-      isFinish:
-        type: boolean
-      updatedAt:
-        description: 更新时间
-        type: string
-    type: object
-  example.ExaFileChunk:
-    properties:
-      ID:
-        description: 主键ID
-        type: integer
-      createdAt:
-        description: 创建时间
-        type: string
-      exaFileID:
-        type: integer
-      fileChunkNumber:
-        type: integer
-      fileChunkPath:
-        type: string
-      updatedAt:
-        description: 更新时间
-        type: string
-    type: object
-  example.ExaFileUploadAndDownload:
-    properties:
-      ID:
-        description: 主键ID
-        type: integer
-      createdAt:
-        description: 创建时间
-        type: string
-      key:
-        description: 编号
-        type: string
-      name:
-        description: 文件名
-        type: string
-      tag:
-        description: 文件标签
-        type: string
-      updatedAt:
-        description: 更新时间
-        type: string
-      url:
-        description: 文件地址
-        type: string
-    type: object
-  github_com_flipped-aurora_gin-vue-admin_server_config.Email:
+  github_com_Lzzzzzzy_UPet_server_config.Email:
     properties:
       from:
         description: 发件人  你自己要发邮件的邮箱
@@ -764,57 +675,135 @@ definitions:
         description: 收件人:多个以英文逗号分隔 例：a@qq.com b@qq.com 正式开发中请把此项目作为参数使用
         type: string
     type: object
-  request.AddMenuAuthorityInfo:
+  pet.PetInfo:
     properties:
-      authorityId:
-        description: 角色ID
+      avatar:
+        description: 宠物头像
+        type: string
+      birthday:
+        description: 宠物生日
+        type: string
+      category:
+        description: 宠物类型
         type: integer
-      menus:
-        items:
-          $ref: '#/definitions/system.SysBaseMenu'
-        type: array
-    type: object
-  request.CasbinInReceive:
-    properties:
-      authorityId:
-        description: 权限id
+      createdAt:
+        description: 创建时间
+        type: string
+      createdBy:
+        description: 创建人
         type: integer
-      casbinInfos:
-        items:
-          $ref: '#/definitions/request.CasbinInfo'
-        type: array
-    type: object
-  request.CasbinInfo:
-    properties:
-      method:
-        description: 方法
-        type: string
-      path:
-        description: 路径
-        type: string
-    type: object
-  request.ChangePasswordReq:
-    properties:
-      newPassword:
-        description: 新密码
-        type: string
-      password:
-        description: 密码
-        type: string
-    type: object
-  request.Empty:
-    type: object
-  request.GetAuthorityId:
-    properties:
-      authorityId:
-        description: 角色ID
+      familyId:
+        description: 所属家庭id
         type: integer
-    type: object
-  request.GetById:
-    properties:
+      gender:
+        description: 宠物性别
+        type: integer
       id:
         description: 主键ID
         type: integer
+      name:
+        description: 宠物名
+        type: string
+      sterilizedState:
+        description: 宠物绝育状态
+        type: integer
+      updatedAt:
+        description: 更新时间
+        type: string
+      updatedBy:
+        description: 更新人
+        type: integer
+    type: object
+  petTodo.PetTodoInfo:
+    properties:
+      color:
+        description: 背景颜色
+        type: integer
+      complete:
+        description: 是否完成，0：否，1：是
+        type: boolean
+      createdAt:
+        description: 创建时间
+        type: string
+      createdBy:
+        description: 创建人
+        type: integer
+      familyId:
+        description: 家庭ID
+        type: integer
+      id:
+        description: 主键ID
+        type: integer
+      petId:
+        description: 宠物ID
+        type: integer
+      remark:
+        description: 备注
+        type: string
+      remind:
+        description: 是否提醒， 0：否，1：是
+        type: boolean
+      remindTime:
+        allOf:
+        - $ref: '#/definitions/common.CustomTime'
+        description: 提醒时间
+      title:
+        description: 标题
+        type: string
+      todoTime:
+        allOf:
+        - $ref: '#/definitions/common.CustomTime'
+        description: 待办时间
+      type:
+        description: 提醒类型， 0：日常记录， 1：待办事项
+        type: integer
+      updatedAt:
+        description: 更新时间
+        type: string
+      updatedBy:
+        description: 更新人
+        type: integer
+    type: object
+  petTodo.SimplePetTodoInfo:
+    properties:
+      color:
+        description: 背景颜色
+        type: integer
+      complete:
+        description: 是否完成，0：否，1：是
+        type: boolean
+      id:
+        description: 主键ID
+        type: integer
+      petId:
+        description: 宠物ID
+        type: integer
+      remark:
+        description: 备注
+        type: string
+      remind:
+        description: 是否提醒， 0：否，1：是
+        type: boolean
+      remindTime:
+        allOf:
+        - $ref: '#/definitions/common.CustomTime'
+        description: 提醒时间
+      title:
+        description: 标题
+        type: string
+      todoTime:
+        allOf:
+        - $ref: '#/definitions/common.CustomTime'
+        description: 待办时间
+      type:
+        description: 提醒类型， 0：日常记录， 1：待办事项
+        type: integer
+    type: object
+  request.AuthInfo:
+    properties:
+      code:
+        description: 微信签发的code
+        type: string
     type: object
   request.IdsReq:
     properties:
@@ -852,155 +841,56 @@ definitions:
     - adminPassword
     - dbName
     type: object
-  request.Login:
+  request.PetTodoInfo:
     properties:
-      captcha:
-        description: 验证码
-        type: string
-      captchaId:
-        description: 验证码ID
-        type: string
-      password:
-        description: 密码
-        type: string
-      username:
-        description: 用户名
-        type: string
-    type: object
-  request.PageInfo:
-    properties:
-      keyword:
-        description: 关键字
-        type: string
-      page:
-        description: 页码
+      color:
+        description: 背景颜色
         type: integer
-      pageSize:
-        description: 每页大小
-        type: integer
-    type: object
-  request.Register:
-    properties:
-      authorityId:
-        example: int 角色id
-        type: string
-      authorityIds:
-        example: '[]uint 角色id'
-        type: string
-      email:
-        example: 电子邮箱
-        type: string
-      enable:
-        example: int 是否启用
-        type: string
-      headerImg:
-        example: 头像链接
-        type: string
-      nickName:
-        example: 昵称
-        type: string
-      passWord:
-        example: 密码
-        type: string
-      phone:
-        example: 电话号码
-        type: string
-      userName:
-        example: 用户名
-        type: string
-    type: object
-  request.RollBack:
-    properties:
-      deleteApi:
-        description: 是否删除接口
+      complete:
+        description: 是否完成，0：否，1：是
         type: boolean
-      deleteMenu:
-        description: 是否删除菜单
+      petId:
+        description: 宠物ID
+        type: integer
+      remark:
+        description: 备注
+        type: string
+      remind:
+        description: 是否提醒， 0：否，1：是
         type: boolean
-      deleteTable:
-        description: 是否删除表
-        type: boolean
-      id:
-        description: 主键ID
-        type: integer
-    type: object
-  request.SearchApiParams:
-    properties:
-      ID:
-        description: 主键ID
-        type: integer
-      apiGroup:
-        description: api组
-        type: string
-      createdAt:
-        description: 创建时间
-        type: string
-      desc:
-        description: 排序方式:升序false(默认)|降序true
-        type: boolean
-      description:
-        description: api中文描述
-        type: string
-      keyword:
-        description: 关键字
-        type: string
-      method:
-        description: 方法:创建POST(默认)|查看GET|更新PUT|删除DELETE
-        type: string
-      orderKey:
-        description: 排序
-        type: string
-      page:
-        description: 页码
-        type: integer
-      pageSize:
-        description: 每页大小
-        type: integer
-      path:
-        description: api路径
-        type: string
-      updatedAt:
-        description: 更新时间
-        type: string
-    type: object
-  request.SetUserAuth:
-    properties:
-      authorityId:
-        description: 角色ID
-        type: integer
-    type: object
-  request.SetUserAuthorities:
-    properties:
-      authorityIds:
-        description: 角色ID
+      remindDate:
+        description: 提醒日期
         items:
-          type: integer
+          type: string
         type: array
-      id:
-        type: integer
-    type: object
-  request.SysAuthorityBtnReq:
-    properties:
-      authorityId:
-        type: integer
-      menuID:
-        type: integer
-      selected:
-        items:
-          type: integer
-        type: array
-    type: object
-  request.SysAutoHistory:
-    properties:
-      keyword:
-        description: 关键字
+      remindTime:
+        description: 提醒时间
         type: string
-      page:
-        description: 页码
+      title:
+        description: 标题
+        type: string
+      todoTime:
+        allOf:
+        - $ref: '#/definitions/common.CustomTime'
+        description: 待办时间
+      type:
+        description: 提醒类型， 0：日常记录， 1：待办事项
         type: integer
-      pageSize:
-        description: 每页大小
+    type: object
+  request.UserInfo:
+    properties:
+      avatar:
+        description: 用户头像url
+        type: string
+      id:
+        description: 用户ID
         type: integer
+      isAdmin:
+        description: 是否为管理员
+        type: boolean
+      nickname:
+        description: 昵称
+        type: string
     type: object
   response.Email:
     properties:
@@ -1014,35 +904,6 @@ definitions:
         description: 邮件发送给谁
         type: string
     type: object
-  response.ExaCustomerResponse:
-    properties:
-      customer:
-        $ref: '#/definitions/example.ExaCustomer'
-    type: object
-  response.ExaFileResponse:
-    properties:
-      file:
-        $ref: '#/definitions/example.ExaFileUploadAndDownload'
-    type: object
-  response.FilePathResponse:
-    properties:
-      filePath:
-        type: string
-    type: object
-  response.FileResponse:
-    properties:
-      file:
-        $ref: '#/definitions/example.ExaFile'
-    type: object
-  response.LoginResponse:
-    properties:
-      expiresAt:
-        type: integer
-      token:
-        type: string
-      user:
-        $ref: '#/definitions/system.SysUser'
-    type: object
   response.PageResult:
     properties:
       list: {}
@@ -1053,12 +914,34 @@ definitions:
       total:
         type: integer
     type: object
-  response.PolicyPathResponse:
+  response.PetInfoResponse:
     properties:
-      paths:
-        items:
-          $ref: '#/definitions/request.CasbinInfo'
-        type: array
+      avatar:
+        description: 宠物头像
+        type: string
+      birthday:
+        description: 宠物生日
+        type: string
+      category:
+        description: 宠物类型
+        type: integer
+      gender:
+        description: 宠物性别
+        type: integer
+      id:
+        description: 宠物头像
+        type: integer
+      name:
+        description: 宠物名
+        type: string
+      sterilizedState:
+        description: 宠物绝育状态
+        type: integer
+    type: object
+  response.PetTodoInfoResponse:
+    properties:
+      petTodos:
+        $ref: '#/definitions/petTodo.PetTodoInfo'
     type: object
   response.Response:
     properties:
@@ -1068,240 +951,10 @@ definitions:
       msg:
         type: string
     type: object
-  response.SysAPIListResponse:
-    properties:
-      apis:
-        items:
-          $ref: '#/definitions/system.SysApi'
-        type: array
-    type: object
-  response.SysAPIResponse:
-    properties:
-      api:
-        $ref: '#/definitions/system.SysApi'
-    type: object
-  response.SysAuthorityBtnRes:
-    properties:
-      selected:
-        items:
-          type: integer
-        type: array
-    type: object
-  response.SysAuthorityCopyResponse:
-    properties:
-      authority:
-        $ref: '#/definitions/system.SysAuthority'
-      oldAuthorityId:
-        description: 旧角色ID
-        type: integer
-    type: object
-  response.SysAuthorityResponse:
-    properties:
-      authority:
-        $ref: '#/definitions/system.SysAuthority'
-    type: object
-  response.SysBaseMenuResponse:
-    properties:
-      menu:
-        $ref: '#/definitions/system.SysBaseMenu'
-    type: object
-  response.SysBaseMenusResponse:
-    properties:
-      menus:
-        items:
-          $ref: '#/definitions/system.SysBaseMenu'
-        type: array
-    type: object
-  response.SysCaptchaResponse:
-    properties:
-      captchaId:
-        type: string
-      captchaLength:
-        type: integer
-      openCaptcha:
-        type: boolean
-      picPath:
-        type: string
-    type: object
   response.SysConfigResponse:
     properties:
       config:
         $ref: '#/definitions/config.Server'
-    type: object
-  response.SysMenusResponse:
-    properties:
-      menus:
-        items:
-          $ref: '#/definitions/system.SysMenu'
-        type: array
-    type: object
-  response.SysUserResponse:
-    properties:
-      user:
-        $ref: '#/definitions/system.SysUser'
-    type: object
-  system.AutoCodeStruct:
-    properties:
-      abbreviation:
-        description: Struct简称
-        type: string
-      autoCreateApiToSql:
-        description: 是否自动创建api
-        type: boolean
-      autoCreateMenuToSql:
-        description: 是否自动创建menu
-        type: boolean
-      autoCreateResource:
-        description: 是否自动创建资源标识
-        type: boolean
-      autoMigrate:
-        description: 是否自动迁移表结构
-        type: boolean
-      businessDB:
-        description: 业务数据库
-        type: string
-      description:
-        description: Struct中文名称
-        type: string
-      fields:
-        items:
-          $ref: '#/definitions/system.Field'
-        type: array
-      gvaModel:
-        description: 是否使用gva默认Model
-        type: boolean
-      humpPackageName:
-        description: go文件名称
-        type: string
-      package:
-        type: string
-      packageName:
-        description: 文件名称
-        type: string
-      primaryField:
-        $ref: '#/definitions/system.Field'
-      structName:
-        description: Struct名称
-        type: string
-      tableName:
-        description: 表名
-        type: string
-    type: object
-  system.Condition:
-    properties:
-      ID:
-        description: 主键ID
-        type: integer
-      column:
-        type: string
-      createdAt:
-        description: 创建时间
-        type: string
-      from:
-        type: string
-      operator:
-        type: string
-      templateID:
-        type: string
-      updatedAt:
-        description: 更新时间
-        type: string
-    type: object
-  system.DataSource:
-    properties:
-      association:
-        description: 关联关系 1 一对一 2 一对多
-        type: integer
-      label:
-        type: string
-      table:
-        type: string
-      value:
-        type: string
-    type: object
-  system.Field:
-    properties:
-      checkDataSource:
-        description: 是否检查数据源
-        type: boolean
-      clearable:
-        description: 是否可清空
-        type: boolean
-      columnName:
-        description: 数据库字段
-        type: string
-      comment:
-        description: 数据库字段描述
-        type: string
-      dataSource:
-        allOf:
-        - $ref: '#/definitions/system.DataSource'
-        description: 数据源
-      dataTypeLong:
-        description: 数据库字段长度
-        type: string
-      defaultValue:
-        description: 是否必填
-        type: string
-      dictType:
-        description: 字典
-        type: string
-      errorText:
-        description: 校验失败文字
-        type: string
-      fieldDesc:
-        description: 中文名
-        type: string
-      fieldIndexType:
-        description: 索引类型
-        type: string
-      fieldJson:
-        description: FieldJson
-        type: string
-      fieldName:
-        description: Field名
-        type: string
-      fieldSearchHide:
-        description: 是否隐藏查询条件
-        type: boolean
-      fieldSearchType:
-        description: 搜索条件
-        type: string
-      fieldType:
-        description: Field数据类型
-        type: string
-      front:
-        description: 是否前端可见
-        type: boolean
-      primaryKey:
-        description: 是否主键
-        type: boolean
-      require:
-        description: 是否必填
-        type: boolean
-      sort:
-        description: 是否增加排序
-        type: boolean
-    type: object
-  system.JoinTemplate:
-    properties:
-      ID:
-        description: 主键ID
-        type: integer
-      createdAt:
-        description: 创建时间
-        type: string
-      joins:
-        type: string
-      "on":
-        type: string
-      table:
-        type: string
-      templateID:
-        type: string
-      updatedAt:
-        description: 更新时间
-        type: string
     type: object
   system.Meta:
     properties:
@@ -1321,30 +974,6 @@ definitions:
         type: boolean
       title:
         description: 菜单名
-        type: string
-    type: object
-  system.SysApi:
-    properties:
-      ID:
-        description: 主键ID
-        type: integer
-      apiGroup:
-        description: api组
-        type: string
-      createdAt:
-        description: 创建时间
-        type: string
-      description:
-        description: api中文描述
-        type: string
-      method:
-        description: 方法:创建POST(默认)|查看GET|更新PUT|删除DELETE
-        type: string
-      path:
-        description: api路径
-        type: string
-      updatedAt:
-        description: 更新时间
         type: string
     type: object
   system.SysAuthority:
@@ -1382,29 +1011,8 @@ definitions:
         description: 更新时间
         type: string
     type: object
-  system.SysAutoCode:
-    properties:
-      ID:
-        description: 主键ID
-        type: integer
-      createdAt:
-        description: 创建时间
-        type: string
-      desc:
-        type: string
-      label:
-        type: string
-      packageName:
-        type: string
-      updatedAt:
-        description: 更新时间
-        type: string
-    type: object
   system.SysBaseMenu:
     properties:
-      ID:
-        description: 主键ID
-        type: integer
       authoritys:
         items:
           $ref: '#/definitions/system.SysAuthority'
@@ -1422,6 +1030,9 @@ definitions:
       hidden:
         description: 是否在列表隐藏
         type: boolean
+      id:
+        description: 主键ID
+        type: integer
       menuBtn:
         items:
           $ref: '#/definitions/system.SysBaseMenuBtn'
@@ -1452,14 +1063,14 @@ definitions:
     type: object
   system.SysBaseMenuBtn:
     properties:
-      ID:
-        description: 主键ID
-        type: integer
       createdAt:
         description: 创建时间
         type: string
       desc:
         type: string
+      id:
+        description: 主键ID
+        type: integer
       name:
         type: string
       sysBaseMenuID:
@@ -1470,12 +1081,12 @@ definitions:
     type: object
   system.SysBaseMenuParameter:
     properties:
-      ID:
-        description: 主键ID
-        type: integer
       createdAt:
         description: 创建时间
         type: string
+      id:
+        description: 主键ID
+        type: integer
       key:
         description: 地址栏携带参数的key
         type: string
@@ -1493,15 +1104,15 @@ definitions:
     type: object
   system.SysDictionary:
     properties:
-      ID:
-        description: 主键ID
-        type: integer
       createdAt:
         description: 创建时间
         type: string
       desc:
         description: 描述
         type: string
+      id:
+        description: 主键ID
+        type: integer
       name:
         description: 字典名（中）
         type: string
@@ -1521,15 +1132,15 @@ definitions:
     type: object
   system.SysDictionaryDetail:
     properties:
-      ID:
-        description: 主键ID
-        type: integer
       createdAt:
         description: 创建时间
         type: string
       extend:
         description: 扩展值
         type: string
+      id:
+        description: 主键ID
+        type: integer
       label:
         description: 展示值
         type: string
@@ -1549,106 +1160,8 @@ definitions:
         description: 字典值
         type: string
     type: object
-  system.SysExportTemplate:
-    properties:
-      ID:
-        description: 主键ID
-        type: integer
-      conditions:
-        items:
-          $ref: '#/definitions/system.Condition'
-        type: array
-      createdAt:
-        description: 创建时间
-        type: string
-      dbName:
-        description: 数据库名称
-        type: string
-      joinTemplate:
-        items:
-          $ref: '#/definitions/system.JoinTemplate'
-        type: array
-      limit:
-        type: integer
-      name:
-        description: 模板名称
-        type: string
-      order:
-        type: string
-      tableName:
-        description: 表名称
-        type: string
-      templateID:
-        description: 模板标识
-        type: string
-      templateInfo:
-        description: 模板信息
-        type: string
-      updatedAt:
-        description: 更新时间
-        type: string
-    type: object
-  system.SysMenu:
-    properties:
-      ID:
-        description: 主键ID
-        type: integer
-      authoritys:
-        items:
-          $ref: '#/definitions/system.SysAuthority'
-        type: array
-      btns:
-        additionalProperties:
-          type: integer
-        type: object
-      children:
-        items:
-          $ref: '#/definitions/system.SysMenu'
-        type: array
-      component:
-        description: 对应前端文件路径
-        type: string
-      createdAt:
-        description: 创建时间
-        type: string
-      hidden:
-        description: 是否在列表隐藏
-        type: boolean
-      menuBtn:
-        items:
-          $ref: '#/definitions/system.SysBaseMenuBtn'
-        type: array
-      menuId:
-        type: integer
-      meta:
-        allOf:
-        - $ref: '#/definitions/system.Meta'
-        description: 附加属性
-      name:
-        description: 路由name
-        type: string
-      parameters:
-        items:
-          $ref: '#/definitions/system.SysBaseMenuParameter'
-        type: array
-      parentId:
-        description: 父菜单ID
-        type: integer
-      path:
-        description: 路由path
-        type: string
-      sort:
-        description: 排序标记
-        type: integer
-      updatedAt:
-        description: 更新时间
-        type: string
-    type: object
   system.SysOperationRecord:
     properties:
-      ID:
-        description: 主键ID
-        type: integer
       agent:
         description: 代理
         type: string
@@ -1661,6 +1174,9 @@ definitions:
       error_message:
         description: 错误信息
         type: string
+      id:
+        description: 主键ID
+        type: integer
       ip:
         description: 请求ip
         type: string
@@ -1690,9 +1206,6 @@ definitions:
     type: object
   system.SysUser:
     properties:
-      ID:
-        description: 主键ID
-        type: integer
       authorities:
         items:
           $ref: '#/definitions/system.SysAuthority'
@@ -1717,6 +1230,9 @@ definitions:
       headerImg:
         description: 用户头像
         type: string
+      id:
+        description: 主键ID
+        type: integer
       nickName:
         description: 用户昵称
         type: string
@@ -1743,26 +1259,25 @@ definitions:
     type: object
 info:
   contact: {}
-  description: 使用gin+vue进行极速开发的全栈开发基础平台
-  title: Gin-Vue-Admin Swagger API接口文档
+  title: Upet API接口文档
   version: v2.7.0
 paths:
-  /api/createApi:
+  /api/auth:
     post:
       consumes:
       - application/json
       parameters:
-      - description: api路径, api中文描述, api组, 方法
+      - description: 微信签发的code
         in: body
         name: data
         required: true
         schema:
-          $ref: '#/definitions/system.SysApi'
+          $ref: '#/definitions/request.AuthInfo'
       produces:
       - application/json
       responses:
         "200":
-          description: 创建基础api
+          description: 用户登录或注册
           schema:
             allOf:
             - $ref: '#/definitions/response.Response'
@@ -1770,27 +1285,14 @@ paths:
                 msg:
                   type: string
               type: object
-      security:
-      - ApiKeyAuth: []
-      summary: 创建基础api
+      summary: 微信第三方登录
       tags:
-      - SysApi
-  /api/deleteApi:
+      - Auth
+  /api/family/join/:familyId:
     post:
-      consumes:
-      - application/json
-      parameters:
-      - description: ID
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/system.SysApi'
-      produces:
-      - application/json
       responses:
         "200":
-          description: 删除api
+          description: 加入结果
           schema:
             allOf:
             - $ref: '#/definitions/response.Response'
@@ -1798,27 +1300,14 @@ paths:
                 msg:
                   type: string
               type: object
-      security:
-      - ApiKeyAuth: []
-      summary: 删除api
+      summary: 加入家庭
       tags:
-      - SysApi
-  /api/deleteApisByIds:
+      - Family
+  /api/family/member/:memberId:
     delete:
-      consumes:
-      - application/json
-      parameters:
-      - description: ID
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/request.IdsReq'
-      produces:
-      - application/json
       responses:
         "200":
-          description: 删除选中Api
+          description: 删除结果
           schema:
             allOf:
             - $ref: '#/definitions/response.Response'
@@ -1826,20 +1315,28 @@ paths:
                 msg:
                   type: string
               type: object
-      security:
-      - ApiKeyAuth: []
-      summary: 删除选中Api
+      summary: 删除家庭成员
       tags:
-      - SysApi
-  /api/freshCasbin:
+      - Family
+    post:
+      responses:
+        "200":
+          description: 转让结果
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                msg:
+                  type: string
+              type: object
+      summary: 转让家庭管理权限
+      tags:
+      - Family
+  /api/family/members:
     get:
-      consumes:
-      - application/json
-      produces:
-      - application/json
       responses:
         "200":
-          description: 刷新成功
+          description: 家庭成员列表
           schema:
             allOf:
             - $ref: '#/definitions/response.Response'
@@ -1847,783 +1344,54 @@ paths:
                 msg:
                   type: string
               type: object
-      summary: 刷新casbin缓存
+      summary: 获取家庭成员列表
       tags:
-      - SysApi
-  /api/getAllApis:
-    post:
-      consumes:
-      - application/json
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 获取所有的Api 不分页,返回包括api列表
-          schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                data:
-                  $ref: '#/definitions/response.SysAPIListResponse'
-                msg:
-                  type: string
-              type: object
-      security:
-      - ApiKeyAuth: []
-      summary: 获取所有的Api 不分页
-      tags:
-      - SysApi
-  /api/getApiById:
-    post:
-      consumes:
-      - application/json
-      parameters:
-      - description: 根据id获取api
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/request.GetById'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 根据id获取api,返回包括api详情
-          schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                data:
-                  $ref: '#/definitions/response.SysAPIResponse'
-              type: object
-      security:
-      - ApiKeyAuth: []
-      summary: 根据id获取api
-      tags:
-      - SysApi
-  /api/getApiList:
-    post:
-      consumes:
-      - application/json
-      parameters:
-      - description: 分页获取API列表
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/request.SearchApiParams'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 分页获取API列表,返回包括列表,总数,页码,每页数量
-          schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                data:
-                  $ref: '#/definitions/response.PageResult'
-                msg:
-                  type: string
-              type: object
-      security:
-      - ApiKeyAuth: []
-      summary: 分页获取API列表
-      tags:
-      - SysApi
-  /api/updateApi:
-    post:
-      consumes:
-      - application/json
-      parameters:
-      - description: api路径, api中文描述, api组, 方法
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/system.SysApi'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 修改基础api
-          schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                msg:
-                  type: string
-              type: object
-      security:
-      - ApiKeyAuth: []
-      summary: 修改基础api
-      tags:
-      - SysApi
-  /authority/copyAuthority:
-    post:
-      consumes:
-      - application/json
-      parameters:
-      - description: 旧角色id, 新权限id, 新权限名, 新父角色id
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/response.SysAuthorityCopyResponse'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 拷贝角色,返回包括系统角色详情
-          schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                data:
-                  $ref: '#/definitions/response.SysAuthorityResponse'
-                msg:
-                  type: string
-              type: object
-      security:
-      - ApiKeyAuth: []
-      summary: 拷贝角色
-      tags:
-      - Authority
-  /authority/createAuthority:
-    post:
-      consumes:
-      - application/json
-      parameters:
-      - description: 权限id, 权限名, 父角色id
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/system.SysAuthority'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 创建角色,返回包括系统角色详情
-          schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                data:
-                  $ref: '#/definitions/response.SysAuthorityResponse'
-                msg:
-                  type: string
-              type: object
-      security:
-      - ApiKeyAuth: []
-      summary: 创建角色
-      tags:
-      - Authority
-  /authority/deleteAuthority:
-    post:
-      consumes:
-      - application/json
-      parameters:
-      - description: 删除角色
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/system.SysAuthority'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 删除角色
-          schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                msg:
-                  type: string
-              type: object
-      security:
-      - ApiKeyAuth: []
-      summary: 删除角色
-      tags:
-      - Authority
-  /authority/getAuthorityList:
-    post:
-      consumes:
-      - application/json
-      parameters:
-      - description: 页码, 每页大小
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/request.PageInfo'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 分页获取角色列表,返回包括列表,总数,页码,每页数量
-          schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                data:
-                  $ref: '#/definitions/response.PageResult'
-                msg:
-                  type: string
-              type: object
-      security:
-      - ApiKeyAuth: []
-      summary: 分页获取角色列表
-      tags:
-      - Authority
-  /authority/setDataAuthority:
-    post:
-      consumes:
-      - application/json
-      parameters:
-      - description: 设置角色资源权限
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/system.SysAuthority'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 设置角色资源权限
-          schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                msg:
-                  type: string
-              type: object
-      security:
-      - ApiKeyAuth: []
-      summary: 设置角色资源权限
-      tags:
-      - Authority
-  /authority/updateAuthority:
-    post:
-      consumes:
-      - application/json
-      parameters:
-      - description: 权限id, 权限名, 父角色id
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/system.SysAuthority'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 更新角色信息,返回包括系统角色详情
-          schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                data:
-                  $ref: '#/definitions/response.SysAuthorityResponse'
-                msg:
-                  type: string
-              type: object
-      security:
-      - ApiKeyAuth: []
-      summary: 更新角色信息
-      tags:
-      - Authority
-  /authorityBtn/canRemoveAuthorityBtn:
-    post:
-      consumes:
-      - application/json
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 删除成功
-          schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                msg:
-                  type: string
-              type: object
-      security:
-      - ApiKeyAuth: []
-      summary: 设置权限按钮
-      tags:
-      - AuthorityBtn
-  /authorityBtn/getAuthorityBtn:
-    post:
-      consumes:
-      - application/json
-      parameters:
-      - description: 菜单id, 角色id, 选中的按钮id
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/request.SysAuthorityBtnReq'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 返回列表成功
-          schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                data:
-                  $ref: '#/definitions/response.SysAuthorityBtnRes'
-                msg:
-                  type: string
-              type: object
-      security:
-      - ApiKeyAuth: []
-      summary: 获取权限按钮
-      tags:
-      - AuthorityBtn
-  /authorityBtn/setAuthorityBtn:
-    post:
-      consumes:
-      - application/json
-      parameters:
-      - description: 菜单id, 角色id, 选中的按钮id
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/request.SysAuthorityBtnReq'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 返回列表成功
-          schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                msg:
-                  type: string
-              type: object
-      security:
-      - ApiKeyAuth: []
-      summary: 设置权限按钮
-      tags:
-      - AuthorityBtn
-  /autoCode/createPackage:
-    post:
-      consumes:
-      - application/json
-      parameters:
-      - description: 创建package
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/system.SysAutoCode'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 创建package成功
-          schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                data:
-                  additionalProperties: true
-                  type: object
-                msg:
-                  type: string
-              type: object
-      security:
-      - ApiKeyAuth: []
-      summary: 创建package
-      tags:
-      - AutoCode
-  /autoCode/createPlug:
-    post:
-      consumes:
-      - application/json
-      parameters:
-      - description: 创建插件模板
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/system.SysAutoCode'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 创建插件模板成功
-          schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                data:
-                  additionalProperties: true
-                  type: object
-                msg:
-                  type: string
-              type: object
-      security:
-      - ApiKeyAuth: []
-      summary: 创建插件模板
-      tags:
-      - AutoCode
-  /autoCode/createTemp:
-    post:
-      consumes:
-      - application/json
-      parameters:
-      - description: 创建自动代码
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/system.AutoCodeStruct'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: '{"success":true,"data":{},"msg":"创建成功"}'
-          schema:
-            type: string
-      security:
-      - ApiKeyAuth: []
-      summary: 自动代码模板
-      tags:
-      - AutoCode
-  /autoCode/delPackage:
-    post:
-      consumes:
-      - application/json
-      parameters:
-      - description: 创建package
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/system.SysAutoCode'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 删除package成功
-          schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                data:
-                  additionalProperties: true
-                  type: object
-                msg:
-                  type: string
-              type: object
-      security:
-      - ApiKeyAuth: []
-      summary: 删除package
-      tags:
-      - AutoCode
-  /autoCode/delSysHistory:
-    post:
-      consumes:
-      - application/json
-      parameters:
-      - description: 请求参数
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/request.GetById'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 删除回滚记录
-          schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                msg:
-                  type: string
-              type: object
-      security:
-      - ApiKeyAuth: []
-      summary: 删除回滚记录
-      tags:
-      - AutoCode
-  /autoCode/getColumn:
-    get:
-      consumes:
-      - application/json
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 获取当前表所有字段
-          schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                data:
-                  additionalProperties: true
-                  type: object
-                msg:
-                  type: string
-              type: object
-      security:
-      - ApiKeyAuth: []
-      summary: 获取当前表所有字段
-      tags:
-      - AutoCode
-  /autoCode/getDatabase:
-    get:
-      consumes:
-      - application/json
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 获取当前所有数据库
-          schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                data:
-                  additionalProperties: true
-                  type: object
-                msg:
-                  type: string
-              type: object
-      security:
-      - ApiKeyAuth: []
-      summary: 获取当前所有数据库
-      tags:
-      - AutoCode
-  /autoCode/getMeta:
-    post:
-      consumes:
-      - application/json
-      parameters:
-      - description: 请求参数
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/request.GetById'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 获取meta信息
-          schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                data:
-                  additionalProperties: true
-                  type: object
-                msg:
-                  type: string
-              type: object
-      security:
-      - ApiKeyAuth: []
-      summary: 获取meta信息
-      tags:
-      - AutoCode
-  /autoCode/getPackage:
-    post:
-      consumes:
-      - application/json
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 创建package成功
-          schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                data:
-                  additionalProperties: true
-                  type: object
-                msg:
-                  type: string
-              type: object
-      security:
-      - ApiKeyAuth: []
-      summary: 获取package
-      tags:
-      - AutoCode
-  /autoCode/getSysHistory:
-    post:
-      consumes:
-      - application/json
-      parameters:
-      - description: 请求参数
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/request.SysAutoHistory'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 查询回滚记录,返回包括列表,总数,页码,每页数量
-          schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                data:
-                  $ref: '#/definitions/response.PageResult'
-                msg:
-                  type: string
-              type: object
-      security:
-      - ApiKeyAuth: []
-      summary: 查询回滚记录
-      tags:
-      - AutoCode
-  /autoCode/getTables:
-    get:
-      consumes:
-      - application/json
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 获取当前数据库所有表
-          schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                data:
-                  additionalProperties: true
-                  type: object
-                msg:
-                  type: string
-              type: object
-      security:
-      - ApiKeyAuth: []
-      summary: 获取当前数据库所有表
-      tags:
-      - AutoCode
-  /autoCode/installPlugin:
+      - Family
+  /api/file:
     post:
       consumes:
       - multipart/form-data
       parameters:
-      - description: this is a test file
+      - description: 文件内容
         in: formData
-        name: plug
+        name: file
         required: true
         type: file
       produces:
       - application/json
       responses:
         "200":
-          description: 安装插件成功
+          description: 用户登录或注册
           schema:
             allOf:
             - $ref: '#/definitions/response.Response'
             - properties:
-                data:
-                  items:
-                    type: object
-                  type: array
-                msg:
+                ' msg':
                   type: string
-              type: object
-      security:
-      - ApiKeyAuth: []
-      summary: 安装插件
-      tags:
-      - AutoCode
-  /autoCode/preview:
-    post:
-      consumes:
-      - application/json
-      parameters:
-      - description: 预览创建代码
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/system.AutoCodeStruct'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 预览创建后的代码
-          schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
                 data:
-                  additionalProperties: true
+                  additionalProperties:
+                    type: string
                   type: object
-                msg:
-                  type: string
               type: object
-      security:
-      - ApiKeyAuth: []
-      summary: 预览创建后的代码
+      summary: 文件上传
       tags:
-      - AutoCode
-  /autoCode/pubPlug:
-    get:
-      consumes:
-      - application/json
-      parameters:
-      - description: 打包插件
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/system.SysAutoCode'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 打包插件成功
-          schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                data:
-                  additionalProperties: true
-                  type: object
-                msg:
-                  type: string
-              type: object
-      security:
-      - ApiKeyAuth: []
-      summary: 打包插件
-      tags:
-      - AutoCode
-  /autoCode/rollback:
+      - File
+  /api/pet:
     post:
       consumes:
       - application/json
       parameters:
-      - description: 请求参数
+      - description: 宠物信息
         in: body
         name: data
         required: true
         schema:
-          $ref: '#/definitions/request.RollBack'
+          $ref: '#/definitions/pet.PetInfo'
       produces:
       - application/json
       responses:
         "200":
-          description: 回滚自动生成代码
+          description: 创建宠物
           schema:
             allOf:
             - $ref: '#/definitions/response.Response'
@@ -2633,74 +1401,25 @@ paths:
               type: object
       security:
       - ApiKeyAuth: []
-      summary: 回滚自动生成代码
+      summary: 创建宠物
       tags:
-      - AutoCode
-  /base/captcha:
-    post:
-      consumes:
-      - application/json
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 生成验证码,返回包括随机数id,base64,验证码长度,是否开启验证码
-          schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                data:
-                  $ref: '#/definitions/response.SysCaptchaResponse'
-                msg:
-                  type: string
-              type: object
-      security:
-      - ApiKeyAuth: []
-      summary: 生成验证码
-      tags:
-      - Base
-  /base/login:
-    post:
-      parameters:
-      - description: 用户名, 密码, 验证码
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/request.Login'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 返回包括用户信息,token,过期时间
-          schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                data:
-                  $ref: '#/definitions/response.LoginResponse'
-                msg:
-                  type: string
-              type: object
-      summary: 用户登录
-      tags:
-      - Base
-  /casbin/UpdateCasbin:
+      - PetInfo
+  /api/pet-todo:
     post:
       consumes:
       - application/json
       parameters:
-      - description: 权限id, 权限模型列表
+      - description: 宠物待办信息
         in: body
         name: data
         required: true
         schema:
-          $ref: '#/definitions/request.CasbinInReceive'
+          $ref: '#/definitions/request.PetTodoInfo'
       produces:
       - application/json
       responses:
         "200":
-          description: 更新角色api权限
+          description: 创建宠物待办
           schema:
             allOf:
             - $ref: '#/definitions/response.Response'
@@ -2710,55 +1429,24 @@ paths:
               type: object
       security:
       - ApiKeyAuth: []
-      summary: 更新角色api权限
+      summary: 创建宠物待办
       tags:
-      - Casbin
-  /casbin/getPolicyPathByAuthorityId:
-    post:
-      consumes:
-      - application/json
-      parameters:
-      - description: 权限id, 权限模型列表
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/request.CasbinInReceive'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 获取权限列表,返回包括casbin详情列表
-          schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                data:
-                  $ref: '#/definitions/response.PolicyPathResponse'
-                msg:
-                  type: string
-              type: object
-      security:
-      - ApiKeyAuth: []
-      summary: 获取权限列表
-      tags:
-      - Casbin
-  /customer/customer:
+      - PetTodo
+  /api/pet-todo/:petTodoID:
     delete:
       consumes:
       - application/json
       parameters:
-      - description: 客户ID
-        in: body
-        name: data
+      - description: 宠物待办ID
+        in: path
+        name: petTodoID
         required: true
-        schema:
-          $ref: '#/definitions/example.ExaCustomer'
+        type: integer
       produces:
       - application/json
       responses:
         "200":
-          description: 删除客户
+          description: 删除宠物待办
           schema:
             allOf:
             - $ref: '#/definitions/response.Response'
@@ -2768,102 +1456,57 @@ paths:
               type: object
       security:
       - ApiKeyAuth: []
-      summary: 删除客户
+      summary: 删除宠物待办
       tags:
-      - ExaCustomer
+      - PetTodo
     get:
       consumes:
       - application/json
       parameters:
-      - description: 主键ID
-        in: query
-        name: ID
+      - description: 宠物待办ID
+        in: path
+        name: petTodoID
+        required: true
         type: integer
-      - description: 创建时间
-        in: query
-        name: createdAt
-        type: string
-      - description: 客户名
-        in: query
-        name: customerName
-        type: string
-      - description: 客户手机号
-        in: query
-        name: customerPhoneData
-        type: string
-      - description: 管理角色ID
-        in: query
-        name: sysUserAuthorityID
-        type: integer
-      - description: 管理ID
-        in: query
-        name: sysUserId
-        type: integer
-      - description: 更新时间
-        in: query
-        name: updatedAt
-        type: string
       produces:
       - application/json
       responses:
         "200":
-          description: 获取单一客户信息,返回包括客户详情
+          description: 获取单一宠物信息
           schema:
             allOf:
             - $ref: '#/definitions/response.Response'
             - properties:
                 data:
-                  $ref: '#/definitions/response.ExaCustomerResponse'
+                  $ref: '#/definitions/response.PetTodoInfoResponse'
                 msg:
                   type: string
               type: object
       security:
       - ApiKeyAuth: []
-      summary: 获取单一客户信息
+      summary: 获取单一宠物待办信息
       tags:
-      - ExaCustomer
-    post:
-      consumes:
-      - application/json
-      parameters:
-      - description: 客户用户名, 客户手机号码
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/example.ExaCustomer'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 创建客户
-          schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                msg:
-                  type: string
-              type: object
-      security:
-      - ApiKeyAuth: []
-      summary: 创建客户
-      tags:
-      - ExaCustomer
+      - PetTodo
     put:
       consumes:
       - application/json
       parameters:
-      - description: 客户ID, 客户信息
+      - description: 宠物待办ID
+        in: path
+        name: petTodoID
+        required: true
+        type: integer
+      - description: 宠物待办信息
         in: body
         name: data
         required: true
         schema:
-          $ref: '#/definitions/example.ExaCustomer'
+          $ref: '#/definitions/petTodo.PetTodoInfo'
       produces:
       - application/json
       responses:
         "200":
-          description: 更新客户信息
+          description: 更新宠物待办信息
           schema:
             allOf:
             - $ref: '#/definitions/response.Response'
@@ -2873,25 +1516,21 @@ paths:
               type: object
       security:
       - ApiKeyAuth: []
-      summary: 更新客户信息
+      summary: 更新宠物待办信息
       tags:
-      - ExaCustomer
-  /customer/customerList:
+      - PetTodo
+  /api/pet-todos:
     get:
       consumes:
       - application/json
       parameters:
-      - description: 关键字
+      - description: 日期
         in: query
-        name: keyword
+        name: date
         type: string
-      - description: 页码
+      - description: 宠物id
         in: query
-        name: page
-        type: integer
-      - description: 每页大小
-        in: query
-        name: pageSize
+        name: petId
         type: integer
       produces:
       - application/json
@@ -2909,9 +1548,297 @@ paths:
               type: object
       security:
       - ApiKeyAuth: []
-      summary: 分页获取权限客户列表
+      summary: 获取所有宠物待办列表
       tags:
-      - ExaCustomer
+      - PetTodo
+  /api/pet-todos/:petTodoID/complete:
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: 宠物待办ID
+        in: path
+        name: petTodoID
+        required: true
+        type: integer
+      - description: 宠物待办信息
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/petTodo.PetTodoInfo'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 更新宠物待办信息
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                msg:
+                  type: string
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: 更新宠物待办信息
+      tags:
+      - PetTodo
+  /api/pet-todos/infos:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: 内容
+        in: query
+        name: content
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 查询宠物待办信息
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/petTodo.SimplePetTodoInfo'
+                msg:
+                  type: string
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: 搜索宠物待办信息
+      tags:
+      - PetTodo
+  /api/pet-todos/mark:
+    post:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 分页获取权限客户列表,返回包括列表,总数,页码,每页数量
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/response.PageResult'
+                msg:
+                  type: string
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: 获取指定日期中宠物待办标记
+      tags:
+      - PetTodo
+  /api/pet/:petID:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: 宠物ID
+        in: path
+        name: petID
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 删除宠物
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                msg:
+                  type: string
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: 删除宠物
+      tags:
+      - PetInfo
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: 宠物头像
+        in: query
+        name: avatar
+        type: string
+      - description: 宠物生日
+        in: query
+        name: birthday
+        type: string
+      - description: 宠物类型
+        in: query
+        name: category
+        type: integer
+      - description: 创建时间
+        in: query
+        name: createdAt
+        type: string
+      - description: 创建人
+        in: query
+        name: createdBy
+        type: integer
+      - description: 所属家庭id
+        in: query
+        name: familyId
+        type: integer
+      - description: 宠物性别
+        in: query
+        name: gender
+        type: integer
+      - description: 主键ID
+        in: query
+        name: id
+        type: integer
+      - description: 宠物名
+        in: query
+        name: name
+        type: string
+      - description: 宠物绝育状态
+        in: query
+        name: sterilizedState
+        type: integer
+      - description: 更新时间
+        in: query
+        name: updatedAt
+        type: string
+      - description: 更新人
+        in: query
+        name: updatedBy
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取单一宠物信息
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/pet.PetInfo'
+                msg:
+                  type: string
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: 获取单一宠物信息
+      tags:
+      - PetInfo
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: 宠物ID
+        in: path
+        name: petID
+        required: true
+        type: integer
+      - description: 宠物信息
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/pet.PetInfo'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 更新宠物信息
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                msg:
+                  type: string
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: 更新宠物信息
+      tags:
+      - PetInfo
+  /api/pets:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 获取宠物信息列表
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/response.PetInfoResponse'
+                  type: array
+                msg:
+                  type: string
+              type: object
+      security:
+      - ApiKeyAuth: []
+      summary: 获取所有宠物列表
+      tags:
+      - PetInfo
+  /api/user:
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: 用户信息
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/request.UserInfo'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 用户信息保存结果
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                msg:
+                  type: string
+              type: object
+      summary: 完善用户信息
+      tags:
+      - User
+  /api/user/:id:
+    get:
+      parameters:
+      - description: 用户id
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: 用户信息
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.Response'
+            - properties:
+                ' msg':
+                  type: string
+                data:
+                  $ref: '#/definitions/request.UserInfo'
+              type: object
+      summary: 查询用户信息
+      tags:
+      - User
   /email/emailTest:
     post:
       produces:
@@ -2947,174 +1874,6 @@ paths:
       summary: 发送邮件
       tags:
       - System
-  /fileUploadAndDownload/breakpointContinue:
-    post:
-      consumes:
-      - multipart/form-data
-      parameters:
-      - description: an example for breakpoint resume, 断点续传示例
-        in: formData
-        name: file
-        required: true
-        type: file
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 断点续传到服务器
-          schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                msg:
-                  type: string
-              type: object
-      security:
-      - ApiKeyAuth: []
-      summary: 断点续传到服务器
-      tags:
-      - ExaFileUploadAndDownload
-  /fileUploadAndDownload/deleteFile:
-    post:
-      parameters:
-      - description: 传入文件里面id即可
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/example.ExaFileUploadAndDownload'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 删除文件
-          schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                msg:
-                  type: string
-              type: object
-      security:
-      - ApiKeyAuth: []
-      summary: 删除文件
-      tags:
-      - ExaFileUploadAndDownload
-  /fileUploadAndDownload/findFile:
-    post:
-      consumes:
-      - multipart/form-data
-      parameters:
-      - description: 上传文件完成
-        in: formData
-        name: file
-        required: true
-        type: file
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 创建文件,返回包括文件路径
-          schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                data:
-                  $ref: '#/definitions/response.FilePathResponse'
-                msg:
-                  type: string
-              type: object
-      security:
-      - ApiKeyAuth: []
-      summary: 创建文件
-      tags:
-      - ExaFileUploadAndDownload
-  /fileUploadAndDownload/getFileList:
-    post:
-      consumes:
-      - application/json
-      parameters:
-      - description: 页码, 每页大小
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/request.PageInfo'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 分页文件列表,返回包括列表,总数,页码,每页数量
-          schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                data:
-                  $ref: '#/definitions/response.PageResult'
-                msg:
-                  type: string
-              type: object
-      security:
-      - ApiKeyAuth: []
-      summary: 分页文件列表
-      tags:
-      - ExaFileUploadAndDownload
-  /fileUploadAndDownload/removeChunk:
-    post:
-      consumes:
-      - multipart/form-data
-      parameters:
-      - description: 删除缓存切片
-        in: formData
-        name: file
-        required: true
-        type: file
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 删除切片
-          schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                msg:
-                  type: string
-              type: object
-      security:
-      - ApiKeyAuth: []
-      summary: 删除切片
-      tags:
-      - ExaFileUploadAndDownload
-  /fileUploadAndDownload/upload:
-    post:
-      consumes:
-      - multipart/form-data
-      parameters:
-      - description: 上传文件示例
-        in: formData
-        name: file
-        required: true
-        type: file
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 上传文件示例,返回包括文件详情
-          schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                data:
-                  $ref: '#/definitions/response.ExaFileResponse'
-                msg:
-                  type: string
-              type: object
-      security:
-      - ApiKeyAuth: []
-      summary: 上传文件示例
-      tags:
-      - ExaFileUploadAndDownload
   /init/checkdb:
     post:
       produces:
@@ -3159,286 +1918,6 @@ paths:
       summary: 初始化用户数据库
       tags:
       - InitDB
-  /jwt/jsonInBlacklist:
-    post:
-      consumes:
-      - application/json
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: jwt加入黑名单
-          schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                msg:
-                  type: string
-              type: object
-      security:
-      - ApiKeyAuth: []
-      summary: jwt加入黑名单
-      tags:
-      - Jwt
-  /menu/addBaseMenu:
-    post:
-      consumes:
-      - application/json
-      parameters:
-      - description: 路由path, 父菜单ID, 路由name, 对应前端文件路径, 排序标记
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/system.SysBaseMenu'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 新增菜单
-          schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                msg:
-                  type: string
-              type: object
-      security:
-      - ApiKeyAuth: []
-      summary: 新增菜单
-      tags:
-      - Menu
-  /menu/addMenuAuthority:
-    post:
-      consumes:
-      - application/json
-      parameters:
-      - description: 角色ID
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/request.AddMenuAuthorityInfo'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 增加menu和角色关联关系
-          schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                msg:
-                  type: string
-              type: object
-      security:
-      - ApiKeyAuth: []
-      summary: 增加menu和角色关联关系
-      tags:
-      - AuthorityMenu
-  /menu/deleteBaseMenu:
-    post:
-      consumes:
-      - application/json
-      parameters:
-      - description: 菜单id
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/request.GetById'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 删除菜单
-          schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                msg:
-                  type: string
-              type: object
-      security:
-      - ApiKeyAuth: []
-      summary: 删除菜单
-      tags:
-      - Menu
-  /menu/getBaseMenuById:
-    post:
-      consumes:
-      - application/json
-      parameters:
-      - description: 菜单id
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/request.GetById'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 根据id获取菜单,返回包括系统菜单列表
-          schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                data:
-                  $ref: '#/definitions/response.SysBaseMenuResponse'
-                msg:
-                  type: string
-              type: object
-      security:
-      - ApiKeyAuth: []
-      summary: 根据id获取菜单
-      tags:
-      - Menu
-  /menu/getBaseMenuTree:
-    post:
-      parameters:
-      - description: 空
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/request.Empty'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 获取用户动态路由,返回包括系统菜单列表
-          schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                data:
-                  $ref: '#/definitions/response.SysBaseMenusResponse'
-                msg:
-                  type: string
-              type: object
-      security:
-      - ApiKeyAuth: []
-      summary: 获取用户动态路由
-      tags:
-      - AuthorityMenu
-  /menu/getMenu:
-    post:
-      parameters:
-      - description: 空
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/request.Empty'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 获取用户动态路由,返回包括系统菜单详情列表
-          schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                data:
-                  $ref: '#/definitions/response.SysMenusResponse'
-                msg:
-                  type: string
-              type: object
-      security:
-      - ApiKeyAuth: []
-      summary: 获取用户动态路由
-      tags:
-      - AuthorityMenu
-  /menu/getMenuAuthority:
-    post:
-      consumes:
-      - application/json
-      parameters:
-      - description: 角色ID
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/request.GetAuthorityId'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 获取指定角色menu
-          schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                data:
-                  additionalProperties: true
-                  type: object
-                msg:
-                  type: string
-              type: object
-      security:
-      - ApiKeyAuth: []
-      summary: 获取指定角色menu
-      tags:
-      - AuthorityMenu
-  /menu/getMenuList:
-    post:
-      consumes:
-      - application/json
-      parameters:
-      - description: 页码, 每页大小
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/request.PageInfo'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 分页获取基础menu列表,返回包括列表,总数,页码,每页数量
-          schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                data:
-                  $ref: '#/definitions/response.PageResult'
-                msg:
-                  type: string
-              type: object
-      security:
-      - ApiKeyAuth: []
-      summary: 分页获取基础menu列表
-      tags:
-      - Menu
-  /menu/updateBaseMenu:
-    post:
-      consumes:
-      - application/json
-      parameters:
-      - description: 路由path, 父菜单ID, 路由name, 对应前端文件路径, 排序标记
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/system.SysBaseMenu'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 更新菜单
-          schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                msg:
-                  type: string
-              type: object
-      security:
-      - ApiKeyAuth: []
-      summary: 更新菜单
-      tags:
-      - Menu
   /sysDictionary/createSysDictionary:
     post:
       consumes:
@@ -3500,10 +1979,6 @@ paths:
       consumes:
       - application/json
       parameters:
-      - description: 主键ID
-        in: query
-        name: ID
-        type: integer
       - description: 创建时间
         in: query
         name: createdAt
@@ -3512,6 +1987,10 @@ paths:
         in: query
         name: desc
         type: string
+      - description: 主键ID
+        in: query
+        name: id
+        type: integer
       - description: 字典名（中）
         in: query
         name: name
@@ -3660,10 +2139,6 @@ paths:
       consumes:
       - application/json
       parameters:
-      - description: 主键ID
-        in: query
-        name: ID
-        type: integer
       - description: 创建时间
         in: query
         name: createdAt
@@ -3672,6 +2147,10 @@ paths:
         in: query
         name: extend
         type: string
+      - description: 主键ID
+        in: query
+        name: id
+        type: integer
       - description: 展示值
         in: query
         name: label
@@ -3721,10 +2200,6 @@ paths:
       consumes:
       - application/json
       parameters:
-      - description: 主键ID
-        in: query
-        name: ID
-        type: integer
       - description: 创建时间
         in: query
         name: createdAt
@@ -3733,6 +2208,10 @@ paths:
         in: query
         name: extend
         type: string
+      - description: 主键ID
+        in: query
+        name: id
+        type: integer
       - description: 关键字
         in: query
         name: keyword
@@ -3816,250 +2295,6 @@ paths:
       summary: 更新SysDictionaryDetail
       tags:
       - SysDictionaryDetail
-  /sysExportTemplate/createSysExportTemplate:
-    post:
-      consumes:
-      - application/json
-      parameters:
-      - description: 创建导出模板
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/system.SysExportTemplate'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: '{"success":true,"data":{},"msg":"创建成功"}'
-          schema:
-            type: string
-      security:
-      - ApiKeyAuth: []
-      summary: 创建导出模板
-      tags:
-      - SysExportTemplate
-  /sysExportTemplate/deleteSysExportTemplate:
-    delete:
-      consumes:
-      - application/json
-      parameters:
-      - description: 删除导出模板
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/system.SysExportTemplate'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: '{"success":true,"data":{},"msg":"删除成功"}'
-          schema:
-            type: string
-      security:
-      - ApiKeyAuth: []
-      summary: 删除导出模板
-      tags:
-      - SysExportTemplate
-  /sysExportTemplate/deleteSysExportTemplateByIds:
-    delete:
-      consumes:
-      - application/json
-      parameters:
-      - description: 批量删除导出模板
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/request.IdsReq'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: '{"success":true,"data":{},"msg":"批量删除成功"}'
-          schema:
-            type: string
-      security:
-      - ApiKeyAuth: []
-      summary: 批量删除导出模板
-      tags:
-      - SysExportTemplate
-  /sysExportTemplate/exportExcel:
-    get:
-      consumes:
-      - application/json
-      produces:
-      - application/json
-      responses: {}
-      security:
-      - ApiKeyAuth: []
-      summary: 导出表格模板
-      tags:
-      - SysExportTemplate
-  /sysExportTemplate/findSysExportTemplate:
-    get:
-      consumes:
-      - application/json
-      parameters:
-      - description: 主键ID
-        in: query
-        name: ID
-        type: integer
-      - description: 创建时间
-        in: query
-        name: createdAt
-        type: string
-      - description: 数据库名称
-        in: query
-        name: dbName
-        type: string
-      - in: query
-        name: limit
-        type: integer
-      - description: 模板名称
-        in: query
-        name: name
-        type: string
-      - in: query
-        name: order
-        type: string
-      - description: 表名称
-        in: query
-        name: tableName
-        type: string
-      - description: 模板标识
-        in: query
-        name: templateID
-        type: string
-      - description: 模板信息
-        in: query
-        name: templateInfo
-        type: string
-      - description: 更新时间
-        in: query
-        name: updatedAt
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: '{"success":true,"data":{},"msg":"查询成功"}'
-          schema:
-            type: string
-      security:
-      - ApiKeyAuth: []
-      summary: 用id查询导出模板
-      tags:
-      - SysExportTemplate
-  /sysExportTemplate/getSysExportTemplateList:
-    get:
-      consumes:
-      - application/json
-      parameters:
-      - description: 主键ID
-        in: query
-        name: ID
-        type: integer
-      - description: 创建时间
-        in: query
-        name: createdAt
-        type: string
-      - description: 数据库名称
-        in: query
-        name: dbName
-        type: string
-      - in: query
-        name: endCreatedAt
-        type: string
-      - description: 关键字
-        in: query
-        name: keyword
-        type: string
-      - in: query
-        name: limit
-        type: integer
-      - description: 模板名称
-        in: query
-        name: name
-        type: string
-      - in: query
-        name: order
-        type: string
-      - description: 页码
-        in: query
-        name: page
-        type: integer
-      - description: 每页大小
-        in: query
-        name: pageSize
-        type: integer
-      - in: query
-        name: startCreatedAt
-        type: string
-      - description: 表名称
-        in: query
-        name: tableName
-        type: string
-      - description: 模板标识
-        in: query
-        name: templateID
-        type: string
-      - description: 模板信息
-        in: query
-        name: templateInfo
-        type: string
-      - description: 更新时间
-        in: query
-        name: updatedAt
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: '{"success":true,"data":{},"msg":"获取成功"}'
-          schema:
-            type: string
-      security:
-      - ApiKeyAuth: []
-      summary: 分页获取导出模板列表
-      tags:
-      - SysExportTemplate
-  /sysExportTemplate/importExcel:
-    post:
-      consumes:
-      - application/json
-      produces:
-      - application/json
-      responses: {}
-      security:
-      - ApiKeyAuth: []
-      summary: 导入表格
-      tags:
-      - SysImportTemplate
-  /sysExportTemplate/updateSysExportTemplate:
-    put:
-      consumes:
-      - application/json
-      parameters:
-      - description: 更新导出模板
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/system.SysExportTemplate'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: '{"success":true,"data":{},"msg":"更新成功"}'
-          schema:
-            type: string
-      security:
-      - ApiKeyAuth: []
-      summary: 更新导出模板
-      tags:
-      - SysExportTemplate
   /sysOperationRecord/createSysOperationRecord:
     post:
       consumes:
@@ -4149,10 +2384,6 @@ paths:
       consumes:
       - application/json
       parameters:
-      - description: 主键ID
-        in: query
-        name: ID
-        type: integer
       - description: 代理
         in: query
         name: agent
@@ -4169,6 +2400,10 @@ paths:
         in: query
         name: error_message
         type: string
+      - description: 主键ID
+        in: query
+        name: id
+        type: integer
       - description: 请求ip
         in: query
         name: ip
@@ -4226,10 +2461,6 @@ paths:
       consumes:
       - application/json
       parameters:
-      - description: 主键ID
-        in: query
-        name: ID
-        type: integer
       - description: 代理
         in: query
         name: agent
@@ -4246,6 +2477,10 @@ paths:
         in: query
         name: error_message
         type: string
+      - description: 主键ID
+        in: query
+        name: id
+        type: integer
       - description: 请求ip
         in: query
         name: ip
@@ -4397,284 +2632,6 @@ paths:
       summary: 设置配置文件内容
       tags:
       - System
-  /user/SetSelfInfo:
-    put:
-      consumes:
-      - application/json
-      parameters:
-      - description: ID, 用户名, 昵称, 头像链接
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/system.SysUser'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 设置用户信息
-          schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                data:
-                  additionalProperties: true
-                  type: object
-                msg:
-                  type: string
-              type: object
-      security:
-      - ApiKeyAuth: []
-      summary: 设置用户信息
-      tags:
-      - SysUser
-  /user/admin_register:
-    post:
-      parameters:
-      - description: 用户名, 昵称, 密码, 角色ID
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/request.Register'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 用户注册账号,返回包括用户信息
-          schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                data:
-                  $ref: '#/definitions/response.SysUserResponse'
-                msg:
-                  type: string
-              type: object
-      summary: 用户注册账号
-      tags:
-      - SysUser
-  /user/changePassword:
-    post:
-      parameters:
-      - description: 用户名, 原密码, 新密码
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/request.ChangePasswordReq'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 用户修改密码
-          schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                msg:
-                  type: string
-              type: object
-      security:
-      - ApiKeyAuth: []
-      summary: 用户修改密码
-      tags:
-      - SysUser
-  /user/deleteUser:
-    delete:
-      consumes:
-      - application/json
-      parameters:
-      - description: 用户ID
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/request.GetById'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 删除用户
-          schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                msg:
-                  type: string
-              type: object
-      security:
-      - ApiKeyAuth: []
-      summary: 删除用户
-      tags:
-      - SysUser
-  /user/getUserInfo:
-    get:
-      consumes:
-      - application/json
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 获取用户信息
-          schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                data:
-                  additionalProperties: true
-                  type: object
-                msg:
-                  type: string
-              type: object
-      security:
-      - ApiKeyAuth: []
-      summary: 获取用户信息
-      tags:
-      - SysUser
-  /user/getUserList:
-    post:
-      consumes:
-      - application/json
-      parameters:
-      - description: 页码, 每页大小
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/request.PageInfo'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 分页获取用户列表,返回包括列表,总数,页码,每页数量
-          schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                data:
-                  $ref: '#/definitions/response.PageResult'
-                msg:
-                  type: string
-              type: object
-      security:
-      - ApiKeyAuth: []
-      summary: 分页获取用户列表
-      tags:
-      - SysUser
-  /user/resetPassword:
-    post:
-      parameters:
-      - description: ID
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/system.SysUser'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 重置用户密码
-          schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                msg:
-                  type: string
-              type: object
-      security:
-      - ApiKeyAuth: []
-      summary: 重置用户密码
-      tags:
-      - SysUser
-  /user/setUserAuthorities:
-    post:
-      consumes:
-      - application/json
-      parameters:
-      - description: 用户UUID, 角色ID
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/request.SetUserAuthorities'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 设置用户权限
-          schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                msg:
-                  type: string
-              type: object
-      security:
-      - ApiKeyAuth: []
-      summary: 设置用户权限
-      tags:
-      - SysUser
-  /user/setUserAuthority:
-    post:
-      consumes:
-      - application/json
-      parameters:
-      - description: 用户UUID, 角色ID
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/request.SetUserAuth'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 设置用户权限
-          schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                msg:
-                  type: string
-              type: object
-      security:
-      - ApiKeyAuth: []
-      summary: 更改用户权限
-      tags:
-      - SysUser
-  /user/setUserInfo:
-    put:
-      consumes:
-      - application/json
-      parameters:
-      - description: ID, 用户名, 昵称, 头像链接
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/system.SysUser'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: 设置用户信息
-          schema:
-            allOf:
-            - $ref: '#/definitions/response.Response'
-            - properties:
-                data:
-                  additionalProperties: true
-                  type: object
-                msg:
-                  type: string
-              type: object
-      security:
-      - ApiKeyAuth: []
-      summary: 设置用户信息
-      tags:
-      - SysUser
 securityDefinitions:
   ApiKeyAuth:
     in: header

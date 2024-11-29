@@ -13,10 +13,10 @@ type FileApi struct{}
 // File Upload
 // @Tags      File
 // @Summary   文件上传
-// @accept    application/json
+// @accept    multipart/form-data
 // @Produce   application/json
-// @Param     data  body      auth.AuthInfo            true  "微信签发的code"
-// @Success   200   {object}  response.Response{msg=string}  "用户登录或注册"
+// @Param     file  formData      file    true  "文件内容"
+// @Success   200   {object}  response.Response{data=map[string]string, msg=string}  "用户登录或注册"
 // @Router    /api/file [post]
 func (e *FileApi) UploadFile(c *gin.Context) {
 	var file file.FileInfo

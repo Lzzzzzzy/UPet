@@ -23,7 +23,7 @@ type PetTodoApi struct{}
 // @Security  ApiKeyAuth
 // @accept    application/json
 // @Produce   application/json
-// @Param     data  body      pet.PetTodo            true  "宠物待办信息"
+// @Param     data  body      request.PetTodoInfo            true  "宠物待办信息"
 // @Success   200   {object}  response.Response{msg=string}  "创建宠物待办"
 // @Router    /api/pet-todo [post]
 func (e *PetTodoApi) CreatePetTodo(c *gin.Context) {
@@ -188,7 +188,7 @@ func (e *PetTodoApi) UpdatePetTodo(c *gin.Context) {
 // @accept    application/json
 // @Produce   application/json
 // @Param     petTodoID  path      int             true  "宠物待办ID"
-// @Success   200   {object}  response.Response{data=petRes.PetTodoResponse,msg=string}  "获取单一宠物信息"
+// @Success   200   {object}  response.Response{data=response.PetTodoInfoResponse,msg=string}  "获取单一宠物信息"
 // @Router    /api/pet-todo/:petTodoID [get]
 func (e *PetTodoApi) GetPetTodo(c *gin.Context) {
 	todoIdStr := c.Param("petTodoID")
@@ -213,6 +213,7 @@ func (e *PetTodoApi) GetPetTodo(c *gin.Context) {
 // @Security  ApiKeyAuth
 // @accept    application/json
 // @Produce   application/json
+// @Param     data  query     request.PetTodoCondition  true  "条件"
 // @Success   200   {object}  response.Response{data=response.PageResult,msg=string}  "分页获取权限客户列表,返回包括列表,总数,页码,每页数量"
 // @Router    /api/pet-todos [get]
 func (e *PetTodoApi) GetPetTodoList(c *gin.Context) {
@@ -333,8 +334,8 @@ func (e *PetTodoApi) UpdatePetTodoComplete(c *gin.Context) {
 // @Security  ApiKeyAuth
 // @accept    application/json
 // @Produce   application/json
-// @Param     content  params      string    true  "搜索内容"
-// @Success   200   {object}  response.Response{data=petRes.PetTodoResponse,msg=string}  "查询宠物待办信息"
+// @Param     content  query      request.SearchCondition    true  "搜索内容"
+// @Success   200   {object}  response.Response{data=petTodo.SimplePetTodoInfo,msg=string}  "查询宠物待办信息"
 // @Router    /api/pet-todos/infos [get]
 func (e *PetTodoApi) SearchPetTodo(c *gin.Context) {
 	var params petTodoReq.SearchCondition
