@@ -97,7 +97,7 @@ const confirmDelete = async () => {
         </nut-row>
     </div>
 
-    <div class="flex-center">
+    <div class="flex-center mt-20px">
         <nut-button @click="addPet" color="#f7daa1" class="!text-black">
             <div class="flex-center">
                 <div class="text-15px i-local-add pr-5px"></div>

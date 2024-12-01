@@ -5,7 +5,7 @@ import { eventCenter, getCurrentInstance, switchTab } from "@tarojs/taro";
 import richTextContent from "@/components/rich-text/index.vue";
 import dayjs from "dayjs";
 import checkedRadio from "@/components/checked-radio/index.vue";
-import { addPetTodo, editPetTodo, deletePetTodo } from "@/service/api";
+import { addPetTodo, editPetTodo } from "@/service/api";
 
 const selectedDate = ref(new Date());
 
