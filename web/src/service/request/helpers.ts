@@ -18,8 +18,8 @@ export function getRequestUrl(url: string) {
         const { miniProgram } = getAccountInfoSync();
         const hosts = {
           develop: 'http://127.0.0.1:8888', // 开发
-          trial: 'https://getman.cn/mock', // 体验
-          release: 'https://getman.cn/mock' // 正式
+          trial: 'http://47.108.171.61', // 体验
+          release: 'http://47.108.171.61' // 正式
         };
         baseUrl = url.substring(0, 1) === '/' ? `${hosts[miniProgram.envVersion]}${url}` : `${url}`;
       }
