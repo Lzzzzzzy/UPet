@@ -16,9 +16,6 @@ export async function uploadFileToSystem(tempUrl: string) {
   });
   let fileUrl = "";
   fileUrl = JSON.parse(resp.data)?.data?.url || ""
-  if (fileUrl) {
-    fileUrl = getRequestUrl(`/${fileUrl}`);
-  }
   console.log("fileUrl:", fileUrl);
   return fileUrl || "";
 }

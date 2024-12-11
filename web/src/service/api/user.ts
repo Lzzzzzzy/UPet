@@ -5,6 +5,8 @@ import { localStg } from '@/utils';
 interface UserInfo {
   avatar: string,
   nickname: string,
+  isAdmin: boolean,
+  id: number,
 }
 
 interface RegisterResp {
@@ -23,7 +25,7 @@ export async function userAuth(code: string) {
 
 /** 完善用户信息 */
 export async function userInfoComplete(data: any) {
-  const resp = await request.put('/api/user', data, {
+  const resp = await request.put<UserInfo>('/api/user', data, {
     useErrMsg: false
   });
   return resp.success;
@@ -36,7 +38,8 @@ export function userLogin(redirectUrl?: string) {
         //发起网络请求
         userAuth(res.code).then((data: any) => {
           localStg.set("token", data.token, data.expiresAt);
-          localStg.set("userInfo", data.user, null);
+          localStg.set("userInfo", data.user, data.expiresAt);
+          console.log("data:", data);
           if (!(data?.user.avatar && data?.user.nickname)) {
             // 跳转到用户注册页面
             redirectTo({

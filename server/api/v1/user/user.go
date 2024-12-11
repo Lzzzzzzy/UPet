@@ -45,7 +45,7 @@ func (e *UserApi) UserInfoComplete(c *gin.Context) {
 		response.FailWithMessage("用户信息完善失败, 更新用户数据错误", c)
 		return
 	}
-	response.Ok(c)
+	response.OkWithDetailed(userReq.UserInfo{NickName: user.NickName, Avatar: user.Avatar, Id: user.ID, IsAdmin: user.IsAdmin}, "查询成功", c)
 }
 
 // User

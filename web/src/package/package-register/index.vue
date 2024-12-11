@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { onBeforeMount, ref } from "vue";
-import { switchTab, redirectTo } from '@tarojs/taro';
+import { onBeforeMount, reactive, ref } from "vue";
+import { switchTab, redirectTo, getCurrentInstance } from '@tarojs/taro';
 import { localStg } from '@/utils';
 import { userInfoComplete } from '@/service/api/user';
 import { uploadFileToSystem } from "@/service/api";
@@ -13,7 +13,7 @@ const onChooseAvatar = (e: any) => {
 }
 const userNickname = ref("");
 
-const formData = ref();
+const formData = reactive({ avatar: '', nickname: '' });
 
 const formRules = ref({
   avatar: [
@@ -24,13 +24,14 @@ const formRules = ref({
   ],
 });
 
-const redirectUrl = ref("");
+const redirectUrl = ref();
 
 onBeforeMount(() => {
   const tokenUserInfo = localStg.get("userInfo")
   userAvatarUrl.value = tokenUserInfo?.avatar || baseAvatarUrl;
-  userNickname.value = tokenUserInfo?.nickname || "";
-  formData.value = tokenUserInfo;
+  userNickname.value = tokenUserInfo?.nickname || "默默无闻的铲屎官";
+  formData.avatar = tokenUserInfo?.avatar || baseAvatarUrl;
+  formData.nickname = tokenUserInfo?.nickname || "";
   const instance = getCurrentInstance();
   const params = instance?.router?.params;
   redirectUrl.value = params?.redirectTo;
@@ -41,16 +42,17 @@ const formRef = ref();
 const isLoading = ref(false);
 
 const confirmRegister = async () => {
-  formData.value.avatar = userAvatarUrl.value === baseAvatarUrl ? "" : userAvatarUrl.value;
-  formData.value.nickname = userNickname.value;
-
+  formData.avatar = userAvatarUrl.value;
+  formData.nickname = userNickname.value;
   const { valid } = await formRef.value?.validate();
   if (valid) {
     isLoading.value = true;
-    const avatarUrl = await uploadFileToSystem(userAvatarUrl.value);
-    formData.value.avatar = avatarUrl;
-    await userInfoComplete(formData.value);
-    localStg.set("userInfo", formData.value);
+    if (userAvatarUrl.value !== baseAvatarUrl) {
+      const avatarUrl = await uploadFileToSystem(userAvatarUrl.value);
+      formData.avatar = avatarUrl;
+    }
+    const resp = await userInfoComplete(formData);
+    localStg.set("userInfo", resp!);
     isLoading.value = false;
     if (redirectUrl.value) {
       redirectTo({

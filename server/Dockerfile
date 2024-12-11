@@ -1,6 +1,6 @@
-FROM golang:alpine as builder
+FROM golang:alpine
 
-WORKDIR /go/src/github.com/Lzzzzzzy/UPet/server
+WORKDIR /go/src/upet
 COPY . .
 
 RUN go env -w GO111MODULE=on \
@@ -12,16 +12,16 @@ RUN go env -w GO111MODULE=on \
 
 FROM alpine:latest
 
-LABEL MAINTAINER="SliverHorn@sliver_horn@qq.com"
+LABEL MAINTAINER="liu_zhiyi@126.com"
 # 设置时区
 ENV TZ=Asia/Shanghai
 RUN apk update && apk add --no-cache tzdata openntpd \
     && ln -sf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone \
-WORKDIR /go/src/github.com/Lzzzzzzy/UPet/server
+WORKDIR /go/src/upet
 
-COPY --from=0 /go/src/github.com/Lzzzzzzy/UPet/server/server ./
-COPY --from=0 /go/src/github.com/Lzzzzzzy/UPet/server/resource ./resource/
-COPY --from=0 /go/src/github.com/Lzzzzzzy/UPet/server/config.docker.yaml ./
+COPY --from=0 /go/src/upet/server ./
+COPY --from=0 /go/src/upet/resource ./resource/
+COPY --from=0 /go/src/upet/config.docker.yaml ./
 
 EXPOSE 8888
 ENTRYPOINT ./server -c config.docker.yaml

@@ -10,6 +10,9 @@ function createLocalStorage<T extends StorageInterface.Local = StorageInterface.
   const DEFAULT_CACHE_TIME = 60 * 60 * 24 * 7;
 
   function set<K extends keyof T>(key: K, value: T[K], expire: number | null = DEFAULT_CACHE_TIME) {
+    if (!expire) {
+      expire = Date.now() + DEFAULT_CACHE_TIME * 1000
+    }
     const storageData: StorageData<T[K]> = {
       value,
       expire,

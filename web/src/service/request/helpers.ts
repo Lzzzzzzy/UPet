@@ -18,8 +18,8 @@ export function getRequestUrl(url: string) {
         const { miniProgram } = getAccountInfoSync();
         const hosts = {
           develop: 'http://127.0.0.1:8888', // 开发
-          trial: 'https://mp/jado.life', // 体验
-          release: 'https://mp/jado.life' // 正式
+          trial: 'https://mp.jado.life', // 体验
+          release: 'https://mp.jado.life' // 正式
         };
         baseUrl = url.substring(0, 1) === '/' ? `${hosts[miniProgram.envVersion]}${url}` : `${url}`;
       }
