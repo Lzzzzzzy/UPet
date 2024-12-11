@@ -31,6 +31,7 @@ func (authService *AuthService) MiniprogramAuth(code string) (*authResp.WechatAu
 	defer resp.Body.Close()
 
 	body, err := io.ReadAll(resp.Body)
+	global.GVA_LOG.Info(fmt.Sprintf("微信返回用户信息：%s", string(body)))
 	if err != nil {
 		global.GVA_LOG.Error("解析微信resp body失败!", zap.Error(err))
 		return &resStruct, err
