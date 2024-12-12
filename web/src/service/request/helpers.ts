@@ -1,6 +1,7 @@
 import { getEnv, getAccountInfoSync, showToast } from '@tarojs/taro';
 import { CONTENT_TYPE, ERROR_MSG_DURATION } from '@/constants';
 import { localStg, exeStrategyActions } from '@/utils';
+import { userLogin } from '@/service/api';
 
 const env = getEnv();
 
@@ -36,14 +37,16 @@ export function getRequestUrl(url: string) {
 }
 
 /** 获取请求头 */
-export function getRequestHeaders(axiosConfig: Service.AxiosConfig) {
+export async function getRequestHeaders(axiosConfig: Service.AxiosConfig, needToken: boolean = true) {
   const header: TaroGeneral.IAnyObject = {};
   /** 获取token */
-  const token = localStg.get('token');
-  if (token) {
-    /** 添加token */
-    header["x-token"] = token;
+  let token = localStg.get('token');
+  if (needToken && !token) {
+    await userLogin();
+    token = localStg.get('token');
   }
+  /** 添加token */
+  header["x-token"] = token;
   /** 增加类型 */
   header['Content-Type'] = axiosConfig.contentType || CONTENT_TYPE.json;
   return header;

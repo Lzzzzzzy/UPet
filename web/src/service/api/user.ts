@@ -31,27 +31,13 @@ export async function userInfoComplete(data: any) {
   return resp.success;
 }
 
-export function userLogin(redirectUrl?: string) {
-  login({
-    success: function (res: any) {
-      if (res.code) {
-        //发起网络请求
-        userAuth(res.code).then((data: any) => {
-          localStg.set("token", data.token, data.expiresAt);
-          localStg.set("userInfo", data.user, data.expiresAt);
-          console.log("data:", data);
-          if (!(data?.user.avatar && data?.user.nickname)) {
-            // 跳转到用户注册页面
-            redirectTo({
-              url: `/package/package-register/index?redirectTo=${redirectUrl}`
-            });
-          }
-        })
-      } else {
-        console.log('登录失败！' + res.errMsg)
-      }
-    }
-  })
+export async function userLogin(redirectUrl?: string) {
+  const res = await login();
+  if (res.code) {
+    const authResp = await userAuth(res.code);
+    localStg.set("token", authResp!.token, authResp!.expireAt);
+    localStg.set("userInfo", authResp!.user, authResp!.expireAt);
+  }
 }
 
 export async function getUserInfo(userId: number | string) {

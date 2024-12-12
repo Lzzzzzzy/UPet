@@ -12,7 +12,7 @@ export async function uploadFileToSystem(tempUrl: string) {
     url,
     filePath: tempUrl,
     name: 'file',
-    header: getRequestHeaders(config),
+    header: await getRequestHeaders(config),
   });
   let fileUrl = "";
   fileUrl = JSON.parse(resp.data)?.data?.url || ""

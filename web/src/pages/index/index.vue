@@ -5,7 +5,7 @@ import noPetRemind from '@/components/home/add-pet-remind/index.vue';
 import petTodosPage from '@/components/pet-todos/index.vue';
 import calendar from '@/components/calendar/index.vue';
 import { Pet } from "@/typings/pet";
-import { userLogin, getAllPetsInfo, getPetTodosOnPagenation, getPetTodosMark } from '@/service/api';
+import { getAllPetsInfo, getPetTodosOnPagenation, getPetTodosMark } from '@/service/api';
 import { localStg, formatDate } from '@/utils';
 
 
@@ -21,10 +21,6 @@ const calendarMode = ref("week");
 const getDotInfos = async (dates: Pet.PetMarkParam) => {
     const data = await getPetTodosMark(dates);
     return data;
-}
-
-const wxLogin = () => {
-  userLogin()
 }
 
 /** 宠物相关参数和方法 */
@@ -48,11 +44,6 @@ onBeforeMount(async () => {
       pets.value = petInfos;
     }
   });
-
-  const token = localStg.get("token");
-  if (!token) {
-    wxLogin();
-  }
 
   const petInfos = await getAllPetsInfo()
   if (petInfos) {

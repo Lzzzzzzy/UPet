@@ -7,7 +7,12 @@ import { userLogin } from '@/service/api';
 async function axios<T>(config: Service.RequestParam): Promise<Service.RequestResult<T>> {
   const { method, url, data } = config;
   const axiosConfig = config.axiosConfig as Service.AxiosConfig;
-  const header = getRequestHeaders(axiosConfig);
+  let header;
+  if (url == '/api/auth') {
+    header = await getRequestHeaders(axiosConfig, false);
+  } else {
+    header = await getRequestHeaders(axiosConfig);
+  }
   return await new Promise((resolve, reject) => {
     request({
       /** 兼容Url不同的情况，可以通过填写完整路径 */
@@ -27,11 +32,9 @@ async function axios<T>(config: Service.RequestParam): Promise<Service.RequestRe
           });
         }
         if (code === NO_AUTH_CODE) {
-          userLogin();
-          return resolve({
-            error: null,
-            success: data
-          });
+          return userLogin().then(() => {
+            return axios(config)
+          })
         }
         /** 仅有使用服务端错误信息的请求才 toast 提示错误 */
         if (axiosConfig.useErrMsg) {

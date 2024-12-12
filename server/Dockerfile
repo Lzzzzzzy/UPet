@@ -16,7 +16,7 @@ LABEL MAINTAINER="liu_zhiyi@126.com"
 # 设置时区
 ENV TZ=Asia/Shanghai
 RUN apk update && apk add --no-cache tzdata openntpd \
-    && ln -sf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone \
+    && ln -sf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 WORKDIR /go/src/upet
 
 COPY --from=0 /go/src/upet/server ./
