@@ -1,13 +1,16 @@
 package middleware
 
 import (
+	"encoding/json"
 	"errors"
+	"fmt"
 	"strconv"
 	"time"
 
 	"github.com/Lzzzzzzy/UPet/server/global"
 	"github.com/Lzzzzzzy/UPet/server/service"
 	"github.com/Lzzzzzzy/UPet/server/utils"
+	"go.uber.org/zap"
 
 	"github.com/golang-jwt/jwt/v4"
 
@@ -37,6 +40,7 @@ func JWTAuth() gin.HandlerFunc {
 		// parseToken 解析token包含的信息
 		claims, err := j.ParseToken(token)
 		if err != nil {
+			global.GVA_LOG.Error("用户解析token失败", zap.Error(err))
 			if errors.Is(err, utils.ErrTokenExpired) {
 				response.NoAuth("授权已过期", c)
 				utils.ClearToken(c)
@@ -48,7 +52,11 @@ func JWTAuth() gin.HandlerFunc {
 			c.Abort()
 			return
 		}
-
+		jsonData, err := json.Marshal(claims)
+		if err != nil {
+			global.GVA_LOG.Error("解析token失败", zap.Error(err))
+		}
+		global.GVA_LOG.Info(fmt.Sprintf("token claims: %v", string(jsonData)))
 		// 已登录用户被管理员禁用 需要使该用户的jwt失效 此处比较消耗性能 如果需要 请自行打开
 		// 用户被删除的逻辑 需要优化 此处比较消耗性能 如果需要 请自行打开
 		userId := claims.UserId

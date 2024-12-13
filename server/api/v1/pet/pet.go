@@ -26,11 +26,13 @@ func (e *PetApi) CreatePetInfo(c *gin.Context) {
 	var petInfo pet.PetInfo
 	err := c.ShouldBindJSON(&petInfo)
 	if err != nil {
+		global.GVA_LOG.Error("创建宠物参数获取失败!", zap.Error(err))
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
 	err = utils.Verify(petInfo, utils.PetInfoVerify)
 	if err != nil {
+		global.GVA_LOG.Error("创建宠物参数验证失败!", zap.Error(err))
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
@@ -44,6 +46,7 @@ func (e *PetApi) CreatePetInfo(c *gin.Context) {
 		response.FailWithMessage("创建失败", c)
 		return
 	}
+	global.GVA_LOG.Info("创建宠物成功!")
 	response.OkWithMessage("创建成功", c)
 }
 
@@ -177,7 +180,7 @@ func (e *PetApi) GetPetInfo(c *gin.Context) {
 func (e *PetApi) GetPetInfoList(c *gin.Context) {
 	petList, err := petService.GetPetInfoList(utils.GetUserFamilyID(c))
 	if err != nil {
-		global.GVA_LOG.Error("获取失败!", zap.Error(err))
+		global.GVA_LOG.Error("获取宠物列表失败!", zap.Error(err))
 		response.FailWithMessage("获取失败"+err.Error(), c)
 		return
 	}

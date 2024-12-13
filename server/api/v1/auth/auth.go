@@ -28,12 +28,15 @@ type AuthApi struct{}
 func (e *AuthApi) UserAuth(c *gin.Context) {
 	var authInfo authReq.AuthInfo
 	err := c.ShouldBindJSON(&authInfo)
+	global.GVA_LOG.Info(fmt.Sprintf("微信用户登录code: %s", authInfo.Code))
 	if err != nil {
+		global.GVA_LOG.Error(fmt.Sprintf("微信用户登录获取参数失败: %e", err))
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
 	err = utils.Verify(authInfo, utils.AuthVerify)
 	if err != nil {
+		global.GVA_LOG.Error(fmt.Sprintf("微信用户登录参数验证失败: %e", err))
 		response.FailWithMessage(err.Error(), c)
 		return
 	}
@@ -53,6 +56,7 @@ func (e *AuthApi) UserAuth(c *gin.Context) {
 	user, err = userService.GetUserByOpenId(resp.Openid)
 	if err != nil {
 		if err == gorm.ErrRecordNotFound { // 数据库没查询到数据时注册
+			global.GVA_LOG.Info("新用户，开始注册")
 			user, err = registerService.RegisterUser(resp.Openid, resp.Unionid)
 			if err != nil {
 				global.GVA_LOG.Error(fmt.Sprintf("微信用户注册失败: %e", err))
