@@ -54,3 +54,21 @@ func (petInfo *PetInfoService) GetPetInfoList(familyID uint) (PetInfoList *[]pet
 	err = db.Where("family_id = ?", familyID).Find(&PetInfoList).Error
 	return
 }
+
+func (petInfo *PetInfoService) UpdatePetsToNewFamily(oldFamilyID, newFamilyId uint) error {
+	var petsList *[]pet.PetInfo
+	db := global.GVA_DB.Model(&pet.PetInfo{})
+
+	err := db.Where("family_id = ?", oldFamilyID).Find(&petsList).Error
+	if err != nil {
+		return err
+	}
+	for _, pet := range *petsList {
+		pet.FamilyId = newFamilyId
+		err = petInfo.UpdatePet(&pet)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}

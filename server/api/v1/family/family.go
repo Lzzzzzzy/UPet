@@ -109,6 +109,7 @@ func (e *FamilyApi) JoinFamily(c *gin.Context) {
 	}
 
 	needRemoveFamily := false
+	needDeleteFamilyId := uint(0)
 	if len(*otherUsers) > 0 {
 		// 转让管理员权限给其他成员
 		users := *otherUsers
@@ -116,17 +117,20 @@ func (e *FamilyApi) JoinFamily(c *gin.Context) {
 		if err != nil {
 			global.GVA_LOG.Error("转让管理员权限失败!", zap.Error(err))
 			response.FailWithMessage("转让管理员权限失败"+err.Error(), c)
-		} else {
-			needRemoveFamily = true
 		}
+	} else { // 没有其他成员时，需要删除当前家庭
+		needRemoveFamily = true
+		needDeleteFamilyId = userInfo.FamilyId
 	}
 
 	// 更新用户家庭
 	userInfo.FamilyId = uint(familyId)
 	userService.UpdateUser(userInfo)
 	if needRemoveFamily {
+		// 原家庭的宠物转移到新家庭
+		petService.UpdatePetsToNewFamily(needDeleteFamilyId, uint(familyId))
 		// 删除原家庭
-		familyService.DeleteFamily(userInfo.FamilyId)
+		familyService.DeleteFamily(needDeleteFamilyId)
 	}
 	response.Ok(c)
 }
