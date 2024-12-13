@@ -52,7 +52,7 @@ const confirmRegister = async () => {
       formData.avatar = avatarUrl;
     }
     const resp = await userInfoComplete(formData);
-    localStg.set("userInfo", resp!);
+    localStg.set("userInfo", resp!, null);
     isLoading.value = false;
     if (redirectUrl.value) {
       redirectTo({
