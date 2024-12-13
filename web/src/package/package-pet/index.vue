@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import { switchTab, eventCenter } from '@tarojs/taro';
+import { eventCenter, redirectTo } from '@tarojs/taro';
 import { computed, onBeforeMount, ref } from 'vue';
 import { Pet } from "@/typings/pet";
 import { uploadFileToSystem, addPet } from "@/service/api";
 import { formatDate } from '@/utils';
-import { dayjs } from "dayjs";
 
 const title = ref("添加档案");
 
@@ -79,8 +78,8 @@ const handleSubmit = async () => {
     await addPet(formData.value);
     isLoading.value = false;
     eventCenter.trigger("refreshPet");
-    switchTab({
-      url: '/pages/index/index'
+    redirectTo({
+      url: '/package/package-pet-management/index'
     })
   }
 }

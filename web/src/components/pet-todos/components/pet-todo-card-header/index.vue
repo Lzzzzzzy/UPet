@@ -51,11 +51,11 @@ const currentPet = ref<Pet.PetInfo>(props.pets[0]);
             <nut-grid-item :text="pet.name" v-for="pet in pets" :key="pet.id" @click="selectPet(pet)">
                 <pet-avatar :avatar-img-url="pet.avatar" />
             </nut-grid-item>
-            <nut-grid-item text="添加" @click="handleToAddPet">
+            <!-- <nut-grid-item text="添加" @click="handleToAddPet">
                 <nut-avatar class="!flex justify-center items-center">
                     <div class="text-20px i-local-add"></div>
                 </nut-avatar>
-            </nut-grid-item>
+            </nut-grid-item> -->
         </nut-grid>
     </nut-popup>
 </div>

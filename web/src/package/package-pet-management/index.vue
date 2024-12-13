@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import petAvatar from '@/components/home/pet-avatar/index.vue';
 import { onBeforeMount, ref } from 'vue';
-import { eventCenter, navigateTo } from "@tarojs/taro";
+import { eventCenter, navigateTo, redirectTo } from "@tarojs/taro";
 import dayjs from 'dayjs';
 import type { Pet } from "@/typings/pet";
 import type { Dayjs } from 'dayjs';
@@ -10,6 +10,12 @@ import { getAllPetsInfo, deletePetInfo } from '@/service/api';
 
 onBeforeMount(() => {
   getPetsInfo();
+  eventCenter.on("refreshPet", async () => {
+    const petInfos = await getAllPetsInfo()
+    if (petInfos) {
+      pets.value = petInfos;
+    }
+  });
 })
 
 const pets = ref<Array<Pet.PetInfo>>([]);
@@ -28,7 +34,7 @@ const editPet = (pet: Pet.PetInfo) => {
 };
 
 const addPet = () => {
-    navigateTo({url: `/package/package-pet/index`})
+  redirectTo({url: `/package/package-pet/index`})
 }
 
 const calculateAge = (birthday: Date | string | Dayjs | null | undefined) => {
@@ -59,7 +65,7 @@ const closePopup = () => {
 }
 const confirmDelete = async () => {
   await deletePetInfo(needDeletePetId.value);
-  await getPetsInfo();
+  eventCenter.trigger("refreshPet");
   closePopup();
 }
 

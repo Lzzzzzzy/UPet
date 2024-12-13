@@ -6,7 +6,7 @@ import petTodosPage from '@/components/pet-todos/index.vue';
 import calendar from '@/components/calendar/index.vue';
 import { Pet } from "@/typings/pet";
 import { getAllPetsInfo, getPetTodosOnPagenation, getPetTodosMark } from '@/service/api';
-import { localStg, formatDate } from '@/utils';
+import { formatDate } from '@/utils';
 
 
 /** 设置页面属性 */
