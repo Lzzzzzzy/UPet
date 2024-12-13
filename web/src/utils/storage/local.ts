@@ -9,8 +9,8 @@ function createLocalStorage<T extends StorageInterface.Local = StorageInterface.
   /** 默认缓存期限为7天 */
   const DEFAULT_CACHE_TIME = 60 * 60 * 24 * 7;
 
-  function set<K extends keyof T>(key: K, value: T[K], expire: number | null = DEFAULT_CACHE_TIME) {
-    if (!expire) {
+  function set<K extends keyof T>(key: K, value: T[K], expire: number | null) {
+    if (expire == null) {
       expire = Date.now() + DEFAULT_CACHE_TIME * 1000
     }
     const storageData: StorageData<T[K]> = {
@@ -28,7 +28,7 @@ function createLocalStorage<T extends StorageInterface.Local = StorageInterface.
       if (storageData) {
         const { value, expire } = storageData;
         // 在有效期内直接返回
-        if (expire === null || expire >= Date.now()) {
+        if (expire === 0 || expire! >= Date.now()) {
           return value as T[K];
         }
       }

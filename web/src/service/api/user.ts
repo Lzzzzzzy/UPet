@@ -1,5 +1,5 @@
 import { request } from '../request';
-import { login, redirectTo } from '@tarojs/taro';
+import { login } from '@tarojs/taro';
 import { localStg } from '@/utils';
 
 interface UserInfo {

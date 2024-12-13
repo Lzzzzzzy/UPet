@@ -45,8 +45,10 @@ export async function getRequestHeaders(axiosConfig: Service.AxiosConfig, needTo
     await userLogin();
     token = localStg.get('token');
   }
-  /** 添加token */
-  header["x-token"] = token;
+  if (needToken) {
+    /** 添加token */
+    header["x-token"] = token;
+  }
   /** 增加类型 */
   header['Content-Type'] = axiosConfig.contentType || CONTENT_TYPE.json;
   return header;
